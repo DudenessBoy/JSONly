@@ -380,7 +380,10 @@ def main_window() -> None:
     root = tk.Tk()
     root.config(bg = '#1e1e2e')
     root.title('JSON Editor')
-    root.attributes('-zoomed', True)
+    if platform.system() == 'Windows':
+        root.state('zoomed')
+    else:
+        root.attributes('-zoomed', True)
     root.focus()
 
     listbox = tk.Listbox(root, height=20, width=100, bg = '#1e1e2e', fg = 'white')
