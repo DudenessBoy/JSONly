@@ -46,4 +46,4 @@ If running from source, use the following command:
 python JSONly.pyw
 ```
 ## License
-JSONly is released under the GPL License. See the [LICENSE.txt](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE.txt) file for more details.
+JSONly is released under the GPL License. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
