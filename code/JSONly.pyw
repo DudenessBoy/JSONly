@@ -16,7 +16,9 @@
 import json
 import platform
 import subprocess
+import webbrowser
 import tkinter as tk
+from LicenseText import LICENSE
 from tooltip import Hovertip
 from tkinter import ttk
 
@@ -30,6 +32,49 @@ filename = None
 saved = True
 findWord = ''
 image = 'iVBORw0KGgoAAAANSUhEUgAAAEIAAABWCAYAAAB7E0BlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPfSURBVHhe7VzRcdswDM0o+XKG6BJZoSNkgNoeoAt0gA7g/0zQAbKAJ+gCTvGkx5wqg6ToCKB8wbt754sFCtAjAVoUo4dAIGCOy/7p+2W/O10OT3/eD0/vU8p3b3LsN02LeD/snnEOOd/f/84hfw/fH3Y/Lz9232i+HaTAp0HnCLHYLAuIprWdc6mwLhhEmPVciRL8LzbNQmuXI0Rjs36QQB5bRADXFgLsPjIkgJMWWInS5oXNs2gVF+xWM8T54zyYGllHHnmKLMTmeMNIO7G5L8T5cR7MlONF755p/inI+SB6URwco7kv5EJftYBACeosn9Web4Wcsyz+ghlpdfBiMwHVC+KtKI4K+X1BMz9ogSRa9kx5JDrPHqjQWiCJNDMBRpvmE0RdopkP0ONaICCGLs1MID6ydWJbQhgH09P3FTYrhPcUulUhQJr5IIQgcL+gBQF+NSG6TWEhBBFCECEEEUIQIQQRQhAhBBFCEPckxCvNTHA/QsgxmplgW0LI8NeCAM2F6Lg6dgXpldLCbfUBzmeh+Z1w9dVzFbUeWetZRgm635FIHZrZolwffFaIKqlpv5ItjooPfSUIl8dulc4408wOuFDNeaLXg9haekIomq6PqgjOD2FL6QGuKgaVx8PX7CwBMl18qjWB2EppCiJuCCKftxVQNKw5SRzt7GcKDc27dVp/9dbSIFFO/NZLhIRhZFTSZMqmOlbNv/FB7JHmm8A4incn+ayl8fI0uUchJB6Z2od6sKIQ8qNEO8mcIkj31ABYK4oCJDalRksRGu36idEU661LBA3TJ467Tp8AfFZjkzSXEb7ejWBtJkE60dQNC1LYpo6xSGoOBzbl3yfB0arGAZp2jDio3XS5jYrSaEC60MwOEkDfOz+iUhvsp/bqkHRID8wUmu8JnVapCr0hx8xXiLCfUvMN3jxF3oJS0UTq0MwM4iM7g3n4/0C5TjgIUbgF8BiRH6gIYb5Ao/lN3I4Q0ls0M4PmN5EmPgghiJ5CYOhrfhNp5oMQggghiBCCCCGIEIIIIYgQggghiBCCKAUTQpAhBBlCkD2FEN++L9XYsBCmvq9QDGb/lf4TuLKkTzMTVKZuvxXsBC2QRIwYmq0OXKzmE4RINPODXGz+2YbhexyQeppP0n/zSrlnbLYJlB7sjOywT0Mcu75jpiYCxKe5L8S52VuHJNez/3Kdo7Rx35/xAXG+aBvilLhINs+iVH9y9NybcQUJYCtvJvOfLeZo2cwFri0ERiWb9ccgxuI3DtZ/Yyw5F8TfxEjQIIG9oIdYFOeBY4P4ooJGYbX3WZ6H78cZxH0XX+Dr4OHhH6RJz7npxayLAAAAAElFTkSuQmCC'
+
+def showLicense() -> None:
+    # Create a new window for the license
+    licenseWin = tk.Toplevel(root, takefocus=True)
+    licenseWin.config(bg = '#1e1e2e')
+    licenseWin.title(f'License - JSONly')
+    licenseWin.focus()
+    licenseWin.geometry(f'805x550+{root.winfo_x()}+{root.winfo_y()}')
+
+    # Frame to hold the text widget and scrollbar
+    textFrame = ttk.Frame(licenseWin)
+    textFrame.pack(fill='both', expand=True, padx=10, pady=10)
+
+    # Text widget to display the license
+    licenseText = tk.Text(
+        textFrame, wrap='word', bg='#1e1e2e',
+        fg='white', font='Helvetica 12', state='normal'
+    )
+    licenseText.insert('1.0', LICENSE)  # Insert license text
+    licenseText.config(state='disabled')  # Make it read-only
+    licenseText.pack(side='left', fill='both', expand=True)
+
+    # Scrollbar for the text widget
+    textScrollbar = ttk.Scrollbar(textFrame, orient='vertical', command=licenseText.yview)
+    licenseText.config(yscrollcommand=textScrollbar.set)
+    textScrollbar.pack(side='right', fill='y')
+
+    # Additional information section
+    ttk.Label(
+        licenseWin, text='Websites for more info on this topic:',
+        font='Helvetica 15', background='#1e1e2e'
+    ).pack(pady=(10, 5))
+
+    # Frame to hold hyperlinks
+    linkFrame = ttk.Frame(licenseWin)
+    linkFrame.pack()
+
+    # Hyperlinks
+    Hyperlink(
+        linkFrame, text='GNU GPL License V3',
+        url='https://www.gnu.org/licenses/gpl-3.0.en.html', cursor='hand2',
+        bg='#1e1e2e'
+    ).pack()
 
 def close() -> None:
     if not saved:
@@ -82,7 +127,6 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     window.grab_set()
     window.wait_window()
     return endVal
-
 
 def load(event = None) -> None:
     global filename, file, saved
@@ -181,23 +225,22 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     current_row = 0
 
     ttk.Label(edit_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
-    type_var = tk.StringVar(value='string')
     value = str(type(val[key] if index is None else val[index]))
     if 'str' in  value:
-        num = 1
+        num = 0
     elif 'int' in value:
-        num = 2
+        num = 1
     elif 'float' in value:
         num = 2
     elif 'bool' in value:
-        num = 2
-    else:
         num = 3
+    else:
+        num = 4
 
-    typeBox = ttk.Combobox(edit_window, textvariable=type_var, 
-                 values=['string', 'integer', 'floating point number', 'boolean', 'null'], 
+    typeBox = ttk.Combobox(edit_window, textvariable=typeVar, 
                  state='readonly')
     typeBox.grid(row=current_row, column=1, padx=5, pady=5)
+    typeBox['values'] = ('string', 'integer', 'floating point number', 'boolean', 'null')
     typeBox.current(num)
     current_row += 1
 
@@ -255,11 +298,11 @@ def config(event=None) -> None:
         
         if isinstance(value, (dict, list)):
             view.config(state='normal', command=lambda: display(value))
-            # edit.config(state='disabled')
+            edit.config(state='disabled')
             valueEntry.config(state='readonly')
         else:
             view.config(state='disabled')
-            # edit.config(state='normal', command=lambda: edit_value(root, file, typeVar, valVar, key=key))
+            edit.config(state='normal', command=lambda: edit_value(root, file, typeVar, valVar, key=key))
             valueEntry.config(state='normal')
         
         remove_button.config(state='normal')
@@ -287,11 +330,11 @@ def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> 
             typeVar.set('integer')
         elif isinstance(value, float):
             typeVar.set('floating point number')
-            
+
 def plainText() -> None:
     win = tk.Toplevel(root)
     win.config(bg = '#1e1e2e')
-    win.title('JSON Editor (plain text)')
+    win.title('JSONls (plain text)')
     win.focus()
     win.grab_set()
     text = tk.Text(win, width = 100, height = 20, bg = '#1e1e2e', insertbackground = 'white', fg = 'white')
@@ -379,11 +422,8 @@ def main_window() -> None:
 
     root = tk.Tk()
     root.config(bg = '#1e1e2e')
-    root.title('JSON Editor')
-    if platform.system() == 'Windows':
-        root.state('zoomed')
-    else:
-        root.attributes('-zoomed', True)
+    root.title('JSONly')
+    root.attributes('-zoomed', True)
     root.focus()
 
     listbox = tk.Listbox(root, height=20, width=100, bg = '#1e1e2e', fg = 'white')
@@ -408,10 +448,10 @@ def main_window() -> None:
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
 
-    # edit = ttk.Button(root, text='Edit simple value', cursor='hand2', state='disabled', 
-    #                   command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])), width = 20)
-    # edit.pack()
-    # Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
+    edit = ttk.Button(root, text='Edit simple value', cursor='hand2', state='disabled', 
+                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])), width = 20)
+    edit.pack()
+    Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
     add_button = ttk.Button(root, text='Add new item', cursor='hand2', 
                             command=lambda: add_new_item(root, file), width = 20)
@@ -450,6 +490,11 @@ def main_window() -> None:
     editmenu.add_command(label = 'Add new item', command = add_button.invoke)
     editmenu.add_command(label = 'Show plain text', command = plainText)
     menubar.add_cascade(label = 'Edit', menu=editmenu)
+    about = tk.Menu(menubar, tearoff = 0)
+    about.add_command(label = 'Website', command = lambda: webbrowser.open('https://dudenessboy.github.io/JSONly'))
+    about.add_command(label = 'Github repository', command = lambda: webbrowser.open('https://github.com/DudenessBoy/JSONly'))
+    about.add_command(label = 'License', command = showLicense)
+    menubar.add_cascade(label = 'About', menu = about)
     root.config(menu = menubar)
 
     root.bind("<<ValueEdited>>", lambda e: config())
@@ -486,7 +531,7 @@ def display(val) -> None:
     index = 0
     disp = tk.Toplevel(root)
     disp.config(bg = '#1e1e2e')
-    disp.title('JSON Editor (complex value)')
+    disp.title('JSONly (complex value)')
     disp.grab_set()
     disp.focus()
     
@@ -521,15 +566,11 @@ def display(val) -> None:
             if isinstance(value, (dict, list)):
                 view.config(state='normal', command=lambda: display(value))
                 valueEntry.config(state = 'readonly')
-                # edit.config(state='disabled')
+                edit.config(state='disabled')
             else:
                 view.config(state='disabled')
                 valueEntry.config(state = 'normal')
-                # if isinstance(val, dict):
-                    # view.config(state = 'readonly')
-                    # edit.config(state='normal', command=lambda: edit_value(disp, val, typeVar, valVar, key=key))
-                # else:
-                    # edit.config(state='normal', command=lambda: edit_value(disp, val, typeVar, valVar, index=index))
+                edit.config(state='normal', command=lambda: edit_value(disp, val, typeVar, valVar, key=key))
             
             remove_button.config(state='normal')
         else:
@@ -692,6 +733,71 @@ def findPrev(searchKey: str, listbox: tk.Listbox):
                     listbox.selection_set(i)
                     listbox.see(i)
                     break
+
+class Hyperlink(tk.Label):
+    '''A simple hyperlink that opens a website when clicked.\n
+    New parameters:\n
+    • url - the website that is connected to the hyperlink\n
+    • showHovertip - whether or not to show a tooltip for the website\n
+    • changeColor - whether or not to change color when hovered over\n
+    • same - if true and no text or textvariable is given, text is the same as url'''
+    def __init__(self, master: tk.Misc | None = None, *, url: str, font: str | list | tuple = 'Helvetica 10 underline', highlightcolor: str = 'blue', showHovertip: bool = True, same: bool = True, changeColor: bool = True, **kwargs) -> None:
+        if not (url.startswith('https://') or url.startswith('http://')):
+            url = 'http://' + url
+        if kwargs['text'] is None:
+            if same:
+                kwargs['text'] = url
+            else:
+                kwargs['text'] = ''
+        self.changeColor = changeColor
+        self.showHovertip = showHovertip
+        self.same = same
+        self.url = url
+        super().__init__(master, activeforeground='#4FC3F7', disabledforeground='#4FC3F7', fg='#4FC3F7', font=font, foreground='#4FC3F7', highlightcolor=highlightcolor, **kwargs)
+        if showHovertip:
+            Hovertip(self, url)
+    
+    # handle url clicked
+    def _onClick(self, event = None) -> None:
+        webbrowser.open_new_tab(self.url)
+
+    # handle mouse enters url
+    def _onEnter(self, event = None) -> None:
+        self.config(foreground = '#0077FF', activeforeground = '#0077FF')
+
+    # handle mouse leave url
+    def _onLeave(self, event = None) -> None:
+        self.config(foreground = '#4FC3F7', activeforeground = '#4FC3F7')
+
+    def _addBindings(self) -> None:
+        self.bind('<Button-1>', self._onClick)
+        if self.changeColor:
+            self.bind('<Enter>', self._onEnter, '+')
+            self.bind('<Leave>', self._onLeave, '+')
+
+    def pack(self, **kwargs) -> None:
+        super().pack(**kwargs)
+        self._addBindings()
+        super().pack_configure(**kwargs)
+
+    def place(self, **kwargs) -> None:
+        super().place(**kwargs)
+        self._addBindings()
+        super().place_configure(**kwargs)
+
+    def grid(self, **kwargs) -> None:
+        super().grid(kwargs)
+        self._addBindings()
+        super().grid_configure(kwargs)
+
+    def configure(self, **kwargs) -> None:
+        self.configure(**kwargs)
+        if 'url' in kwargs:
+            self.url = kwargs['url']
+        if 'same' in kwargs:
+            self.same = kwargs['same']
+        if 'changeColor' in kwargs:
+            self.changeColor = kwargs['changeColor']
 
 root = main_window()
 img = tk.PhotoImage(data = image)
