@@ -26,6 +26,7 @@ if platform.system() == 'Linux':
     import tkfilebrowser
 else:
     from tkinter import filedialog as tkfilebrowser
+    import pyperclip
 
 file = {}
 filename = None
@@ -341,7 +342,10 @@ def plainText() -> None:
     text.pack()
     text.insert(0.0, json.dumps(file, indent = 2))
     text.config(state = 'disabled')
-    copy = ttk.Button(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
+    if platform.system() == 'Linux':
+        copy = ttk.Button(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
+    else:
+        pyperclip.copy(json.dumps(file, indent = 2))
     copy.pack()
 
 def add_new_item(parent, val) -> None:
