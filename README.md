@@ -46,3 +46,9 @@ python JSONly.pyw
 ```
 ## License
 JSONly is released under the GPL License. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
+
+## Additional links
+Project website: https://DudenessBoy.github.io/JSONly  
+SourceForge page: https://JSONly.sourceforgw.net  
+Discord server: https://discord.gg/DG9pr3XA  
+Subreddit: https://reddit.com/r/JSONly  
