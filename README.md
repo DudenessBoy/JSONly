@@ -1,4 +1,4 @@
-o# JSONly
+# JSONly
 
 Jsonly is a lightweight, user-friendly GUI JSON editor designed to make working with JSON files simple and efficient. Built with a focus on usability, Jsonly provides an intuitive interface for viewing, editing, and managing JSON data without overwhelming you with unnecessary features.
 
@@ -49,6 +49,6 @@ JSONly is released under the GPL License. See the [LICENSE](https://github.com/D
 
 ## Additional links
 Project website: https://DudenessBoy.github.io/JSONly  
-SourceForge page: https://JSONly.sourceforge.net  
+SourceForge page: https://jsonly.sourceforge.net  
 Discord server: https://discord.gg/DG9pr3XA  
 Subreddit: https://reddit.com/r/JSONly  
