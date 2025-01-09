@@ -38,6 +38,8 @@ If you plan to run JSONly from the source code, you will need to install the fol
 ## Platform Compatibility
 JSONly has been tested on Linux and Windows. It has not been tested on macOS, so compatibility on macOS is not guaranteed.
 
+Mobile compatibility is planned but not yet implemented.
+
 ## Usage
 Run the executable for a hassle-free experience.
 If running from source, use the following command:
@@ -52,3 +54,6 @@ Project website: https://DudenessBoy.github.io/JSONly
 SourceForge page: https://jsonly.sourceforge.net  
 Discord server: https://discord.gg/DG9pr3XA  
 Subreddit: https://reddit.com/r/JSONly  
+
+## Contributing
+If you encounter an issue or have a feature request, please submit it on the [GitHub Issues page](https://github.com/DudenessBoy/JSONly/issues). Developers with coding experience are encouraged to fork the repository and contribute by submitting a pull request. For those interested in becoming an active contributor to the project, please reach out to the author directly.
