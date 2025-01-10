@@ -3,9 +3,8 @@
 Jsonly is a lightweight, user-friendly GUI JSON editor designed to make working with JSON files simple and efficient. Built with a focus on usability, Jsonly provides an intuitive interface for viewing, editing, and managing JSON data without overwhelming you with unnecessary features.
 
 ## Features
-- Tree-View Editing: Easily navigate and edit the structure of your JSON data.
 - Plain Text Viewer: View and copy the raw JSON content with a single click.
-- Save and load queues from files
+- Open any JSON file for easy editing
 
 Jsonly is perfect for developers, data analysts, or anyone needing a reliable tool to manage JSON files. Whether you're debugging APIs, managing configurations, or just exploring JSON, JSONly has you covered.
 
@@ -39,6 +38,8 @@ If you plan to run JSONly from the source code, you will need to install the fol
 ## Platform Compatibility
 JSONly has been tested on Linux and Windows. It has not been tested on macOS, so compatibility on macOS is not guaranteed.
 
+Mobile compatibility is planned but not yet implemented.
+
 ## Usage
 Run the executable for a hassle-free experience.
 If running from source, use the following command:
@@ -47,3 +48,12 @@ python JSONly.pyw
 ```
 ## License
 JSONly is released under the GPL License. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
+
+## Additional links
+Project website: https://DudenessBoy.github.io/JSONly  
+SourceForge page: https://jsonly.sourceforge.net  
+Discord server: https://discord.gg/DG9pr3XA  
+Subreddit: https://reddit.com/r/JSONly  
+
+## Contributing
+If you encounter an issue or have a feature request, please submit it on the [GitHub Issues page](https://github.com/DudenessBoy/JSONly/issues). Developers with coding experience are encouraged to fork the repository and contribute by submitting a pull request. For those interested in becoming an active contributor to the project, please [reach out](https://dudenessboy.github.io/contact.html) to the author directly.
