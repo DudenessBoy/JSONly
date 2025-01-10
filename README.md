@@ -56,4 +56,4 @@ Discord server: https://discord.gg/DG9pr3XA
 Subreddit: https://reddit.com/r/JSONly  
 
 ## Contributing
-If you encounter an issue or have a feature request, please submit it on the [GitHub Issues page](https://github.com/DudenessBoy/JSONly/issues). Developers with coding experience are encouraged to fork the repository and contribute by submitting a pull request. For those interested in becoming an active contributor to the project, please reach out to the author directly.
+If you encounter an issue or have a feature request, please submit it on the [GitHub Issues page](https://github.com/DudenessBoy/JSONly/issues). Developers with coding experience are encouraged to fork the repository and contribute by submitting a pull request. For those interested in becoming an active contributor to the project, please [reach out](https://dudenessboy.github.io/contact.html) to the author directly.
