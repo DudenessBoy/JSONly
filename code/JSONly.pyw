@@ -17,15 +17,13 @@ import json
 import platform
 import subprocess
 import webbrowser
+from plyer import filechooser
 import tkinter as tk
+import customtkinter as ctk
 from LicenseText import LICENSE
 from tooltip import Hovertip
 from tkinter import ttk
-
-if platform.system() == 'Linux':
-    import tkfilebrowser
-else:
-    from tkinter import filedialog as tkfilebrowser
+if platform.system() == 'Windows':
     import pyperclip
 
 file = {}
@@ -115,7 +113,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
 
     # Add buttons
     for button_text in buttons:
-        button = ttk.Button(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt))
+        button = ctk.CTkButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt))
         button.pack(side=tk.LEFT, padx=5)
 
     # Center the window on the screen
@@ -125,7 +123,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
 
     # Prevent interaction with the main window
     window.transient()
-    window.grab_set()
+    # window.grab_set()
     window.wait_window()
     return endVal
 
@@ -138,7 +136,7 @@ def load(event = None) -> None:
         elif ans == 'Save':
             if not save():
                 return
-    filename = tkfilebrowser.askopenfilename(filetypes = [('JSON files', '*.json'), ('Any files', '*.*')])
+    filename = filechooser.open_file(title = 'something', filters = [('JSON files', '*.json'), ('Any files', '*.*')])
     if filename:
         try:
             with open(filename, 'r', encoding = 'utf-8') as f:
@@ -168,7 +166,7 @@ def load(event = None) -> None:
 def save(event = None, saveas: bool = False) -> bool:
     global filename, saved
     if filename is None or saveas:
-        filename = tkfilebrowser.asksaveasfilename(filetypes = [('JSON files', '*.json'), ('Any files', '*.*')], initialfile = 'newfile.json')
+        filename = filechooser.save_file(filters = [('JSON files', '*.json')])
         if not filename:
             filename = None
             return False
@@ -222,7 +220,7 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     edit_window.config(bg = '#1e1e2e')
     edit_window.title("Edit Value")
     edit_window.focus()
-    edit_window.grab_set()
+    # edit_window.grab_set()
     current_row = 0
 
     ttk.Label(edit_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
@@ -254,7 +252,7 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ttk.Button(edit_window, text="Save", command=save_value, cursor = 'hand2').grid(row=current_row, column=0, columnspan=2, pady=10)
+    ctk.CTkButton(edit_window, text="Save", command=save_value, cursor = 'hand2').grid(row=current_row, column=0, columnspan=2, pady=10)
 
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
     new_value = value
@@ -337,13 +335,13 @@ def plainText() -> None:
     win.config(bg = '#1e1e2e')
     win.title('JSONls (plain text)')
     win.focus()
-    win.grab_set()
+    # win.grab_set()
     text = tk.Text(win, width = 100, height = 20, bg = '#1e1e2e', insertbackground = 'white', fg = 'white')
     text.pack()
     text.insert(0.0, json.dumps(file, indent = 2))
     text.config(state = 'disabled')
     if platform.system() == 'Linux':
-        copy = ttk.Button(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
+        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
     else:
         pyperclip.copy(json.dumps(file, indent = 2))
     copy.pack()
@@ -394,7 +392,7 @@ def add_new_item(parent, val) -> None:
     add_window.config(bg = '#1e1e2e')
     add_window.title("Add New Item")
     add_window.focus()
-    add_window.grab_set()
+    # add_window.grab_set()
 
     current_row = 0
 
@@ -419,7 +417,7 @@ def add_new_item(parent, val) -> None:
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ttk.Button(add_window, text="Save", command=save_item, cursor = 'hand2').grid(row=current_row, column=0, columnspan=2, pady=10)
+    ctk.CTkButton(add_window, text="Save", command=save_item, cursor = 'hand2').grid(row=current_row, column=0, columnspan=2, pady=10)
 
 def main_window() -> None:
     global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
@@ -451,36 +449,36 @@ def main_window() -> None:
     valueEntry.bind('<Return>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
     valueEntry.bind('<FocusOut>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
 
-    view = ttk.Button(root, text='View complex value', cursor='hand2', state='disabled', width = 20)
+    view = ctk.CTkButton(root, text='View complex value', cursor='hand2', state='disabled', width = 20)
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
 
-    edit = ttk.Button(root, text='Edit simple value', cursor='hand2', state='disabled', 
+    edit = ctk.CTkButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
                       command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])), width = 20)
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
-    add_button = ttk.Button(root, text='Add new item', cursor='hand2', 
+    add_button = ctk.CTkButton(root, text='Add new item', cursor='hand2', 
                             command=lambda: add_new_item(root, file), width = 20)
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
-    remove_button = ttk.Button(root, text='Remove item', cursor='hand2', state='disabled',
+    remove_button = ctk.CTkButton(root, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection()[0])), width = 20)
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
     ttk.Label(root).pack()
-    plain = ttk.Button(root, text = 'View plain text', cursor = 'hand2', command = plainText, width = 20)
+    plain = ctk.CTkButton(root, text = 'View plain text', cursor = 'hand2', command = plainText, width = 20)
     plain.pack()
     Hovertip(plain, 'view the JSON data as plain text')
-    loadBtn = ttk.Button(root, text = 'Load file', cursor = 'hand2', command = load, width = 20)
+    loadBtn = ctk.CTkButton(root, text = 'Load file', cursor = 'hand2', command = load, width = 20)
     loadBtn.pack()
     Hovertip(loadBtn, 'load JSON data from a file (ctrl+o)')
-    saveBtn = ttk.Button(root, text = 'Save', cursor = 'hand2', command = save, width = 20)
+    saveBtn = ctk.CTkButton(root, text = 'Save', cursor = 'hand2', command = save, width = 20)
     saveBtn.pack()
     Hovertip(saveBtn, 'save the JSON data (ctrl+s)')
-    saveas = ttk.Button(root, text = 'Save as', cursor = 'hand2', command = lambda: save(saveas = True), width = 20)
+    saveas = ctk.CTkButton(root, text = 'Save as', cursor = 'hand2', command = lambda: save(saveas = True), width = 20)
     saveas.pack()
     Hovertip(saveas, 'save the JSON data to a file of your choice (ctrl+shift+s)')
 
@@ -539,7 +537,7 @@ def display(val) -> None:
     disp = tk.Toplevel(root)
     disp.config(bg = '#1e1e2e')
     disp.title('JSONly (complex value)')
-    disp.grab_set()
+    # disp.grab_set()
     disp.focus()
     
     listbox = tk.Listbox(disp, height=20, width=100, fg = 'white', bg = '#1e1e2e')
@@ -625,18 +623,18 @@ def display(val) -> None:
     else:
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
         valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
-    view = ttk.Button(disp, text='View complex value', cursor='hand2', state='disabled', width = 20)
+    view = ctk.CTkButton(disp, text='View complex value', cursor='hand2', state='disabled', width = 20)
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
-    edit = ttk.Button(disp, text='Edit simple value', cursor='hand2', state='disabled', width = 20)
+    edit = ctk.CTkButton(disp, text='Edit simple value', cursor='hand2', state='disabled', width = 20)
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
-    add_button = ttk.Button(disp, text='Add new item', cursor='hand2', 
+    add_button = ctk.CTkButton(disp, text='Add new item', cursor='hand2', 
                             command=lambda: add_new_item(disp, val), width = 20)
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
-    remove_button = ttk.Button(disp, text='Remove item', cursor='hand2', state='disabled',
+    remove_button = ctk.CTkButton(disp, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(disp, val, 
                                                            key=listbox.get(listbox.curselection()[0]) if isinstance(val, dict) else None,
                                                            index=listbox.curselection()[0] if isinstance(val, list) else None), width = 20)
@@ -655,7 +653,7 @@ def findWindow(listbox: tk.Listbox) -> None:
     findWin = tk.Toplevel(root)
     findWin.config(bg = '#1e1e2e')
     findWin.focus()
-    findWin.grab_set()
+    # findWin.grab_set()
     findWin.overrideredirect(True)
     # Calculate the center coordinates of the main window
     root.update_idletasks()
@@ -676,13 +674,13 @@ def findWindow(listbox: tk.Listbox) -> None:
     findEntry.focus()
     findEntry.insert(0, findWord)
     findEntry.select_range(0, tk.END)
-    nextBtn = ttk.Button(findWin, text = '↓', command = lambda: findNext(findEntry.get(), listbox), width = 5, takefocus = False)
+    nextBtn = ctk.CTkButton(findWin, text = '↓', command = lambda: findNext(findEntry.get(), listbox), width = 5, takefocus = False)
     nextBtn.pack(side = 'left')
     Hovertip(nextBtn, 'find next (enter, up)')
-    prevBtn = ttk.Button(findWin, text = '↑', command = lambda: findPrev(findEntry.get(), listbox), width = 5, takefocus = False)
+    prevBtn = ctk.CTkButton(findWin, text = '↑', command = lambda: findPrev(findEntry.get(), listbox), width = 5, takefocus = False)
     prevBtn.pack(side = 'left')
     Hovertip(prevBtn, 'find previous (up)')
-    closeBtn = ttk.Button(findWin, text = '×', command = close, width = 5, takefocus = False)
+    closeBtn = ctk.CTkButton(findWin, text = '×', command = close, width = 5, takefocus = False)
     closeBtn.pack(side = 'left')
     Hovertip(closeBtn, 'close')
     findWin.bind('<Return>', lambda event: findNext(findEntry.get(), listbox))
