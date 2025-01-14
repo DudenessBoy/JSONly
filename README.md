@@ -11,10 +11,19 @@ Jsonly is perfect for developers, data analysts, or anyone needing a reliable to
 ## Installing Dependencies (for running from source):
 If you plan to run JSONly from the source code, you will need to install the following dependencies:
 
-1. **tkfilebrowser** (only on Linux):
+1. **plyer**:
    ```bash
-   pip install tkfilebrowser
-2. **Python** 3.8 or above
+   pip install plyer
+2. **CustomTkinter**
+   ```bash
+   pip install customtkinter
+3. **pyperclip** (Windows only)
+   ```bash
+   pip install pyperclip
+4. **PyWin32** (Windows only)
+   ```bash
+   pip install pywin32
+5. **Python** 3.8 or above
    - For Linux (note: most Linux distributions come with Python preinstalled):
      - For **Debian-based distributions** (e.g., Ubuntu):
        ```bash
@@ -22,7 +31,7 @@ If you plan to run JSONly from the source code, you will need to install the fol
       - For **Red Hat-based distributions** (e.g., Fedora, CentOS):
          ```bash
          sudo dnf install python3
-     - For **Arch Linux**:
+     - For **Arch-based distributions** (e.g. Manjaro, EndeavorOS):
          ```bash
          sudo pacman -S python
      - For other Linux distributions, you can search for Python in your package manager. Alternatively, you can check your distribution’s documentation for installation instructions specific to Python.
@@ -38,7 +47,7 @@ If you plan to run JSONly from the source code, you will need to install the fol
 ## Platform Compatibility
 JSONly has been tested on Linux and Windows. It has not been tested on macOS, so compatibility on macOS is not guaranteed.
 
-Mobile compatibility is planned but not yet implemented.
+Mobile compatibility (Android and iOS) is planned but not yet implemented.
 
 ## Usage
 Run the executable for a hassle-free experience.
