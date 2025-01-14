@@ -20,10 +20,10 @@ import webbrowser
 from plyer import filechooser
 import tkinter as tk
 import customtkinter as ctk
-from LicenseText import LICENSE
+import License
 from tooltip import Hovertip
 from tkinter import ttk
-if platform.system() == 'Windows':
+if platform.system() != 'Linux':
     import pyperclip
 
 file = {}
@@ -31,49 +31,6 @@ filename = None
 saved = True
 findWord = ''
 image = 'iVBORw0KGgoAAAANSUhEUgAAAEIAAABWCAYAAAB7E0BlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPfSURBVHhe7VzRcdswDM0o+XKG6BJZoSNkgNoeoAt0gA7g/0zQAbKAJ+gCTvGkx5wqg6ToCKB8wbt754sFCtAjAVoUo4dAIGCOy/7p+2W/O10OT3/eD0/vU8p3b3LsN02LeD/snnEOOd/f/84hfw/fH3Y/Lz9232i+HaTAp0HnCLHYLAuIprWdc6mwLhhEmPVciRL8LzbNQmuXI0Rjs36QQB5bRADXFgLsPjIkgJMWWInS5oXNs2gVF+xWM8T54zyYGllHHnmKLMTmeMNIO7G5L8T5cR7MlONF755p/inI+SB6URwco7kv5EJftYBACeosn9Web4Wcsyz+ghlpdfBiMwHVC+KtKI4K+X1BMz9ogSRa9kx5JDrPHqjQWiCJNDMBRpvmE0RdopkP0ONaICCGLs1MID6ydWJbQhgH09P3FTYrhPcUulUhQJr5IIQgcL+gBQF+NSG6TWEhBBFCECEEEUIQIQQRQhAhBBFCEPckxCvNTHA/QsgxmplgW0LI8NeCAM2F6Lg6dgXpldLCbfUBzmeh+Z1w9dVzFbUeWetZRgm635FIHZrZolwffFaIKqlpv5ItjooPfSUIl8dulc4408wOuFDNeaLXg9haekIomq6PqgjOD2FL6QGuKgaVx8PX7CwBMl18qjWB2EppCiJuCCKftxVQNKw5SRzt7GcKDc27dVp/9dbSIFFO/NZLhIRhZFTSZMqmOlbNv/FB7JHmm8A4incn+ayl8fI0uUchJB6Z2od6sKIQ8qNEO8mcIkj31ABYK4oCJDalRksRGu36idEU661LBA3TJ467Tp8AfFZjkzSXEb7ejWBtJkE60dQNC1LYpo6xSGoOBzbl3yfB0arGAZp2jDio3XS5jYrSaEC60MwOEkDfOz+iUhvsp/bqkHRID8wUmu8JnVapCr0hx8xXiLCfUvMN3jxF3oJS0UTq0MwM4iM7g3n4/0C5TjgIUbgF8BiRH6gIYb5Ao/lN3I4Q0ls0M4PmN5EmPgghiJ5CYOhrfhNp5oMQggghiBCCCCGIEIIIIYgQggghiBCCKAUTQpAhBBlCkD2FEN++L9XYsBCmvq9QDGb/lf4TuLKkTzMTVKZuvxXsBC2QRIwYmq0OXKzmE4RINPODXGz+2YbhexyQeppP0n/zSrlnbLYJlB7sjOywT0Mcu75jpiYCxKe5L8S52VuHJNez/3Kdo7Rx35/xAXG+aBvilLhINs+iVH9y9NybcQUJYCtvJvOfLeZo2cwFri0ERiWb9ccgxuI3DtZ/Yyw5F8TfxEjQIIG9oIdYFOeBY4P4ooJGYbX3WZ6H78cZxH0XX+Dr4OHhH6RJz7npxayLAAAAAElFTkSuQmCC'
-
-def showLicense() -> None:
-    # Create a new window for the license
-    licenseWin = tk.Toplevel(root, takefocus=True)
-    licenseWin.configure(bg = '#1e1e2e')
-    licenseWin.title(f'License - JSONly')
-    licenseWin.focus()
-    licenseWin.geometry(f'805x550+{root.winfo_x()}+{root.winfo_y()}')
-
-    # Frame to hold the text widget and scrollbar
-    textFrame = ttk.Frame(licenseWin)
-    textFrame.pack(fill='both', expand=True, padx=10, pady=10)
-
-    # Text widget to display the license
-    licenseText = tk.Text(
-        textFrame, wrap='word', bg='#1e1e2e',
-        fg='white', font='Helvetica 12', state='normal'
-    )
-    licenseText.insert('1.0', LICENSE)  # Insert license text
-    licenseText.configure(state='disabled')  # Make it read-only
-    licenseText.pack(side='left', fill='both', expand=True)
-
-    # Scrollbar for the text widget
-    textScrollbar = ttk.Scrollbar(textFrame, orient='vertical', command=licenseText.yview)
-    licenseText.configure(yscrollcommand=textScrollbar.set)
-    textScrollbar.pack(side='right', fill='y')
-
-    # Additional information section
-    ttk.Label(
-        licenseWin, text='Websites for more info on this topic:',
-        font='Helvetica 15', background='#1e1e2e'
-    ).pack(pady=(10, 5))
-
-    # Frame to hold hyperlinks
-    linkFrame = ttk.Frame(licenseWin)
-    linkFrame.pack()
-
-    # Hyperlinks
-    Hyperlink(
-        linkFrame, text='GNU GPL License V3',
-        url='https://www.gnu.org/licenses/gpl-3.0.en.html', cursor='hand2',
-        bg='#1e1e2e'
-    ).pack()
 
 def close() -> None:
     if not saved:
@@ -113,13 +70,11 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
 
     # Add buttons
     for button_text in buttons:
-        button = ctk.CTkButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt), fg_color = '#646cff')
+        button = ctk.CTkButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt), fg_color = '#646cff', hover_color='#4b50d8')
         button.pack(side=tk.LEFT, padx=5)
 
     # Center the window on the screen
     window.update_idletasks()
-    window.geometry(f"+{(window.winfo_screenwidth() // 2) - (window.winfo_width() // 2)}"
-                    f"+{(window.winfo_screenheight() // 2) - (window.winfo_height() // 2)}")
 
     # Prevent interaction with the main window
     window.transient()
@@ -136,7 +91,7 @@ def load(event = None) -> None:
         elif ans == 'Save':
             if not save():
                 return
-    filename = filechooser.open_file(title = 'something', filters = [('JSON files', '*.json'), ('Any files', '*.*')])
+    filename = filechooser.open_file(title = 'something', filters=[("JSON files", "*.json"), ('All files', '*.*')])
     if filename:
         try:
             with open(filename, 'r', encoding = 'utf-8') as f:
@@ -236,15 +191,16 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     else:
         num = 4
 
-    typeBox = ttk.Combobox(edit_window, textvariable=typeVar, 
-                 state='readonly')
+    # typeBox = ttk.Combobox(edit_window, textvariable=typeVar, 
+    #              state='readonly')
+    typeBox = ctk.CTkOptionMenu(edit_window)
     typeBox.grid(row=current_row, column=1, padx=5, pady=5)
     typeBox['values'] = ('string', 'integer', 'floating point number', 'boolean', 'null')
     typeBox.current(num)
     current_row += 1
 
     ttk.Label(edit_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
-    value_entry = ttk.Entry(edit_window, width = 100)
+    value_entry = ctk.Entry(edit_window, width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     value_entry.insert(0, str(val[key]).lower() if index is None else str(val[index]).lower())
     value_entry.selection_range(0, tk.END)
     value_entry.focus()
@@ -252,7 +208,7 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ctk.CTkButton(edit_window, text="Save", command=save_value, cursor = 'hand2', fg_color = '#646cff').grid(row=current_row, column=0, columnspan=2, pady=10)
+    ctk.CTkButton(edit_window, text="Save", command=save_value, cursor = 'hand2', fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e').grid(row=current_row, column=0, columnspan=2, pady=10)
 
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
     new_value = value
@@ -333,7 +289,7 @@ def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> 
 def plainText() -> None:
     win = tk.Toplevel(root)
     win.configure(bg = '#1e1e2e')
-    win.title('JSONls (plain text)')
+    win.title('JSONly (plain text)')
     win.focus()
     # win.grab_set()
     text = tk.Text(win, width = 100, height = 20, bg = '#1e1e2e', insertbackground = 'white', fg = 'white')
@@ -341,9 +297,9 @@ def plainText() -> None:
     text.insert(0.0, json.dumps(file, indent = 2))
     text.configure(state = 'disabled')
     if platform.system() == 'Linux':
-        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True), fg_color = '#646cff')
+        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     else:
-        pyperclip.copy(json.dumps(file, indent = 2))
+        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     copy.pack()
 
 def add_new_item(parent, val) -> None:
@@ -398,7 +354,7 @@ def add_new_item(parent, val) -> None:
 
     if isinstance(val, dict):
         ttk.Label(add_window, text="Key:").grid(row=current_row, column=0, padx=5, pady=5)
-        key_entry = ttk.Entry(add_window, width = 100)
+        key_entry = ctk.CTkEntry(add_window, width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
         key_entry.bind('<Return>', lambda e: value_entry.focus())
         key_entry.grid(row=current_row, column=1, padx=5, pady=5)
         key_entry.focus()
@@ -406,18 +362,22 @@ def add_new_item(parent, val) -> None:
 
     ttk.Label(add_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
     type_var = tk.StringVar(value='string')
-    ttk.Combobox(add_window, textvariable=type_var,
-                 values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], 
-                 state='readonly').grid(row=current_row, column=1, padx=5, pady=5)
+    ctk.CTkOptionMenu(add_window, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object']).grid(row=current_row, column=1, padx=5, pady=5)
+    # ttk.Combobox(add_window, textvariable=type_var,
+    #              values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], 
+    #              state='readonly').grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
     ttk.Label(add_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
-    value_entry = ttk.Entry(add_window, width = 100)
+    value_entry = ctk.CTkEntry(add_window, width = 800, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     value_entry.bind('<Return>', save_item)
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ctk.CTkButton(add_window, text="Save", command=save_item, cursor = 'hand2', fg_color = '#646cff').grid(row=current_row, column=0, columnspan=2, pady=10)
+    ctk.CTkButton(add_window, text="Save", command=save_item, cursor = 'hand2', fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e').grid(row=current_row, column=0, columnspan=2, pady=10)
+
+def settings() -> None:
+    messagebox('Placeholder', 'Settings is currently not implemented. This is just a placeholder. Settings will be implemented sometime in the near future.')
 
 def main_window() -> None:
     global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
@@ -431,63 +391,45 @@ def main_window() -> None:
         root.attributes('-zoomed', True)
     root.focus()
 
-    frame1 = ttk.Frame(root)
-    frame2 = ttk.Frame(root)
-    frame1.pack(anchor = tk.W)
-    frame2.pack(anchor = tk.CENTER)
-    listbox = tk.Listbox(frame1, height=20, width=100, bg = '#1e1e2e', fg = 'white', highlightbackground='#646cff')
+    listbox = tk.Listbox(root, height=20, width=100, bg = '#1e1e2e', fg = 'white', highlightbackground='#4b50d8', highlightcolor='#646cff')
     listbox.pack()
     for i in file:
         listbox.insert(tk.END, i)
     listbox.bind('<<ListboxSelect>>', configure)
 
-    ttk.Label(frame1, text='Type').pack()
+    ttk.Label(root, text='Type').pack()
     typeVar = tk.StringVar()
-    type_ = ctk.CTkEntry(frame1, state='readonly', textvariable=typeVar, justify = 'center', width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
+    type_ = ctk.CTkEntry(root, state='readonly', textvariable=typeVar, justify = 'center', width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     type_.pack()
 
-    ttk.Label(frame1, text='Value').pack()
+    ttk.Label(root, text='Value').pack()
     valVar = tk.StringVar()
-    valueEntry = ctk.CTkEntry(frame1, state='readonly', textvariable=valVar, width = 800, justify = 'center', fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
+    valueEntry = ctk.CTkEntry(root, state='readonly', textvariable=valVar, width = 800, justify = 'center', fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     valueEntry.pack()
     valueEntry.bind('<Return>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
     valueEntry.bind('<FocusOut>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
 
-    view = ctk.CTkButton(frame1, text='View complex value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    view = ctk.CTkButton(root, text='View complex value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
 
-    edit = ctk.CTkButton(frame1, text='Edit simple value', cursor='hand2', state='disabled', 
+    edit = ctk.CTkButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
                       command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
-    add_button = ctk.CTkButton(frame1, text='Add new item', cursor='hand2', 
+    add_button = ctk.CTkButton(root, text='Add new item', cursor='hand2', 
                             command=lambda: add_new_item(root, file), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
-    remove_button = ctk.CTkButton(frame1, text='Remove item', cursor='hand2', state='disabled',
+    remove_button = ctk.CTkButton(root, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection()[0])), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
-    ttk.Label(root).pack()
-    plain = ctk.CTkButton(frame2, text = 'View plain text', cursor = 'hand2', command = plainText, width = 200, height=40, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e')
-    plain.pack()
-    Hovertip(plain, 'view the JSON data as plain text')
-    loadBtn = ctk.CTkButton(frame2, text = 'Load file', cursor = 'hand2', command = load, width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
-    loadBtn.pack()
-    Hovertip(loadBtn, 'load JSON data from a file (ctrl+o)')
-    saveBtn = ctk.CTkButton(frame2, text = 'Save', cursor = 'hand2', command = save, width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
-    saveBtn.pack()
-    Hovertip(saveBtn, 'save the JSON data (ctrl+s)')
-    saveas = ctk.CTkButton(frame2, text = 'Save as', cursor = 'hand2', command = lambda: save(saveas = True), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
-    saveas.pack()
-    Hovertip(saveas, 'save the JSON data to a file of your choice (ctrl+shift+s)')
-
     # menu bar
-    menubar = tk.Menu(root, bg = '#1e1e2e', fg = 'white')
+    menubar = tk.Menu(root)
     filemenu = tk.Menu(menubar, tearoff = 0)
     filemenu.add_command(label = 'Open', command = load)
     filemenu.add_command(label = 'Save', command = save)
@@ -502,8 +444,15 @@ def main_window() -> None:
     about = tk.Menu(menubar, tearoff = 0)
     about.add_command(label = 'Website', command = lambda: webbrowser.open('https://dudenessboy.github.io/JSONly'))
     about.add_command(label = 'Github repository', command = lambda: webbrowser.open('https://github.com/DudenessBoy/JSONly'))
-    about.add_command(label = 'License', command = showLicense)
+    about.add_command(label = 'License', command = License.showLicense)
     menubar.add_cascade(label = 'About', menu = about)
+    settingmenu = tk.Menu(menubar, tearoff = 0)
+    settingmenu.add_command(label = 'Theme', command = settings)
+    settingmenu.add_command(label = 'Preferences', command = settings)
+    menubar.add_cascade(label = 'Settings', menu = settingmenu)
+    if platform.system() != 'Windows':
+        for menu in (menubar, filemenu, editmenu, about, settingmenu):
+            menu.configure(bg = '#1e1e2e', fg = 'white', activebackground='#646cff', activeforeground='#cccccc')
     root.configure(menu = menubar)
 
     root.bind("<<ValueEdited>>", lambda e: configure())
@@ -544,7 +493,7 @@ def display(val) -> None:
     # disp.grab_set()
     disp.focus()
     
-    listbox = tk.Listbox(disp, height=20, width=100, fg = 'white', bg = '#1e1e2e')
+    listbox = tk.Listbox(disp, height=20, width=100, fg = 'white', bg = '#1e1e2e', highlightbackground='#4b50d8', highlightcolor='#646cff')
     listbox.pack()
     
     def refresh_listbox():
@@ -615,11 +564,11 @@ def display(val) -> None:
     listbox.bind('<<ListboxSelect>>', configure)
     ttk.Label(disp, text='Type').pack()
     typeVar = tk.StringVar()
-    type_ = ttk.Entry(disp, state='readonly', textvariable=typeVar, justify = 'center')
+    type_ = ctk.CTkEntry(disp, state='readonly', textvariable=typeVar, justify = 'center', width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     type_.pack()
     ttk.Label(disp, text='Value').pack()
     valVar = tk.StringVar()
-    valueEntry = ttk.Entry(disp, state='readonly', textvariable=valVar, width = 100, justify = 'center')
+    valueEntry = ctk.CTkEntry(disp, state='readonly', textvariable=valVar, justify = 'center', width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     valueEntry.pack()
     if isinstance(val, dict):
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), key=listbox.get(index)))
@@ -627,21 +576,21 @@ def display(val) -> None:
     else:
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
         valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
-    view = ctk.CTkButton(disp, text='View complex value', cursor='hand2', state='disabled', width = 20, fg_color = '#646cff')
+    view = ctk.CTkButton(disp, text='View complex value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
-    edit = ctk.CTkButton(disp, text='Edit simple value', cursor='hand2', state='disabled', width = 20, fg_color = '#646cff')
+    edit = ctk.CTkButton(disp, text='Edit simple value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
     add_button = ctk.CTkButton(disp, text='Add new item', cursor='hand2', 
-                            command=lambda: add_new_item(disp, val), width = 20, fg_color = '#646cff')
+                            command=lambda: add_new_item(disp, val), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
     remove_button = ctk.CTkButton(disp, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(disp, val, 
                                                            key=listbox.get(listbox.curselection()[0]) if isinstance(val, dict) else None,
-                                                           index=listbox.curselection()[0] if isinstance(val, list) else None), width = 20, fg_color = '#646cff')
+                                                           index=listbox.curselection()[0] if isinstance(val, list) else None), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
@@ -673,7 +622,7 @@ def findWindow(listbox: tk.Listbox) -> None:
     y_offset = (y_center - findWin_height // 2) + 20
     
     findWin.geometry(f"+{x_offset}+{y_offset}")
-    findEntry = ttk.Entry(findWin, width = 50)
+    findEntry = ctk.CTkEntry(findWin, width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     findEntry.pack(side = 'left')
     findEntry.focus()
     findEntry.insert(0, findWord)
@@ -742,71 +691,6 @@ def findPrev(searchKey: str, listbox: tk.Listbox):
                     listbox.selection_set(i)
                     listbox.see(i)
                     break
-
-class Hyperlink(tk.Label):
-    '''A simple hyperlink that opens a website when clicked.\n
-    New parameters:\n
-    • url - the website that is connected to the hyperlink\n
-    • showHovertip - whether or not to show a tooltip for the website\n
-    • changeColor - whether or not to change color when hovered over\n
-    • same - if true and no text or textvariable is given, text is the same as url'''
-    def __init__(self, master: tk.Misc | None = None, *, url: str, font: str | list | tuple = 'Helvetica 10 underline', highlightcolor: str = 'blue', showHovertip: bool = True, same: bool = True, changeColor: bool = True, **kwargs) -> None:
-        if not (url.startswith('https://') or url.startswith('http://')):
-            url = 'http://' + url
-        if kwargs['text'] is None:
-            if same:
-                kwargs['text'] = url
-            else:
-                kwargs['text'] = ''
-        self.changeColor = changeColor
-        self.showHovertip = showHovertip
-        self.same = same
-        self.url = url
-        super().__init__(master, activeforeground='#4FC3F7', disabledforeground='#4FC3F7', fg='#4FC3F7', font=font, foreground='#4FC3F7', highlightcolor=highlightcolor, **kwargs)
-        if showHovertip:
-            Hovertip(self, url)
-    
-    # handle url clicked
-    def _onClick(self, event = None) -> None:
-        webbrowser.open_new_tab(self.url)
-
-    # handle mouse enters url
-    def _onEnter(self, event = None) -> None:
-        self.configure(foreground = '#0077FF', activeforeground = '#0077FF')
-
-    # handle mouse leave url
-    def _onLeave(self, event = None) -> None:
-        self.configure(foreground = '#4FC3F7', activeforeground = '#4FC3F7')
-
-    def _addBindings(self) -> None:
-        self.bind('<Button-1>', self._onClick)
-        if self.changeColor:
-            self.bind('<Enter>', self._onEnter, '+')
-            self.bind('<Leave>', self._onLeave, '+')
-
-    def pack(self, **kwargs) -> None:
-        super().pack(**kwargs)
-        self._addBindings()
-        super().pack_configure(**kwargs)
-
-    def place(self, **kwargs) -> None:
-        super().place(**kwargs)
-        self._addBindings()
-        super().place_configure(**kwargs)
-
-    def grid(self, **kwargs) -> None:
-        super().grid(kwargs)
-        self._addBindings()
-        super().grid_configure(kwargs)
-
-    def configure(self, **kwargs) -> None:
-        self.configure(**kwargs)
-        if 'url' in kwargs:
-            self.url = kwargs['url']
-        if 'same' in kwargs:
-            self.same = kwargs['same']
-        if 'changeColor' in kwargs:
-            self.changeColor = kwargs['changeColor']
 
 root = main_window()
 img = tk.PhotoImage(data = image)
