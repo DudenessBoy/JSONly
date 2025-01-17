@@ -193,16 +193,15 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
 
     # typeBox = ttk.Combobox(edit_window, textvariable=typeVar, 
     #              state='readonly')
-    typeBox = ctk.CTkOptionMenu(edit_window)
+    typeBox = ctk.CTkOptionMenu(edit_window, variable = typeVar, values=('string', 'integer', 'floating point number', 'boolean', 'null'), fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8')
     typeBox.grid(row=current_row, column=1, padx=5, pady=5)
-    typeBox['values'] = ('string', 'integer', 'floating point number', 'boolean', 'null')
-    typeBox.current(num)
+    typeBox.set(typeBox._values[num])
     current_row += 1
 
     ttk.Label(edit_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
-    value_entry = ctk.Entry(edit_window, width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
+    value_entry = ctk.CTkEntry(edit_window, width = 800, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     value_entry.insert(0, str(val[key]).lower() if index is None else str(val[index]).lower())
-    value_entry.selection_range(0, tk.END)
+    value_entry.select_range(0, tk.END)
     value_entry.focus()
     value_entry.bind('<Return>', save_value)
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
@@ -362,7 +361,7 @@ def add_new_item(parent, val) -> None:
 
     ttk.Label(add_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
     type_var = tk.StringVar(value='string')
-    ctk.CTkOptionMenu(add_window, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object']).grid(row=current_row, column=1, padx=5, pady=5)
+    ctk.CTkOptionMenu(add_window, variable = type_var, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8').grid(row=current_row, column=1, padx=5, pady=5)
     # ttk.Combobox(add_window, textvariable=type_var,
     #              values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], 
     #              state='readonly').grid(row=current_row, column=1, padx=5, pady=5)
@@ -377,7 +376,7 @@ def add_new_item(parent, val) -> None:
     ctk.CTkButton(add_window, text="Save", command=save_item, cursor = 'hand2', fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e').grid(row=current_row, column=0, columnspan=2, pady=10)
 
 def settings() -> None:
-    messagebox('Placeholder', 'Settings is currently not implemented. This is just a placeholder. Settings will be implemented sometime in the near future.')
+    messagebox('Placeholder', 'Settings is currently not implemented. This is just a placeholder. Settings will be implemented in the next update.')
 
 def main_window() -> None:
     global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
