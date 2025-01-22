@@ -13,6 +13,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import json
 import platform
 import subprocess
@@ -26,12 +27,25 @@ from tkinter import ttk
 if platform.system() != 'Linux':
     import pyperclip
 
-file = {}
-filename = None
-saved = True
-findWord = ''
+# initialize some variables
+file = {}# JSON data to be viewed
+filename = None # filename to save to
+saved = True # whether or not the data has been saved
+findWord = ''# string in the find feature
+buttons = []
 image = 'iVBORw0KGgoAAAANSUhEUgAAAEIAAABWCAYAAAB7E0BlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPfSURBVHhe7VzRcdswDM0o+XKG6BJZoSNkgNoeoAt0gA7g/0zQAbKAJ+gCTvGkx5wqg6ToCKB8wbt754sFCtAjAVoUo4dAIGCOy/7p+2W/O10OT3/eD0/vU8p3b3LsN02LeD/snnEOOd/f/84hfw/fH3Y/Lz9232i+HaTAp0HnCLHYLAuIprWdc6mwLhhEmPVciRL8LzbNQmuXI0Rjs36QQB5bRADXFgLsPjIkgJMWWInS5oXNs2gVF+xWM8T54zyYGllHHnmKLMTmeMNIO7G5L8T5cR7MlONF755p/inI+SB6URwco7kv5EJftYBACeosn9Web4Wcsyz+ghlpdfBiMwHVC+KtKI4K+X1BMz9ogSRa9kx5JDrPHqjQWiCJNDMBRpvmE0RdopkP0ONaICCGLs1MID6ydWJbQhgH09P3FTYrhPcUulUhQJr5IIQgcL+gBQF+NSG6TWEhBBFCECEEEUIQIQQRQhAhBBFCEPckxCvNTHA/QsgxmplgW0LI8NeCAM2F6Lg6dgXpldLCbfUBzmeh+Z1w9dVzFbUeWetZRgm635FIHZrZolwffFaIKqlpv5ItjooPfSUIl8dulc4408wOuFDNeaLXg9haekIomq6PqgjOD2FL6QGuKgaVx8PX7CwBMl18qjWB2EppCiJuCCKftxVQNKw5SRzt7GcKDc27dVp/9dbSIFFO/NZLhIRhZFTSZMqmOlbNv/FB7JHmm8A4incn+ayl8fI0uUchJB6Z2od6sKIQ8qNEO8mcIkj31ABYK4oCJDalRksRGu36idEU661LBA3TJ467Tp8AfFZjkzSXEb7ejWBtJkE60dQNC1LYpo6xSGoOBzbl3yfB0arGAZp2jDio3XS5jYrSaEC60MwOEkDfOz+iUhvsp/bqkHRID8wUmu8JnVapCr0hx8xXiLCfUvMN3jxF3oJS0UTq0MwM4iM7g3n4/0C5TjgIUbgF8BiRH6gIYb5Ao/lN3I4Q0ls0M4PmN5EmPgghiJ5CYOhrfhNp5oMQggghiBCCCCGIEIIIIYgQggghiBCCKAUTQpAhBBlCkD2FEN++L9XYsBCmvq9QDGb/lf4TuLKkTzMTVKZuvxXsBC2QRIwYmq0OXKzmE4RINPODXGz+2YbhexyQeppP0n/zSrlnbLYJlB7sjOywT0Mcu75jpiYCxKe5L8S52VuHJNez/3Kdo7Rx35/xAXG+aBvilLhINs+iVH9y9NybcQUJYCtvJvOfLeZo2cwFri0ERiWb9ccgxuI3DtZ/Yyw5F8TfxEjQIIG9oIdYFOeBY4P4ooJGYbX3WZ6H78cZxH0XX+Dr4OHhH6RJz7npxayLAAAAAElFTkSuQmCC'
 
+# set the data folder depending on OS
+dataDir = os.path.expanduser('~')
+match platform.system():
+    case'Linux':
+        dataDir = os.path.join(dataDir, '.config', 'JSONly')
+    case 'Darwin':
+        dataDir = os.path.join(dataDir, 'Library', 'Preferences', 'JSONly')
+    case 'Windows':
+        dataDir = os.path.join(dataDir, 'AppData', 'Local', 'JSONly')
+
+# check for unsaved work before closing the main window
 def close() -> None:
     if not saved:
         ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
@@ -42,6 +56,7 @@ def close() -> None:
                 return
     root.destroy()
 
+# display messages in a pop-up
 def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x150'):
     # Create a new window
     window = tk.Toplevel()
@@ -70,7 +85,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
 
     # Add buttons
     for button_text in buttons:
-        button = ctk.CTkButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt), fg_color = '#646cff', hover_color='#4b50d8')
+        button = StyledButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt), height=30, width = 100)
         button.pack(side=tk.LEFT, padx=5)
 
     # Center the window on the screen
@@ -82,6 +97,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     window.wait_window()
     return endVal
 
+# load a file from the disk
 def load(event = None) -> None:
     global filename, file, saved
     if not saved:
@@ -112,12 +128,17 @@ def load(event = None) -> None:
             messagebox('Permission Denied', f'Permission to read the file "{filename}" could not be obtained')
             filename = None
             return
+        except Exception as e:
+            messagebox('Error', f'There was an error while attempting to read the file "{filename}": {e}')
+            filename = None
+            return
         else:
             refresh_listbox(listbox, file)
             saved = True
     else:
         filename = None
 
+# save the file
 def save(event = None, saveas: bool = False) -> bool:
     global filename, saved
     if filename is None or saveas:
@@ -133,13 +154,17 @@ def save(event = None, saveas: bool = False) -> bool:
         filename = None
         return
     except IOError:
-        messagebox('I/O Error', f'There was an error while attempting to write to the file {filename}')
+        messagebox('I/O Error', f'There was an error while attempting to write to the file "{filename}"')
         filename = None
+        return
+    except Exception as e:
+        messagebox('Error', f'There was an error while attempting to write to the file "{dataFile}": {e}')
         return
     else:
         saved = True
         return True
 
+# edit the value, using a dedicated window
 def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=None, index=None) -> None:
     def save_value(event = None):
         new_value = value_entry.get()
@@ -207,8 +232,9 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ctk.CTkButton(edit_window, text="Save", command=save_value, cursor = 'hand2', fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e').grid(row=current_row, column=0, columnspan=2, pady=10)
+    StyledButton(edit_window, text="Save", command=save_value, cursor = 'hand2', height=30, width = 150)
 
+# edit the value directly from the entry widget
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
     new_value = value
     if typeVar.get() == 'integer':
@@ -236,6 +262,7 @@ def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) 
     elif index is not None:
         val[index] = new_value
 
+# remove an item
 def remove_item(parent, val, key=None, index=None) -> None:
     if key is not None:
         del val[key]
@@ -285,6 +312,7 @@ def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> 
         elif isinstance(value, float):
             typeVar.set('floating point number')
 
+# display the file as JSON plain text
 def plainText() -> None:
     win = tk.Toplevel(root)
     win.configure(bg = '#1e1e2e')
@@ -296,11 +324,12 @@ def plainText() -> None:
     text.insert(0.0, json.dumps(file, indent = 2))
     text.configure(state = 'disabled')
     if platform.system() == 'Linux':
-        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+        copy = StyledButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
     else:
-        copy = ctk.CTkButton(win, text = 'Copy', cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+        copy = StyledButton(win, text = 'Copy', cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)))
     copy.pack()
 
+# add a new item to the listbox
 def add_new_item(parent, val) -> None:
     def save_item(event = None):
         new_value = value_entry.get()
@@ -362,9 +391,6 @@ def add_new_item(parent, val) -> None:
     ttk.Label(add_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
     type_var = tk.StringVar(value='string')
     ctk.CTkOptionMenu(add_window, variable = type_var, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8').grid(row=current_row, column=1, padx=5, pady=5)
-    # ttk.Combobox(add_window, textvariable=type_var,
-    #              values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], 
-    #              state='readonly').grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
     ttk.Label(add_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
@@ -373,11 +399,49 @@ def add_new_item(parent, val) -> None:
     value_entry.grid(row=current_row, column=1, padx=5, pady=5)
     current_row += 1
 
-    ctk.CTkButton(add_window, text="Save", command=save_item, cursor = 'hand2', fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, bg_color='#1e1e2e').grid(row=current_row, column=0, columnspan=2, pady=10)
+    StyledButton(add_window, text="Save", command=save_item, cursor = 'hand2', height=30, width = 150).grid(row=current_row, column=0, columnspan=2, pady=10)
 
+# general preferences
 def settings() -> None:
-    messagebox('Placeholder', 'Settings is currently not implemented. This is just a placeholder. Settings will be implemented in the next update.')
+    def configNumLabel(val) -> None:
+        number.config(text = int(val))
+    def close() -> None:
+        data['preferences']['indent'] = int(indent.get())
+        extension = ext.get().strip()
+        if not extension.startswith('.'):
+            extension = '.' + extension
+        data['preferences']['extension'] = extension
+        saveData(data)
+        win.destroy()
+    win = tk.Toplevel(root)
+    win.title('Preferences - JSONly')
+    win.config(bg = '#1e1e2e')
+    win.protocol('WM_DELETE_WINDOW', close)
+    ttk.Label(win, text = 'Indent when saving', font = 1).pack()
+    number = ttk.Label(win, text = data['preferences']['indent'])
+    number.pack()
+    indent = ctk.CTkSlider(win, to = 10, from_ = 0, number_of_steps = 10, command = configNumLabel, button_color='#646cff', button_hover_color='#4b50d8')
+    indent.set(data['preferences']['indent'])
+    indent.pack()
+    ttk.Label(win, text = 'Default file extension to save', font = 1).pack()
+    ext = ctk.CTkEntry(win, width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
+    ext.pack()
+    ext.insert(0, data['preferences']['extension'])
+    ttk.Label
 
+# theme settings
+def theme() -> None:
+    win = tk.Toplevel()
+    win.title('Theme - JSONly')
+    win.config(bg = '#1e1e2e')
+    ttk.Label(win, text = 'Global theme', font = 1).pack()
+    globalTheme = tk.IntVar(value = data['theme']['global'])
+    dark = ctk.CTkRadioButton(win, variable = globalTheme, value = 0, text = 'Dark')
+    dark.pack()
+    light = ctk.CTkRadioButton(win, variable = globalTheme, value = 1, text = 'Light')
+    light.pack()
+
+# construct the main window with all of it's widgets
 def main_window() -> None:
     global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
 
@@ -408,22 +472,22 @@ def main_window() -> None:
     valueEntry.bind('<Return>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
     valueEntry.bind('<FocusOut>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
 
-    view = ctk.CTkButton(root, text='View complex value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    view = StyledButton(root, text='View complex value', cursor='hand2', state='disabled')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
 
-    edit = ctk.CTkButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
-                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    edit = StyledButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
+                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])))
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
-    add_button = ctk.CTkButton(root, text='Add new item', cursor='hand2', 
-                            command=lambda: add_new_item(root, file), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    add_button = StyledButton(root, text='Add new item', cursor='hand2', 
+                            command=lambda: add_new_item(root, file))
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
-    remove_button = ctk.CTkButton(root, text='Remove item', cursor='hand2', state='disabled',
-                               command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection()[0])), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    remove_button = StyledButton(root, text='Remove item', cursor='hand2', state='disabled',
+                               command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection()[0])))
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
@@ -446,7 +510,7 @@ def main_window() -> None:
     about.add_command(label = 'License', command = License.showLicense)
     menubar.add_cascade(label = 'About', menu = about)
     settingmenu = tk.Menu(menubar, tearoff = 0)
-    settingmenu.add_command(label = 'Theme', command = settings)
+    settingmenu.add_command(label = 'Theme', command = theme)
     settingmenu.add_command(label = 'Preferences', command = settings)
     menubar.add_cascade(label = 'Settings', menu = settingmenu)
     if platform.system() != 'Windows':
@@ -466,6 +530,7 @@ def main_window() -> None:
 
     return root
 
+# refresh the listbox in case of new values
 def refresh_listbox(listbox, val) -> None:
     global saved
     saved = False
@@ -484,6 +549,7 @@ def setIndex(listbox: tk.Listbox):
     else:
         index = 0
 
+# display complex value, hopefully replaced with a tree view soon
 def display(val) -> None:
     index = 0
     disp = tk.Toplevel(root)
@@ -567,7 +633,7 @@ def display(val) -> None:
     type_.pack()
     ttk.Label(disp, text='Value').pack()
     valVar = tk.StringVar()
-    valueEntry = ctk.CTkEntry(disp, state='readonly', textvariable=valVar, justify = 'center', width = 200, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
+    valueEntry = ctk.CTkEntry(disp, state='readonly', textvariable=valVar, justify = 'center', width = 800, fg_color='#28293d', border_color='#646cff', bg_color='#1e1e2e')
     valueEntry.pack()
     if isinstance(val, dict):
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), key=listbox.get(index)))
@@ -575,21 +641,21 @@ def display(val) -> None:
     else:
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
         valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
-    view = ctk.CTkButton(disp, text='View complex value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    view = StyledButton(disp, text='View complex value', cursor='hand2', state='disabled')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
-    edit = ctk.CTkButton(disp, text='Edit simple value', cursor='hand2', state='disabled', width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    edit = StyledButton(disp, text='Edit simple value', cursor='hand2', state='disabled',)
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
-    add_button = ctk.CTkButton(disp, text='Add new item', cursor='hand2', 
-                            command=lambda: add_new_item(disp, val), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+    add_button = StyledButton(disp, text='Add new item', cursor='hand2', 
+                            command=lambda: add_new_item(disp, val))
     add_button.pack()
     Hovertip(add_button, 'add a new item')
 
-    remove_button = ctk.CTkButton(disp, text='Remove item', cursor='hand2', state='disabled',
+    remove_button = StyledButton(disp, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(disp, val, 
                                                            key=listbox.get(listbox.curselection()[0]) if isinstance(val, dict) else None,
-                                                           index=listbox.curselection()[0] if isinstance(val, list) else None), width = 200, fg_color = '#646cff', hover_color='#4b50d8', border_color='#1e1e2e', border_width=2, height=40, bg_color='#1e1e2e')
+                                                           index=listbox.curselection()[0] if isinstance(val, list) else None))
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
@@ -597,6 +663,7 @@ def display(val) -> None:
     disp.bind("<<ItemAdded>>", lambda e: refresh_listbox())
     disp.bind("<<ItemRemoved>>", lambda e: refresh_listbox())
 
+# next three functions are for finding objects
 def findWindow(listbox: tk.Listbox) -> None:
     def close() -> None:
         global findmode, findWord
@@ -626,13 +693,13 @@ def findWindow(listbox: tk.Listbox) -> None:
     findEntry.focus()
     findEntry.insert(0, findWord)
     findEntry.select_range(0, tk.END)
-    nextBtn = ctk.CTkButton(findWin, text = '↓', command = lambda: findNext(findEntry.get(), listbox), width = 5, fg_color='#1e1e2e')
+    nextBtn = StyledButton(findWin, text = '↓', command = lambda: findNext(findEntry.get(), listbox), width = 5)
     nextBtn.pack(side = 'left')
     Hovertip(nextBtn, 'find next (enter, up)')
-    prevBtn = ctk.CTkButton(findWin, text = '↑', command = lambda: findPrev(findEntry.get(), listbox), width = 5, fg_color='#1e1e2e')
+    prevBtn = StyledButton(findWin, text = '↑', command = lambda: findPrev(findEntry.get(), listbox), width = 5)
     prevBtn.pack(side = 'left')
     Hovertip(prevBtn, 'find previous (up)')
-    closeBtn = ctk.CTkButton(findWin, text = '×', command = close, width = 5, fg_color='#1e1e2e')
+    closeBtn = StyledButton(findWin, text = '×', command = close, width = 5)
     closeBtn.pack(side = 'left')
     Hovertip(closeBtn, 'close')
     findWin.bind('<Return>', lambda event: findNext(findEntry.get(), listbox))
@@ -691,9 +758,94 @@ def findPrev(searchKey: str, listbox: tk.Listbox):
                     listbox.see(i)
                     break
 
+# save the program's persistant data
+def saveData(data: dict) -> None:
+    if os.path.exists(dataFile):
+        operation = 'write to'
+    else:
+        operation = 'create'
+    try:
+        with open(dataFile, 'w') as f:
+            json.dump(data, f, indent = 2)
+    except PermissionError:
+        messagebox('Permission Denied', f'Permission to {operation} the file "{dataFile}" could not be obtained')
+    except IOError:
+        messagebox('I/O Error', f'There was an error while attempting to {operation} the file "{dataFile}"')
+    except Exception as e:
+        messagebox('Error', f'There was an error while attempting to {operation} the file "{dataFile}": {e}')
+
+# a custom button class, useless outside of this program, pre-sets a lot of things that were causing repitition
+class StyledButton(ctk.CTkButton):
+    def __init__(self, master, width = 200, height=40, text = '', cursor = 'arrow', state = 'normal', command = None) -> None:
+        self.master = master
+        self.width = width
+        self.text = text
+        self.cursor = cursor
+        self.state = state
+        self.command = command
+        match data['theme']['global']:
+            case 0:
+                border_color = '#1e1e2e'
+                bg_color = '#1e1e2e'
+            case 1:
+                border_color = 'white'
+                bg_color = 'white'
+        self.border_color = border_color
+        self.bg_color = bg_color
+        super().__init__(master, width, height, fg_color = '#646cff', hover_color='#4b50d8', border_color=border_color, border_width=2, bg_color=bg_color, text=text, cursor=cursor, state=state, command=command)
+    
+    def changeTheme(self) -> None:
+        match data['theme']['global']:
+            case 0:
+                self.border_color = '#1e1e2e'
+                self.bg_color = '#1e1e2e'
+            case 1:
+                self.border_color = 'white'
+                self.bg_color = 'white'
+        super().configure(bg_color = self.bg_color, border_color = self.border_color)
+
+# load save data
+dataFile = os.path.join(dataDir, 'settings.json')
+os.makedirs(dataDir, exist_ok=True)
+try:
+    with open(dataFile, 'r') as f:
+        data = json.load(f)
+except FileNotFoundError:
+    data = {}
+    saveData(data)
+except PermissionError:
+    messagebox('Permission Denied', f'Permission to read the file "{dataFile}" could not be obtained. Persistant data cannot be read.')
+    data = {}
+except json.JSONDecodeError:
+    messagebox('JSON Decode Error', f'The file "{dataFile}" contains invalid JSON syntax. Persistant data will be overwritten.')
+    data = {}
+    saveData(data)
+except Exception as e:
+    messagebox('Error', f'There was an error while attempting to read the file "{dataFile}": {e}. JSONly will attempt to overwrite persistant data.')
+    data = {}
+    saveData(data)
+
+# make sure all required keys exist and contain valid data
+if 'preferences' not in data.keys():
+    data['preferences'] = {}
+    saveData(data)
+if 'indent' not in data['preferences'].keys():
+    data['preferences']['indent'] = 2
+    saveData(data)
+if 'extension' not in data['preferences'].keys():
+    data['preferences']['extension'] = '.json'
+    saveData(data)
+if 'theme' not in data.keys():
+    data['theme'] = {}
+    saveData(data)
+if 'global' not in data['theme'].keys():
+    data['theme']['global'] = 0
+    saveData(data)
+
 root = main_window()
 img = tk.PhotoImage(data = image)
 root.iconphoto(True, img)
+# styling ttk widgets
 style = ttk.Style()
 style.theme_use('alt')
 style.configure('TButton', background = '#1e1e2e', foreground = 'white', focuscolor = 'gray')
