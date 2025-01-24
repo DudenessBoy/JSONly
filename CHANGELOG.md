@@ -6,7 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Nothing yet
+### Added
+- licensing for the tooltip module
+- functionality to the theme setting
+
+### Fixed
+- Fixed a bug causing 'add new item' window to not fully render on some screens
+
+### Changed
+- Moved embedded image data to a seperate file
+- Reorganized file structure
 
 ## v0.4.0 RC - 1/22/25
 ### Added
