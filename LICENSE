@@ -672,3 +672,11 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+
+---
+
+Additional Notices:
+
+This project includes code derived from Python's standard library, specifically the `idlelib.tooltip` module, which is licensed under the Python Software Foundation License (PSFL). A copy of the PSFL is provided in the file `PSFL.txt`.
+
+The inclusion of this code does not affect the GPL licensing of the project as a whole, as the PSFL is GPL-compatible.
