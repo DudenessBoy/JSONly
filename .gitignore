@@ -1,2 +1,3 @@
 dist/
+__pycache__/
 JSONly/__pycache__/
