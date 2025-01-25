@@ -1,6 +1,6 @@
 # JSONly
 
-Jsonly is a lightweight, user-friendly GUI JSON editor designed to make working with JSON files simple and efficient. Built with a focus on usability, Jsonly provides an intuitive interface for viewing, editing, and managing JSON data without overwhelming you with unnecessary features.
+JSONly is a lightweight, user-friendly GUI JSON editor designed to make working with JSON files simple and efficient. Built with a focus on usability, Jsonly provides an intuitive interface for viewing, editing, and managing JSON data without overwhelming you with unnecessary features.
 
 ## Features
 - Plain Text Viewer: View and copy the raw JSON content with a single click.
