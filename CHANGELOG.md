@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- nothing yet
+
+## v0.4.0 RC 2 - 1/25/2025
 ### Added
 - licensing for the tooltip module
 - functionality to the theme setting
@@ -17,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved embedded image data to a seperate file
 - Reorganized file structure
 
-## v0.4.0 RC - 1/22/25
+## v0.4.0 RC - 1/22/2025
 ### Added
 - Preferences
 - Theme settings
