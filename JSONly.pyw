@@ -550,6 +550,7 @@ def main_window() -> None:
     root.bind('<Control-Shift-KeyPress-s>', lambda: save(saveas = True))
     root.protocol('WM_DELETE_WINDOW', close)
     root.bind('<Control-f>', lambda e: findWindow(listbox))
+    root.bind('<Button-3>', context)
     listbox.bind('<Delete>', lambda e: remove_button.invoke())
 
     return root
@@ -799,6 +800,21 @@ def saveData(data: dict) -> None:
         messagebox('I/O Error', f'There was an error while attempting to {operation} the file "{dataFile}"')
     except Exception as e:
         messagebox('Error', f'There was an error while attempting to {operation} the file "{dataFile}": {e}')
+
+# context menu
+def context(event: tk.Event) -> None:
+    contextMenu = tk.Menu(root, tearoff=0)
+    contextMenu.add_command(label='Save', command=save)
+    contextMenu.add_command(label='Save as', command=lambda: save(saveas=True))
+    contextMenu.add_command(label='Open', command=load)
+    contextMenu.add_separator()
+    contextMenu.add_command(label='Add new item', command=add_button.invoke)
+    contextMenu.add_command(label='Remove selected item', command=remove_button.invoke)
+    contextMenu.add_separator()
+    contextMenu.add_command(label='Show plain text', command=plainText)
+    contextMenu.tk_popup(event.x_root, event.y_root)
+    if platform.system() != 'Windows':
+        contextMenu.configure(bg = color, fg = fore, activebackground='#646cff', activeforeground='#cccccc')
 
 # a custom button class, useless outside of this program, pre-sets a lot of things that were causing repitition
 class StyledButton(ctk.CTkButton):
