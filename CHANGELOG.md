@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - right-click context menu
+- Automatic resize functionality for main listbox
 
 ## v0.4.0 RC 2 - 1/25/2025
 ### Added

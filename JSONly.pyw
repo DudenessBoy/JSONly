@@ -478,7 +478,7 @@ def main_window() -> None:
         root.attributes('-zoomed', True)
     root.focus()
 
-    listbox = tk.Listbox(root, height=20, width=100, bg = color, fg = fore, highlightbackground='#4b50d8', highlightcolor='#646cff')
+    listbox = ResizableListbox(root, height=20, width=100, bg = color, fg = fore, highlightbackground='#4b50d8', highlightcolor='#646cff')
     listbox.pack()
     for i in file:
         listbox.insert(tk.END, i)
@@ -583,7 +583,7 @@ def display(val) -> None:
     # disp.grab_set()
     disp.focus()
     
-    listbox = tk.Listbox(disp, height=20, width=100, fg = fore, bg = color, highlightbackground='#4b50d8', highlightcolor='#646cff')
+    listbox = ResizableListbox(disp, height=20, width=100, fg = fore, bg = color, highlightbackground='#4b50d8', highlightcolor='#646cff')
     listbox.pack()
     
     def refresh_listbox():
@@ -845,6 +845,73 @@ class StyledButton(ctk.CTkButton):
                 self.border_color = fore
                 self.bg_color = fore
         super().configure(bg_color = self.bg_color, border_color = self.border_color)
+
+# custom listbox class that will dynamically resize with the window
+class ResizableListbox(tk.Listbox):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self._master = master
+        
+        # Wait for widget to be fully created before binding
+        self.after_idle(self._setup_resize_binding)
+
+    def _setup_resize_binding(self):
+        if self._master:
+            # Only respond to actual size changes, not moves
+            self._master.bind('<Configure>', self._on_configure)
+            # Force initial sizing
+            self.update_idletasks()
+            self.auto_resize(self._create_dummy_event())
+
+    def _on_configure(self, event):
+        # Only handle if size actually changed
+        if hasattr(self, '_last_size'):
+            if (event.width, event.height) == self._last_size:
+                return
+        self._last_size = (event.width, event.height)
+        self.auto_resize(event)
+
+    def auto_resize(self, event):
+        """
+        Dynamically resize listbox based on parent window height.
+        Leaves room for other UI components (like buttons).
+        Converts pixel height to number of rows.
+        """
+        if self._master:
+            # Get the height of a single line in pixels
+            font = self.cget('font')
+            if isinstance(font, str):
+                font_obj = tk.font.nametofont(font)
+            else:
+                font_obj = font
+            line_height = font_obj.metrics('linespace')
+
+            # Convert available pixels to number of rows
+            total_rows = event.height // line_height
+            
+            # Don't let padding take more than 70% of the total height
+            max_padding = int(total_rows * 0.7)
+            padding_rows = 16
+            padding_rows = min(padding_rows, max_padding)
+            
+            rows = total_rows - padding_rows
+            
+            # Limit maximum number of rows to 50
+            rows = min(rows, 50)
+            
+            # Ensure a minimum of 5 rows, but don't let it exceed 80% of total height
+            min_rows = min(1, int(total_rows * 0.8))
+            rows = max(rows, min_rows)
+            
+            self.config(height=int(rows))
+
+    def _create_dummy_event(self):
+        """Creates a dummy event with the correct height."""
+        class DummyEvent:
+            def __init__(self, height):
+                self.height = height
+
+        return DummyEvent(self._master.winfo_height())
 
 # load save data
 dataFile = os.path.join(dataDir, 'settings.json')
