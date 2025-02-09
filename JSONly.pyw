@@ -900,7 +900,7 @@ class ResizableListbox(tk.Listbox):
             rows = min(rows, 50)
             
             # Ensure a minimum of 5 rows, but don't let it exceed 80% of total height
-            min_rows = min(1, int(total_rows * 0.8))
+            min_rows = 5#min(1, int(total_rows * 0.8))
             rows = max(rows, min_rows)
             
             self.config(height=int(rows))
