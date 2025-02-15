@@ -21,6 +21,7 @@ import webbrowser
 from plyer import filechooser
 import tkinter as tk
 import customtkinter as ctk
+from CTkListbox import CTkListbox # because listbox isn't included by default in customtkinter, made by another person
 import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
@@ -478,7 +479,7 @@ def main_window() -> None:
         root.attributes('-zoomed', True)
     root.focus()
 
-    listbox = ResizableListbox(root, height=20, width=100, bg = color, fg = fore, highlightbackground='#4b50d8', highlightcolor='#646cff')
+    listbox = ResizableListbox(root, width=500, bg_color = color, fg_color = fore)
     listbox.pack()
     for i in file:
         listbox.insert(tk.END, i)
@@ -847,71 +848,32 @@ class StyledButton(ctk.CTkButton):
         super().configure(bg_color = self.bg_color, border_color = self.border_color)
 
 # custom listbox class that will dynamically resize with the window
-class ResizableListbox(tk.Listbox):
+class ResizableListbox(CTkListbox):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
         self._master = master
         
-        # Wait for widget to be fully created before binding
-        self.after_idle(self._setup_resize_binding)
-
-    def _setup_resize_binding(self):
-        if self._master:
-            # Only respond to actual size changes, not moves
-            self._master.bind('<Configure>', self._on_configure)
-            # Force initial sizing
-            self.update_idletasks()
-            self.auto_resize(self._create_dummy_event())
-
-    def _on_configure(self, event):
-        # Only handle if size actually changed
-        if hasattr(self, '_last_size'):
-            if (event.width, event.height) == self._last_size:
-                return
-        self._last_size = (event.width, event.height)
-        self.auto_resize(event)
+        self._master.bind('<Configure>', self.auto_resize)
+        self.after(10, self.auto_resize, self._create_dummy_event())  # Delay initial resize
 
     def auto_resize(self, event):
         """
         Dynamically resize listbox based on parent window height.
         Leaves room for other UI components (like buttons).
-        Converts pixel height to number of rows.
         """
         if self._master:
-            # Get the height of a single line in pixels
-            font = self.cget('font')
-            if isinstance(font, str):
-                font_obj = tk.font.nametofont(font)
-            else:
-                font_obj = font
-            line_height = font_obj.metrics('linespace')
-
-            # Convert available pixels to number of rows
-            total_rows = event.height // line_height
-            
-            # Don't let padding take more than 70% of the total height
-            max_padding = int(total_rows * 0.7)
-            padding_rows = 16
-            padding_rows = min(padding_rows, max_padding)
-            
-            rows = total_rows - padding_rows
-            
-            # Limit maximum number of rows to 50
-            rows = min(rows, 50)
-            
-            # Ensure a minimum of 5 rows, but don't let it exceed 80% of total height
-            min_rows = 5#min(1, int(total_rows * 0.8))
-            rows = max(rows, min_rows)
-            
-            self.config(height=int(rows))
+            padding = 300 # padding for buttons
+            available = max(self._master.winfo_height() - padding, 1)# Prevent negative or zero height
+            super().configure(height = available)
 
     def _create_dummy_event(self):
-        """Creates a dummy event with the correct height."""
+        """Creates a dummy event with a safe height value."""
         class DummyEvent:
             def __init__(self, height):
-                self.height = height
+                self.height = max(height, 50)
+                # Ensure height is not zero or negative
 
-        return DummyEvent(self._master.winfo_height())
+        return DummyEvent(self._master.winfo_height() or 50)
 
 # load save data
 dataFile = os.path.join(dataDir, 'settings.json')
