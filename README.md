@@ -38,13 +38,15 @@ If you plan to run JSONly from the source code, you will need to install the fol
    - For Windows
      - Installing from **Winget**:
          ```bash
-         winget install Python.Python3.12
+         winget install Python.Python3.13
      - Windows installer:
          https://www.python.org/downloads/windows/  
-   -For MacOS
-     -Installing from **Homebrew**
-     ```bash
-     brew install python@3.13
+   - For MacOS
+     - Installing from **Homebrew**
+        ```bash
+        brew install python@3.13
+     - MacOS PKG installer:
+         https://www.python.org/downloads/macos/
    - Other download options:
          https://python.org/downloads  
 
