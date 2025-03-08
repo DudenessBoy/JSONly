@@ -21,7 +21,7 @@ import webbrowser
 from plyer import filechooser
 import tkinter as tk
 import customtkinter as ctk
-from CTkListbox import CTkListbox # because listbox isn't included by default in customtkinter, made by another person
+from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
@@ -60,7 +60,7 @@ def close() -> None:
 # display messages in a pop-up
 def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x150'):
     # Create a new window
-    window = tk.Toplevel()
+    window = ctk.CTkToplevel()
     window.configure(bg = color)
     window.title(title)
     window.geometry(geometry)
@@ -197,7 +197,7 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
         edit_window.destroy()
         parent.event_generate("<<ValueEdited>>")
 
-    edit_window = tk.Toplevel(parent)
+    edit_window = ctk.CTkToplevel(parent)
     edit_window.configure(bg = color)
     edit_window.title("Edit Value")
     edit_window.focus()
@@ -314,7 +314,7 @@ def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> 
 
 # display the file as JSON plain text
 def plainText() -> None:
-    win = tk.Toplevel(root)
+    win = ctk.CTkToplevel(root)
     win.configure(bg = color)
     win.title('JSONly (plain text)')
     win.focus()
@@ -372,7 +372,7 @@ def add_new_item(parent, val) -> None:
         add_window.destroy()
         parent.event_generate("<<ItemAdded>>")
 
-    add_window = tk.Toplevel(parent)
+    add_window = ctk.CTkToplevel(parent)
     add_window.geometry('900x150')
     add_window.configure(bg = color)
     add_window.title("Add New Item")
@@ -416,7 +416,7 @@ def settings() -> None:
         data['preferences']['extension'] = extension
         saveData(data)
         win.destroy()
-    win = tk.Toplevel(root)
+    win = ctk.CTkToplevel(root)
     win.title('Preferences - JSONly')
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
@@ -453,7 +453,7 @@ def theme() -> None:
         # changeTheme()
         saveData(data)
         win.destroy()
-    win = tk.Toplevel()
+    win = ctk.CTkToplevel()
     win.title('Theme - JSONly')
     win.grab_set()
     win.config(bg = color)
@@ -470,16 +470,16 @@ def theme() -> None:
 def main_window() -> None:
     global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
 
-    root = tk.Tk()
+    root = ctk.CTk()
     root.configure(bg = color)
     root.title('JSONly')
     if platform.system() == 'Windows':
         root.state('zoomed')
-    else:
+    elif platform.system() == 'Linux':
         root.attributes('-zoomed', True)
     root.focus()
 
-    listbox = ResizableListbox(root, width=500, bg_color = color, fg_color = fore)
+    listbox = ResizableListbox(root, width=800, bg_color = color, fg_color = fore)
     listbox.pack()
     for i in file:
         listbox.insert(tk.END, i)
@@ -578,13 +578,13 @@ def setIndex(listbox: tk.Listbox):
 # display complex value, hopefully replaced with a tree view soon
 def display(val) -> None:
     index = 0
-    disp = tk.Toplevel(root)
+    disp = ctk.CTkToplevel(root)
     disp.configure(bg = color)
     disp.title('JSONly (complex value)')
     # disp.grab_set()
     disp.focus()
     
-    listbox = ResizableListbox(disp, height=20, width=100, fg = fore, bg = color, highlightbackground='#4b50d8', highlightcolor='#646cff')
+    listbox = ResizableListbox(disp, width=800, fg = fore, bg = color, highlightbackground='#4b50d8', highlightcolor='#646cff')
     listbox.pack()
     
     def refresh_listbox():
@@ -696,7 +696,7 @@ def findWindow(listbox: tk.Listbox) -> None:
         global findmode, findWord
         findWord = findEntry.get()
         findWin.destroy()
-    findWin = tk.Toplevel(root)
+    findWin = ctk.CTkToplevel(root)
     findWin.configure(bg = color)
     findWin.focus()
     # findWin.grab_set()
@@ -854,7 +854,7 @@ class ResizableListbox(CTkListbox):
         self._master = master
         
         self._master.bind('<Configure>', self.auto_resize)
-        self.after(10, self.auto_resize, self._create_dummy_event())  # Delay initial resize
+        self.after(10, self.auto_resize, self._create_dummy_event())# Delay initial resize
 
     def auto_resize(self, event):
         """
@@ -926,17 +926,7 @@ root.iconphoto(True, img)
 # styling ttk widgets
 style = ttk.Style()
 style.theme_use('alt')
-style.configure('TButton', background = color, foreground = fore, focuscolor = 'gray')
-style.map('TButton', background = [('disabled', '#383846'), ('active', '#2a2a3a')])
 style.configure('TLabel', background = color, foreground = fore)
-style.configure('TEntry', foreground = fore, fieldbackground = color, insertcolor = fore)
-style.map('TEntry', fieldbackground = [('readonly', '#2a2a3a')])
-style.configure('TCombobox', foreground = fore, fieldbackground = color, background = color, arrowcolor = fore, insertcolor = fore)
-style.map('TCombobox', fieldbackground = [('readonly', '#2a2a3a')], background = [('active', '!focus', '#2a2a3a')])
-style.configure('Vertical.TScrollbar', background = color, troughcolor = color, arrowcolor = fore)
-style.map('Vertical.TScrollbar', background = [('active', '!focus', '#2a2a3a')])
 style.configure('TFrame', background = color)
-root.option_add('*TCombobox*Listbox.background', color)
-root.option_add('*TCombobox*Listbox.foreground', fore)
 del img, image
 root.mainloop()
