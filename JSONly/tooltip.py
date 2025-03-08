@@ -5,8 +5,8 @@
 # For more information, see: https://docs.python.org/3/license.html
 
 # Modifications Summary:
-# - Removed several lines for testing tooltips
-# - Removed an unecessary function
+# - Removed several lines for testing tooltips (177)
+# - Removed an unecessary function (179)
 # See inline comments for detailed changes.
 
 
