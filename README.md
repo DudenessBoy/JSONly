@@ -51,7 +51,7 @@ If you plan to run JSONly from the source code, you will need to install the fol
          https://python.org/downloads  
 
 ## Platform Compatibility
-JSONly has been tested on Linux, MacOS, and Windows.
+JSONly has been tested on Linux, MacOS, and Windows on x86_64 processors. ARM compatibility is not guaranteed, but should work.
 
 Mobile compatibility (Android and iOS) is planned but not yet implemented.
 
