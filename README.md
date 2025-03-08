@@ -23,7 +23,7 @@ If you plan to run JSONly from the source code, you will need to install the fol
 4. **PyWin32** (Windows only)
    ```bash
    pip install pywin32
-5. **Python** 3.8 or above
+5. **Python** 3.10 or above
    - For Linux (note: most Linux distributions come with Python preinstalled):
      - For **Debian-based distributions** (e.g., Ubuntu):
        ```bash
@@ -40,17 +40,21 @@ If you plan to run JSONly from the source code, you will need to install the fol
          ```bash
          winget install Python.Python3.12
      - Windows installer:
-         https://www.python.org/downloads/windows/
+         https://www.python.org/downloads/windows/  
+   -For MacOS
+     -Installing from **Homebrew**
+     ```bash
+     brew install python@3.13
    - Other download options:
-         https://python.org/downloads
+         https://python.org/downloads  
 
 ## Platform Compatibility
-JSONly has been tested on Linux and Windows. It has not been tested on macOS, so compatibility on macOS is not guaranteed.
+JSONly has been tested on Linux, MacOS, and Windows.
 
 Mobile compatibility (Android and iOS) is planned but not yet implemented.
 
 ## Usage
-Run the executable for a hassle-free experience.
+Run the release file for a hassle-free experience.
 If running from source, use the following command:
 ```bash
 python JSONly.pyw
