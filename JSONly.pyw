@@ -110,6 +110,7 @@ def load(event = None) -> None:
                 return
     filename = filechooser.open_file(title = 'something', filters=[("JSON files", "*.json"), ('All files', '*.*')])
     if filename:
+        filename = filename[0]
         try:
             with open(filename, 'r', encoding = 'utf-8') as f:
                 file = json.load(f)
