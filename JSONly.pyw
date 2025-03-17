@@ -36,15 +36,22 @@ saved = True # whether or not the data has been saved
 findWord = ''# string in the find feature
 buttons = []
 
-# set the data folder depending on OS
-dataDir = os.path.expanduser('~')
+# set the data and configuration folders depending on OS
 match platform.system():
     case'Linux':
-        dataDir = os.path.join(dataDir, '.config', 'JSONly')
-    case 'Darwin':
-        dataDir = os.path.join(dataDir, 'Library', 'Preferences', 'JSONly')
+        configDir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.getenv('HOME', ''), '.config')) # get $XDG_CONFIG_HOME, if not set default to $HOME/.config
+        dataDir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', ''), '.local', 'share')) # seperate data directory to comply with XDG Base Directory Specification
+    case 'Darwin': # MacOS
+        configDir = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
+        dataDir = os.path.join(configDir, 'data')
     case 'Windows':
-        dataDir = os.path.join(dataDir, 'AppData', 'Local', 'JSONly')
+        configDir = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE\AppData\Local
+        dataDir = os.path.join(configDir, 'data')
+    case _:
+        configDir = '.' # attempt to store data in same directory as the program if the OS is something other than Windows, MacOS or Linux
+        dataDir = configDir
+configDir = os.path.join(configDir, 'JSONly')
+dataDir = os.path.join(dataDir, 'JSONly')
 
 # check for unsaved work before closing the main window
 def close() -> None:
@@ -456,7 +463,7 @@ def theme() -> None:
         win.destroy()
     win = tk.Toplevel()
     win.title('Theme - JSONly')
-    win.grab_set()
+    # win.grab_set()
     win.config(bg = color)
     ttk.Label(win, text = 'Global theme', font = 1).pack()
     globalTheme = tk.IntVar(value = data['theme']['global'])
@@ -877,7 +884,8 @@ class ResizableListbox(CTkListbox):
         return DummyEvent(self._master.winfo_height() or 50)
 
 # load save data
-dataFile = os.path.join(dataDir, 'settings.json')
+dataFile = os.path.join(configDir, 'settings.json')
+os.makedirs(configDir, exist_ok=True)
 os.makedirs(dataDir, exist_ok=True)
 try:
     with open(dataFile, 'r') as f:
