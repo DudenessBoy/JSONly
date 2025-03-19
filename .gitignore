@@ -2,3 +2,4 @@ packaging/
 .venv/
 __pycache__/
 JSONly/__pycache__/
+Linux/dist

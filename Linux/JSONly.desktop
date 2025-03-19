@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=JSONly
+Exec=JSONly %F
+Icon=JSONly
+Categories=Development;
+StartupWMClass=JSONly
+Terminal=false
+MimeType=application/json;
+Comment=A GUI JSON editor
+Keywords=json;editor;viewer;development;
