@@ -458,7 +458,8 @@ def writeFile(path: str, data: str) -> bool:
 def loadData(path: str, default: str) -> str:
     try:
         with open(path, 'r') as f:
-            return f
+            ret = f.read()
+            return ret
     except FileNotFoundError:
         writeFile(path, default)
         return default
@@ -921,7 +922,7 @@ dataFile = os.path.join(configDir, 'settings.json')
 os.makedirs(configDir, exist_ok=True)
 os.makedirs(dataDir, exist_ok=True)
 try:
-    data = json.load(loadData(dataFile, r'{}'))
+    data = json.loads(loadData(dataFile, r'{}'))
 except json.JSONDecodeError:
     messagebox('JSON Decode Error', f'The file "{dataFile}" contains invalid JSON syntax. Persistant data will be overwritten.')
     data = {}
