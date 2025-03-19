@@ -59,7 +59,7 @@ Mobile compatibility (Android and iOS) is planned but not yet implemented.
 Run the release file for a hassle-free experience.
 If running from source, use the following command:
 ```bash
-python JSONly.pyw
+python main.pyw
 ```
 ## License
 JSONly is released under the GPL License. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
