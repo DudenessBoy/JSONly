@@ -44,7 +44,7 @@ ensureFolder() {
 mkdir dist/
 cd dist
 
-cp ../../JSONly.pyw ./JSONly # make a copy of the program that will be executable
+cp ../../main.pyw ./JSONly # make a copy of the program that will be executable
 
 # add a shebang and mark it executable
 sed -i '1i #!/usr/bin/python3' JSONly
