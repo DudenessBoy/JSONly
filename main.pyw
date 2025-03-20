@@ -896,9 +896,14 @@ class ResizableListbox(CTkListbox):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
         self._master = master
-        
-        self._master.bind('<Configure>', self.auto_resize)
-        # self.after(10, self.auto_resize, self._create_dummy_event())# Delay initial resize
+        self._resize_timer = None
+
+        self._master.bind('<Configure>', self.debounce_resize)
+
+    def debounce_resize(self, event):
+        if self._resize_timer is not None:
+            self._master.after_cancel(self._resize_timer)
+        self._resize_timer = self._master.after(150, self.auto_resize, event)
 
     def auto_resize(self, event):
         """
@@ -907,17 +912,8 @@ class ResizableListbox(CTkListbox):
         """
         if self._master:
             padding = 300 # padding for buttons
-            available = max(self._master.winfo_height() - padding, 1)# Prevent negative or zero height
+            available = max(self._master.winfo_height() - padding, 1) # Prevent negative or zero height
             super().configure(height = available)
-
-    def _create_dummy_event(self):
-        """Creates a dummy event with a safe height value."""
-        class DummyEvent:
-            def __init__(self, height):
-                self.height = max(height, 50)
-                # Ensure height is not zero or negative
-
-        return DummyEvent(self._master.winfo_height() or 50)
 
 # load save data
 dataFile = os.path.join(configDir, 'settings.json')
