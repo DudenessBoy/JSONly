@@ -17,7 +17,7 @@ If you plan to run JSONly from the source code, you will need to install the fol
 2. **CustomTkinter**
    ```bash
    pip install customtkinter
-3. **pyperclip** (Windows only)
+3. **pyperclip** (Windows and MacOS only)
    ```bash
    pip install pyperclip
 4. **PyWin32** (Windows only)
