@@ -27,7 +27,9 @@ import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
 from tkinter import ttk
-if platform.system() != 'Linux':
+if platform.system() == 'Linux':
+    import subprocess
+else:
     import pyperclip
 
 # initialize some variables
@@ -896,7 +898,7 @@ class ResizableListbox(CTkListbox):
         self._master = master
         
         self._master.bind('<Configure>', self.auto_resize)
-        self.after(10, self.auto_resize, self._create_dummy_event())# Delay initial resize
+        # self.after(10, self.auto_resize, self._create_dummy_event())# Delay initial resize
 
     def auto_resize(self, event):
         """
