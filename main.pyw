@@ -38,6 +38,7 @@ filename = None # filename to save to
 saved = True # whether or not the data has been saved
 findWord = ''# string in the find feature
 buttons = []
+isEnabled = True
 
 # set the data and configuration folders depending on OS
 match platform.system():
@@ -59,6 +60,8 @@ dataDir = os.path.join(dataDir, 'JSONly')
 
 # check for unsaved work before closing the main window
 def close() -> None:
+    if not isEnabled:
+        return
     if not saved:
         ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
         if ans == 'Cancel':
@@ -91,6 +94,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
         if callback:
             callback(btn_text)
         endVal = btn_text
+        enableWidgets(root)
         window.destroy()
     
     endVal = 'closed'
@@ -106,8 +110,27 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     # Prevent interaction with the main window
     window.transient()
     # window.grab_set()
+    window.attributes('-topmost', True)
+    disableWidgets(root)
+    window.protocol('WM_DELETE_WINDOW', lambda: on_button_click(buttons[-1]))
     window.wait_window()
     return endVal
+
+def disableWidgets(parent):
+        """Disable all interactive widgets in the parent window."""
+        global isEnabled
+        isEnabled = False
+        for widget in parent.winfo_children():
+            if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
+                widget.configure(state=tk.DISABLED)
+
+def enableWidgets(parent):
+    """Re-enable all widgets in the parent window."""
+    global isEnabled
+    isEnabled = True
+    for widget in parent.winfo_children():
+        if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
+            widget.configure(state=tk.NORMAL)
 
 # load a file from the disk
 def load(event = None) -> None:
@@ -210,6 +233,8 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
         parent.event_generate("<<ValueEdited>>")
 
     edit_window = tk.Toplevel(parent)
+    disableWidgets(root)
+    edit_window.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), edit_window.destroy()])
     edit_window.configure(bg = color)
     edit_window.title("Edit Value")
     edit_window.focus()
@@ -385,6 +410,8 @@ def add_new_item(parent, val) -> None:
         parent.event_generate("<<ItemAdded>>")
 
     add_window = tk.Toplevel(parent)
+    disableWidgets(root)
+    add_window.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), add_window.destroy()])
     add_window.geometry('900x150')
     add_window.configure(bg = color)
     add_window.title("Add New Item")
@@ -429,6 +456,8 @@ def settings() -> None:
         saveData(data)
         win.destroy()
     win = tk.Toplevel(root)
+    disableWidgets(root)
+    win.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), win.destroy()])
     win.title('Preferences - JSONly')
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
@@ -498,6 +527,8 @@ def theme() -> None:
         saveData(data)
         win.destroy()
     win = tk.Toplevel()
+    disableWidgets(root)
+    win.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), win.destroy()])
     win.title('Theme - JSONly')
     # win.grab_set()
     win.config(bg = color)
@@ -743,6 +774,8 @@ def findWindow(listbox: tk.Listbox) -> None:
         findWord = findEntry.get()
         findWin.destroy()
     findWin = tk.Toplevel(root)
+    disableWidgets(root)
+    findWin.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), findWin.destroy()])
     findWin.configure(bg = color)
     findWin.focus()
     # findWin.grab_set()
