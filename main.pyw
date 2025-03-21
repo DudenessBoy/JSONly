@@ -284,8 +284,8 @@ def remove_item(parent, val, key=None, index=None) -> None:
 
 def configure(event=None) -> None:
     setIndex(listbox)
-    if listbox.curselection():
-        key = listbox.get(listbox.curselection()[0])
+    if listbox.curselection() >= 0:
+        key = listbox.get(listbox.curselection())
         value = file[key]
         update_value_display(value, typeVar, valVar)
         
@@ -646,8 +646,8 @@ def display(val) -> None:
 
     def configure(event=None):
         setIndex(listbox)
-        if listbox.curselection():
-            index = listbox.curselection()[0]
+        if listbox.curselection() >= 0:
+            index = listbox.curselection()
             if isinstance(val, dict):
                 key = listbox.get(index)
                 value = val[key]
