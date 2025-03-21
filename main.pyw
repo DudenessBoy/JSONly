@@ -61,6 +61,7 @@ dataDir = os.path.join(dataDir, 'JSONly')
 # check for unsaved work before closing the main window
 def close() -> None:
     if not isEnabled:
+        print('closing blocked by popup')
         return
     if not saved:
         ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
@@ -117,16 +118,18 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     return endVal
 
 def disableWidgets(parent):
-        """Disable all interactive widgets in the parent window."""
-        global isEnabled
-        isEnabled = False
-        for widget in parent.winfo_children():
-            if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
-                widget.configure(state=tk.DISABLED)
+    """Disable all interactive widgets in the parent window."""
+    global isEnabled
+    print('disabled main window')
+    isEnabled = False
+    for widget in parent.winfo_children():
+        if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
+            widget.configure(state=tk.DISABLED)
 
 def enableWidgets(parent):
     """Re-enable all widgets in the parent window."""
     global isEnabled
+    print('enabled main window')
     isEnabled = True
     for widget in parent.winfo_children():
         if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
@@ -232,6 +235,7 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
         elif index is not None:
             val[index] = new_value
         
+        enableWidgets(root)
         edit_window.destroy()
         parent.event_generate("<<ValueEdited>>")
 
@@ -409,6 +413,7 @@ def add_new_item(parent, val) -> None:
         elif isinstance(val, list):
             val.append(new_value)
         
+        enableWidgets(root)
         add_window.destroy()
         parent.event_generate("<<ItemAdded>>")
 
@@ -457,6 +462,7 @@ def settings() -> None:
             extension = '.' + extension
         data['preferences']['extension'] = extension
         saveData(data)
+        enableWidgets(root)
         win.destroy()
     win = tk.Toplevel(root)
     disableWidgets(root)
@@ -528,6 +534,7 @@ def theme() -> None:
         data['theme']['global'] = globalTheme.get()
         # changeTheme()
         saveData(data)
+        enableWidgets(root)
         win.destroy()
     win = tk.Toplevel()
     disableWidgets(root)
@@ -775,10 +782,10 @@ def findWindow(listbox: tk.Listbox) -> None:
     def close() -> None:
         global findmode, findWord
         findWord = findEntry.get()
+        enableWidgets(root)
         findWin.destroy()
     findWin = tk.Toplevel(root)
     disableWidgets(root)
-    findWin.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), findWin.destroy()])
     findWin.configure(bg = color)
     findWin.focus()
     # findWin.grab_set()
@@ -999,7 +1006,7 @@ style.configure('TFrame', background = color)
 del img, image
 
 if len(sys.argv) > 1:
-    print(sys.argv[1])
+    print('opened:', sys.argv[1])
     load(filePath = sys.argv[1])
 
 root.mainloop()
