@@ -134,6 +134,7 @@ def enableWidgets(parent):
     for widget in parent.winfo_children():
         if isinstance(widget, (StyledButton, ResizableListbox, ctk.CTkEntry, ctk.CTkOptionMenu)):
             widget.configure(state=tk.NORMAL)
+    configure()
 
 # load a file from the disk
 def load(event = None, filePath = None) -> None:
@@ -316,7 +317,7 @@ def remove_item(parent, val, key=None, index=None) -> None:
 
 def configure(event=None) -> None:
     setIndex(listbox)
-    if listbox.curselection() >= 0:
+    if listbox.curselection() != None:
         key = listbox.get(listbox.curselection())
         value = file[key]
         update_value_display(value, typeVar, valVar)
@@ -333,6 +334,9 @@ def configure(event=None) -> None:
         remove_button.configure(state='normal')
     else:
         remove_button.configure(state='disabled')
+        view.configure(state='disabled')
+        edit.configure(state='disabled')
+        valueEntry.configure(state='readonly')
 
 def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> None:
     if value is None:
@@ -689,7 +693,7 @@ def display(val) -> None:
 
     def configure(event=None):
         setIndex(listbox)
-        if listbox.curselection() >= 0:
+        if listbox.curselection() != None:
             index = listbox.curselection()
             if isinstance(val, dict):
                 key = listbox.get(index)
@@ -711,6 +715,9 @@ def display(val) -> None:
             remove_button.configure(state='normal')
         else:
             remove_button.configure(state='disabled')
+            view.configure(state='disabled')
+            edit.configure(state='disabled')
+            valueEntry.configure(state='readonly')
 
     def directEdit(parent, otherVal, typeVar: tk.StringVar, value, key=None, index=None) -> None:
         new_value = value
