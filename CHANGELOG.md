@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - interaction with main window no longer allowed while popup shows
-- listbox items can now be selected again
 
 ### Changed
 - main window now has a default size when in windowed mode
