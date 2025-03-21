@@ -14,6 +14,24 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+# set the data and configuration folders depending on OS, needs to be above the other import statements to work properly
+match platform.system():
+    case'Linux':
+        configDir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.getenv('HOME', ''), '.config')) # get $XDG_CONFIG_HOME, if not set default to $HOME/.config
+        dataDir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', ''), '.local', 'share')) # seperate data directory to comply with XDG Base Directory Specification
+        sys.path.insert(0, "/usr/share/JSONly/lib/")
+        import subprocess
+    case 'Darwin': # MacOS
+        configDir = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
+        dataDir = os.path.join(configDir, 'data')
+    case 'Windows':
+        configDir = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE\AppData\Local
+        dataDir = os.path.join(configDir, 'data')
+    case _:
+        configDir = '.' # attempt to store data in same directory as the program if the OS is something other than Windows, MacOS or Linux
+        dataDir = configDir
+configDir = os.path.join(configDir, 'JSONly')
+dataDir = os.path.join(dataDir, 'JSONly')
 import sys
 import json
 import platform
@@ -27,10 +45,8 @@ import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
 from tkinter import ttk
-if platform.system() == 'Linux':
-    import subprocess
-else:
-    import pyperclip
+if platform.system() != 'Linux':
+    import pyperclips
 
 # initialize some variables
 file = {}# JSON data to be viewed
@@ -39,24 +55,6 @@ saved = True # whether or not the data has been saved
 findWord = ''# string in the find feature
 buttons = []
 isEnabled = True
-
-# set the data and configuration folders depending on OS
-match platform.system():
-    case'Linux':
-        configDir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.getenv('HOME', ''), '.config')) # get $XDG_CONFIG_HOME, if not set default to $HOME/.config
-        dataDir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', ''), '.local', 'share')) # seperate data directory to comply with XDG Base Directory Specification
-        sys.path.insert(0, "/usr/share/JSONly/lib/")
-    case 'Darwin': # MacOS
-        configDir = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
-        dataDir = os.path.join(configDir, 'data')
-    case 'Windows':
-        configDir = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE\AppData\Local
-        dataDir = os.path.join(configDir, 'data')
-    case _:
-        configDir = '.' # attempt to store data in same directory as the program if the OS is something other than Windows, MacOS or Linux
-        dataDir = configDir
-configDir = os.path.join(configDir, 'JSONly')
-dataDir = os.path.join(dataDir, 'JSONly')
 
 # check for unsaved work before closing the main window
 def close() -> None:
