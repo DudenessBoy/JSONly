@@ -133,7 +133,7 @@ def enableWidgets(parent):
             widget.configure(state=tk.NORMAL)
 
 # load a file from the disk
-def load(event = None) -> None:
+def load(event = None, filePath = None) -> None:
     global filename, file, saved
     if not saved:
         ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
@@ -142,7 +142,10 @@ def load(event = None) -> None:
         elif ans == 'Save':
             if not save():
                 return
-    filename = filechooser.open_file(title = 'something', filters=[("JSON files", "*.json"), ('All files', '*.*')])
+    if filePath is None:
+        filename = filechooser.open_file(title = 'something', filters=[("JSON files", "*.json"), ('All files', '*.*')])
+    else:
+        filename = [filePath]
     if filename:
         filename = filename[0]
         try:
@@ -994,4 +997,9 @@ style.theme_use('alt')
 style.configure('TLabel', background = color, foreground = fore)
 style.configure('TFrame', background = color)
 del img, image
+
+if len(sys.argv) > 1:
+    print(sys.argv[1])
+    load(filePath = sys.argv[1])
+
 root.mainloop()
