@@ -46,7 +46,7 @@ from JSONly.tooltip import Hovertip
 from JSONly.image import image
 from tkinter import ttk
 if platform.system() != 'Linux':
-    import pyperclips
+    import pyperclip
 
 # initialize some variables
 file = {}# JSON data to be viewed
