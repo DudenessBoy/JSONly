@@ -517,6 +517,7 @@ def main_window() -> None:
     root = tk.Tk()
     root.configure(bg = color)
     root.title('JSONly')
+    root.geometry('1000x800')
     if platform.system() == 'Windows':
         root.state('zoomed')
     elif platform.system() == 'Linux':
@@ -624,6 +625,7 @@ def display(val) -> None:
     index = 0
     disp = tk.Toplevel(root)
     disp.configure(bg = color)
+    disp.geometry('1000x800')
     disp.title('JSONly (complex value)')
     # disp.grab_set()
     disp.focus()
