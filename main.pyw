@@ -14,6 +14,8 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import platform
+import sys
 # set the data and configuration folders depending on OS, needs to be above the other import statements to work properly
 match platform.system():
     case'Linux':
@@ -32,9 +34,7 @@ match platform.system():
         dataDir = configDir
 configDir = os.path.join(configDir, 'JSONly')
 dataDir = os.path.join(dataDir, 'JSONly')
-import sys
 import json
-import platform
 import subprocess
 import webbrowser
 from plyer import filechooser
