@@ -134,7 +134,7 @@ cp ../JSONly.desktop appimage/app.desktop
 cp ../../icon.png appimage/app.png
 cp ../AppRun appimage/
 ensureFile /usr/bin/python3.11 "Python 3.11 is not installed on your computer. Please install it with 'sudo apt install python3.11' or your distro's equivalent."
-cp /usr/bin/python3 appimage/usr/bin/
+cp /usr/bin/python3.11 appimage/usr/bin/
 ensureFile /usr/bin/xsel "xsel is not installed on your computer. Please install it with 'sudo apt install xsel' or your distro's equivalent."
 cp /usr/bin/xsel appimage/usr/bin
 # don't need to make sure they exist, this was done earlier
