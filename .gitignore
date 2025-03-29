@@ -2,4 +2,9 @@ packaging/
 .venv/
 __pycache__/
 JSONly/__pycache__/
-Linux/dist
+Linux/dist/
+Windows/dist/
+Windows/build/
+Windows/Output/
+Windows/icon.ico
+Windows/doc/
