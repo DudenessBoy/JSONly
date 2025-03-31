@@ -3,11 +3,13 @@ from setuptools import setup
 APP = ['main.pyw']
 DATA_FILES = [
     ('resources', ['resources/icon.icns']),
-    ('resources/doc', ['MIT.txt', 'BSD-3-Clause.txt', '../../LICENSE', '../../PSFL.txt'])
+    ('resources/doc', ['resources/doc/MIT.txt', 'resources/doc/BSD-3-Clause.txt', '../../LICENSE', '../../PSFL.txt'])
 ]
 OPTIONS = {
+    'argv_emulation': False,
     'packages': ['JSONly', 'customtkinter', 'CTkListbox', 'plyer', 'pyperclip'],
     'iconfile': 'resources/icon.icns',
+    'excludes': 'setuptools',
     'plist': {
         'CFBundleName': 'JSONly',
         'CFBundleVersion': '1.0.0',
