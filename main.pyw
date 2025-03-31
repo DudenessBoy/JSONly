@@ -25,10 +25,13 @@ match platform.system():
         import subprocess
     case 'Darwin': # MacOS
         configDir = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
-        dataDir = os.path.join(configDir, 'data')
+        dataDir = configDir
     case 'Windows':
         configDir = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE\AppData\Local
-        dataDir = os.path.join(configDir, 'data')
+        dataDir = configDir
+    case 'FreeBSD':
+        configDir = os.path.join(os.getenv('HOME'), '.config')
+        dataDir = os.path.join(os.getenv('HOME'), '.local/share')
     case _:
         configDir = '.' # attempt to store data in same directory as the program if the OS is something other than Windows, MacOS or Linux
         dataDir = configDir
