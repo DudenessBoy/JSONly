@@ -87,11 +87,11 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     label.pack(padx=20, pady=(20, 10))
 
     # Create a frame for the buttons
-    button_frame = ttk.Frame(window)
-    button_frame.pack(pady=10)
+    buttonFrame = ttk.Frame(window)
+    buttonFrame.pack(pady=10)
 
     # Callback function for buttons
-    def on_button_click(btn_text):
+    def onButtonClick(btn_text):
         nonlocal endVal
         if callback:
             callback(btn_text)
@@ -103,7 +103,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
 
     # Add buttons
     for button_text in buttons:
-        button = StyledButton(button_frame, text=button_text, command=lambda bt=button_text: on_button_click(bt), height=30, width = 100)
+        button = StyledButton(buttonFrame, text=button_text, command=lambda bt=button_text: onButtonClick(bt), height=30, width = 100)
         button.pack(side=tk.LEFT, padx=5)
 
     # Center the window on the screen
@@ -114,7 +114,7 @@ def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x1
     # window.grab_set()
     window.attributes('-topmost', True)
     disableWidgets(root)
-    window.protocol('WM_DELETE_WINDOW', lambda: on_button_click(buttons[-1]))
+    window.protocol('WM_DELETE_WINDOW', lambda: onButtonClick(buttons[-1]))
     window.wait_window()
     return endVal
 
@@ -177,7 +177,7 @@ def load(event = None, filePath = None) -> None:
             filename = None
             return
         else:
-            refresh_listbox(listbox, file)
+            refreshListbox(listbox, file)
             saved = True
     else:
         filename = None
@@ -209,48 +209,48 @@ def save(event = None, saveas: bool = False) -> bool:
         return True
 
 # edit the value, using a dedicated window
-def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=None, index=None) -> None:
-    def save_value(event = None):
-        new_value = value_entry.get()
+def editValue(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=None, index=None) -> None:
+    def saveValue(event = None):
+        newValue = valueEntry.get()
         if typeVar.get() == 'integer':
             try:
-                new_value = int(float(new_value))
+                newValue = int(float(newValue))
             except ValueError:
-                new_value = 1
+                newValue = 1
         elif typeVar.get() == 'floating point number':
             try:
-                new_value = float(new_value)
+                newValue = float(newValue)
             except ValueError:
-                new_value = 1.0
+                newValue = 1.0
         elif typeVar.get() == 'boolean':
-            if new_value.lower() != 'true' and new_value.lower() != 'false':
-                if new_value == '0' or new_value == '':
-                    new_value = 'false'
+            if newValue.lower() != 'true' and newValue.lower() != 'false':
+                if newValue == '0' or newValue == '':
+                    newValue = 'false'
                 else:
-                    new_value = 'true'
-            new_value = new_value.lower() == 'true'
+                    newValue = 'true'
+            newValue = newValue.lower() == 'true'
         elif typeVar.get() == 'null':
-            new_value = None
+            newValue = None
 
         if key is not None:
-            val[key] = new_value
+            val[key] = newValue
         elif index is not None:
-            val[index] = new_value
+            val[index] = newValue
         
         enableWidgets(root)
-        edit_window.destroy()
+        editWindow.destroy()
         parent.event_generate("<<ValueEdited>>")
 
-    edit_window = tk.Toplevel(parent)
+    editWindow = tk.Toplevel(parent)
     disableWidgets(root)
-    edit_window.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), edit_window.destroy()])
-    edit_window.configure(bg = color)
-    edit_window.title("Edit Value")
-    edit_window.focus()
-    # edit_window.grab_set()
-    current_row = 0
+    editWindow.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), editWindow.destroy()])
+    editWindow.configure(bg = color)
+    editWindow.title("Edit Value")
+    editWindow.focus()
+    # editWindow.grab_set()
+    currentRow = 0
 
-    ttk.Label(edit_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
+    ttk.Label(editWindow, text="Type:").grid(row=currentRow, column=0, padx=5, pady=5)
     value = str(type(val[key] if index is None else val[index]))
     if 'str' in  value:
         num = 0
@@ -263,53 +263,53 @@ def edit_value(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=Non
     else:
         num = 4
 
-    typeBox = ctk.CTkOptionMenu(edit_window, variable = typeVar, values=('string', 'integer', 'floating point number', 'boolean', 'null'), fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8')
-    typeBox.grid(row=current_row, column=1, padx=5, pady=5)
+    typeBox = ctk.CTkOptionMenu(editWindow, variable = typeVar, values=('string', 'integer', 'floating point number', 'boolean', 'null'), fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8')
+    typeBox.grid(row=currentRow, column=1, padx=5, pady=5)
     typeBox.set(typeBox._values[num])
-    current_row += 1
+    currentRow += 1
 
-    ttk.Label(edit_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
-    value_entry = ctk.CTkEntry(edit_window, width = 800, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
-    value_entry._entry.config(insertbackground=fore)
-    value_entry.insert(0, str(val[key]).lower() if index is None else str(val[index]).lower())
-    value_entry.select_range(0, tk.END)
-    value_entry.focus()
-    value_entry.bind('<Return>', save_value)
-    value_entry.grid(row=current_row, column=1, padx=5, pady=5)
-    current_row += 1
+    ttk.Label(editWindow, text="Value:").grid(row=currentRow, column=0, padx=5, pady=5)
+    valueEntry = ctk.CTkEntry(editWindow, width = 800, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
+    valueEntry._entry.config(insertbackground=fore)
+    valueEntry.insert(0, str(val[key]).lower() if index is None else str(val[index]).lower())
+    valueEntry.select_range(0, tk.END)
+    valueEntry.focus()
+    valueEntry.bind('<Return>', saveValue)
+    valueEntry.grid(row=currentRow, column=1, padx=5, pady=5)
+    currentRow += 1
 
-    StyledButton(edit_window, text="Save", command=save_value, cursor = 'hand2', height=30, width = 150)
+    StyledButton(editWindow, text="Save", command=saveValue, cursor = 'hand2', height=30, width = 150)
 
 # edit the value directly from the entry widget
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
-    new_value = value
+    newValue = value
     if typeVar.get() == 'integer':
         try:
-            new_value = int(float(new_value))
+            newValue = int(float(newValue))
         except ValueError:
-            new_value = 1
+            newValue = 1
     elif typeVar.get() == 'floating point number':
         try:
-            new_value = float(new_value)
+            newValue = float(newValue)
         except ValueError:
-            new_value = 1.0
+            newValue = 1.0
     elif typeVar.get() == 'boolean':
-        if new_value.lower() != 'true' and new_value.lower() != 'false':
-            if new_value == '0' or new_value == '':
-                new_value = 'false'
+        if newValue.lower() != 'true' and newValue.lower() != 'false':
+            if newValue == '0' or newValue == '':
+                newValue = 'false'
             else:
-                new_value = 'true'
-        new_value = new_value.lower() == 'true'
+                newValue = 'true'
+        newValue = newValue.lower() == 'true'
     elif typeVar.get() == 'null':
-        new_value = None
+        newValue = None
 
     if key is not None:
-        val[key] = new_value
+        val[key] = newValue
     elif index is not None:
-        val[index] = new_value
+        val[index] = newValue
 
 # remove an item
-def remove_item(parent, val, key=None, index=None) -> None:
+def removeItem(parent, val, key=None, index=None) -> None:
     if key is not None:
         del val[key]
     elif index is not None:
@@ -321,7 +321,7 @@ def configure(event=None) -> None:
     if listbox.curselection() != None:
         key = listbox.get(listbox.curselection())
         value = file[key]
-        update_value_display(value, typeVar, valVar)
+        updateValueDisplay(value, typeVar, valVar)
         
         if isinstance(value, (dict, list)):
             view.configure(state='normal', command=lambda: display(value))
@@ -329,17 +329,17 @@ def configure(event=None) -> None:
             valueEntry.configure(state='readonly')
         else:
             view.configure(state='disabled')
-            edit.configure(state='normal', command=lambda: edit_value(root, file, typeVar, valVar, key=key))
+            edit.configure(state='normal', command=lambda: editValue(root, file, typeVar, valVar, key=key))
             valueEntry.configure(state='normal')
         
-        remove_button.configure(state='normal')
+        removeButton.configure(state='normal')
     else:
-        remove_button.configure(state='disabled')
+        removeButton.configure(state='disabled')
         view.configure(state='disabled')
         edit.configure(state='disabled')
         valueEntry.configure(state='readonly')
 
-def update_value_display(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> None:
+def updateValueDisplay(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> None:
     if value is None:
         valVar.set('null')
         typeVar.set('null')
@@ -379,32 +379,32 @@ def plainText() -> None:
     copy.pack()
 
 # add a new item to the listbox
-def add_new_item(parent, val) -> None:
-    def save_item(event = None):
-        new_value = value_entry.get()
+def addNewItem(parent, val) -> None:
+    def saveItem(event = None):
+        newValue = valueEntry.get()
         if type_var.get() == 'integer':
             try:
-                new_value = int(float(new_value))
+                newValue = int(float(newValue))
             except ValueError:
-                new_value = 1
+                newValue = 1
         elif type_var.get() == 'floating point number':
             try:
-                new_value = float(new_value)
+                newValue = float(newValue)
             except ValueError:
-                new_value = 1.0
+                newValue = 1.0
         elif type_var.get() == 'boolean':
-            if new_value.lower() != 'true' and new_value.lower() != 'false':
-                if new_value == '0' or new_value == '':
-                    new_value = 'false'
+            if newValue.lower() != 'true' and newValue.lower() != 'false':
+                if newValue == '0' or newValue == '':
+                    newValue = 'false'
                 else:
-                    new_value = 'true'
-            new_value = new_value.lower() == 'true'
+                    newValue = 'true'
+            newValue = newValue.lower() == 'true'
         elif type_var.get() == 'null':
-            new_value = None
+            newValue = None
         elif type_var.get() == 'array':
-            new_value = []
+            newValue = []
         elif type_var.get() == 'object':
-            new_value = {}
+            newValue = {}
 
         if isinstance(val, dict):
             new_key = key_entry.get().strip()
@@ -414,47 +414,47 @@ def add_new_item(parent, val) -> None:
             if new_key in val:
                 messagebox("Error", "Key already exists")
                 return
-            val[new_key] = new_value
+            val[new_key] = newValue
         elif isinstance(val, list):
-            val.append(new_value)
+            val.append(newValue)
         
         enableWidgets(root)
-        add_window.destroy()
+        addWindow.destroy()
         parent.event_generate("<<ItemAdded>>")
 
-    add_window = tk.Toplevel(parent)
+    addWindow = tk.Toplevel(parent)
     disableWidgets(root)
-    add_window.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), add_window.destroy()])
-    add_window.geometry('900x150')
-    add_window.configure(bg = color)
-    add_window.title("Add New Item")
-    add_window.focus()
-    # add_window.grab_set()
+    addWindow.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), addWindow.destroy()])
+    addWindow.geometry('900x150')
+    addWindow.configure(bg = color)
+    addWindow.title("Add New Item")
+    addWindow.focus()
+    # addWindow.grab_set()
 
-    current_row = 0
+    currentRow = 0
 
     if isinstance(val, dict):
-        ttk.Label(add_window, text="Key:").grid(row=current_row, column=0, padx=5, pady=5)
-        key_entry = ctk.CTkEntry(add_window, width = 200, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
+        ttk.Label(addWindow, text="Key:").grid(row=currentRow, column=0, padx=5, pady=5)
+        key_entry = ctk.CTkEntry(addWindow, width = 200, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
         key_entry._entry.config(insertbackground=fore)
-        key_entry.bind('<Return>', lambda e: value_entry.focus())
-        key_entry.grid(row=current_row, column=1, padx=5, pady=5)
+        key_entry.bind('<Return>', lambda e: valueEntry.focus())
+        key_entry.grid(row=currentRow, column=1, padx=5, pady=5)
         key_entry.focus()
-        current_row += 1
+        currentRow += 1
 
-    ttk.Label(add_window, text="Type:").grid(row=current_row, column=0, padx=5, pady=5)
+    ttk.Label(addWindow, text="Type:").grid(row=currentRow, column=0, padx=5, pady=5)
     type_var = tk.StringVar(value='string')
-    ctk.CTkOptionMenu(add_window, variable = type_var, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8').grid(row=current_row, column=1, padx=5, pady=5)
-    current_row += 1
+    ctk.CTkOptionMenu(addWindow, variable = type_var, values=['string', 'integer', 'floating point number', 'boolean', 'null', 'array', 'object'], fg_color='#646cff', button_color='#646cff', button_hover_color='#4b50d8').grid(row=currentRow, column=1, padx=5, pady=5)
+    currentRow += 1
 
-    ttk.Label(add_window, text="Value:").grid(row=current_row, column=0, padx=5, pady=5)
-    value_entry = ctk.CTkEntry(add_window, width = 800, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
-    value_entry._entry.config(insertbackground=fore)
-    value_entry.bind('<Return>', save_item)
-    value_entry.grid(row=current_row, column=1, padx=5, pady=5)
-    current_row += 1
+    ttk.Label(addWindow, text="Value:").grid(row=currentRow, column=0, padx=5, pady=5)
+    valueEntry = ctk.CTkEntry(addWindow, width = 800, fg_color=color, border_color='#646cff', bg_color=color, text_color = fore)
+    valueEntry._entry.config(insertbackground=fore)
+    valueEntry.bind('<Return>', saveItem)
+    valueEntry.grid(row=currentRow, column=1, padx=5, pady=5)
+    currentRow += 1
 
-    StyledButton(add_window, text="Save", command=save_item, cursor = 'hand2', height=30, width = 150).grid(row=current_row, column=0, columnspan=2, pady=10)
+    StyledButton(addWindow, text="Save", command=saveItem, cursor = 'hand2', height=30, width = 150).grid(row=currentRow, column=0, columnspan=2, pady=10)
 
 # general preferences
 def settings() -> None:
@@ -557,8 +557,8 @@ def theme() -> None:
     win.protocol('WM_DELETE_WINDOW', close)
 
 # construct the main window with all of it's widgets
-def main_window() -> None:
-    global root, listbox, typeVar, valVar, view, edit, add_button, remove_button, file, valueEntry
+def mainWindow() -> None:
+    global root, listbox, typeVar, valVar, view, edit, addButton, removeButton, file, valueEntry
 
     root = tk.Tk()
     root.configure(bg = color)
@@ -593,19 +593,19 @@ def main_window() -> None:
     Hovertip(view, 'look at complex values (arrays and objects)')
 
     edit = StyledButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
-                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection())))
+                      command=lambda: editValue(root, file, key=listbox.get(listbox.curselection())))
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
-    add_button = StyledButton(root, text='Add new item', cursor='hand2', 
-                            command=lambda: add_new_item(root, file))
-    add_button.pack()
-    Hovertip(add_button, 'add a new item')
+    addButton = StyledButton(root, text='Add new item', cursor='hand2', 
+                            command=lambda: addNewItem(root, file))
+    addButton.pack()
+    Hovertip(addButton, 'add a new item')
 
-    remove_button = StyledButton(root, text='Remove item', cursor='hand2', state='disabled',
-                               command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection())))
-    remove_button.pack()
-    Hovertip(remove_button, 'remove items')
+    removeButton = StyledButton(root, text='Remove item', cursor='hand2', state='disabled',
+                               command=lambda: removeItem(root, file, key=listbox.get(listbox.curselection())))
+    removeButton.pack()
+    Hovertip(removeButton, 'remove items')
 
     # menu bar
     menubar = tk.Menu(root)
@@ -617,7 +617,7 @@ def main_window() -> None:
     filemenu.add_command(label = 'Exit', command = close)
     menubar.add_cascade(label = 'File', menu = filemenu)
     editmenu = tk.Menu(menubar, tearoff = 0)
-    editmenu.add_command(label = 'Add new item', command = add_button.invoke)
+    editmenu.add_command(label = 'Add new item', command = addButton.invoke)
     editmenu.add_command(label = 'Show plain text', command = plainText)
     menubar.add_cascade(label = 'Edit', menu=editmenu)
     about = tk.Menu(menubar, tearoff = 0)
@@ -635,20 +635,20 @@ def main_window() -> None:
     root.configure(menu = menubar)
 
     root.bind("<<ValueEdited>>", lambda e: configure())
-    root.bind("<<ItemAdded>>", lambda e: refresh_listbox(listbox, file))
-    root.bind("<<ItemRemoved>>", lambda e: refresh_listbox(listbox, file))
+    root.bind("<<ItemAdded>>", lambda e: refreshListbox(listbox, file))
+    root.bind("<<ItemRemoved>>", lambda e: refreshListbox(listbox, file))
     root.bind('<Control-o>', load)
     root.bind('<Control-s>', save)
     root.bind('<Control-Shift-KeyPress-s>', lambda: save(saveas = True))
     root.protocol('WM_DELETE_WINDOW', close)
     root.bind('<Control-f>', lambda e: findWindow(listbox))
     root.bind('<Button-3>', context)
-    listbox.bind('<Delete>', lambda e: remove_button.invoke())
+    listbox.bind('<Delete>', lambda e: removeButton.invoke())
 
     return root
 
 # refresh the listbox in case of new values
-def refresh_listbox(listbox, val) -> None:
+def refreshListbox(listbox, val) -> None:
     global saved
     saved = False
     listbox.delete(0, tk.END)
@@ -679,7 +679,7 @@ def display(val) -> None:
     listbox = ResizableListbox(disp, width=800, fg_color = color, hover_color = '#646cff', highlight_color='#4b50d8', text_color=fore)
     listbox.pack()
     
-    def refresh_listbox():
+    def refreshListbox():
         global saved
         saved = False
         listbox.delete(0, tk.END)
@@ -690,7 +690,7 @@ def display(val) -> None:
             for i, item in enumerate(val):
                 listbox.insert(tk.END, f"[{i}]")
 
-    refresh_listbox()
+    refreshListbox()
 
     def configure(event=None):
         setIndex(listbox)
@@ -702,7 +702,7 @@ def display(val) -> None:
             else:
                 value = val[index]
             
-            update_value_display(value, typeVar, valVar)
+            updateValueDisplay(value, typeVar, valVar)
             
             if isinstance(value, (dict, list)):
                 view.configure(state='normal', command=lambda: display(value))
@@ -711,41 +711,41 @@ def display(val) -> None:
             else:
                 view.configure(state='disabled')
                 valueEntry.configure(state = 'normal')
-                edit.configure(state='normal', command=lambda: edit_value(disp, val, typeVar, valVar, key=key))
+                edit.configure(state='normal', command=lambda: editValue(disp, val, typeVar, valVar, key=key))
             
-            remove_button.configure(state='normal')
+            removeButton.configure(state='normal')
         else:
-            remove_button.configure(state='disabled')
+            removeButton.configure(state='disabled')
             view.configure(state='disabled')
             edit.configure(state='disabled')
             valueEntry.configure(state='readonly')
 
     def directEdit(parent, otherVal, typeVar: tk.StringVar, value, key=None, index=None) -> None:
-        new_value = value
+        newValue = value
         if typeVar.get() == 'integer':
             try:
-                new_value = int(float(new_value))
+                newValue = int(float(newValue))
             except ValueError:
-                new_value = 1
+                newValue = 1
         elif typeVar.get() == 'floating point number':
             try:
-                new_value = float(new_value)
+                newValue = float(newValue)
             except ValueError:
-                new_value = 1.0
+                newValue = 1.0
         elif typeVar.get() == 'boolean':
-            if new_value.lower() != 'true' and new_value.lower() != 'false':
-                if new_value == '0' or new_value == '':
-                    new_value = 'false'
+            if newValue.lower() != 'true' and newValue.lower() != 'false':
+                if newValue == '0' or newValue == '':
+                    newValue = 'false'
                 else:
-                    new_value = 'true'
-            new_value = new_value.lower() == 'true'
+                    newValue = 'true'
+            newValue = newValue.lower() == 'true'
         elif typeVar.get() == 'null':
-            new_value = None
+            newValue = None
 
         if key is not None:
-            val[key] = new_value
+            val[key] = newValue
         elif index is not None:
-            val[index] = new_value
+            val[index] = newValue
 
     listbox.bind('<<ListboxSelect>>', configure)
     ttk.Label(disp, text='Type').pack()
@@ -769,21 +769,21 @@ def display(val) -> None:
     edit = StyledButton(disp, text='Edit simple value', cursor='hand2', state='disabled',)
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
-    add_button = StyledButton(disp, text='Add new item', cursor='hand2', 
-                            command=lambda: add_new_item(disp, val))
-    add_button.pack()
-    Hovertip(add_button, 'add a new item')
+    addButton = StyledButton(disp, text='Add new item', cursor='hand2', 
+                            command=lambda: addNewItem(disp, val))
+    addButton.pack()
+    Hovertip(addButton, 'add a new item')
 
-    remove_button = StyledButton(disp, text='Remove item', cursor='hand2', state='disabled',
-                               command=lambda: remove_item(disp, val, 
+    removeButton = StyledButton(disp, text='Remove item', cursor='hand2', state='disabled',
+                               command=lambda: removeItem(disp, val, 
                                                            key=listbox.get(listbox.curselection()) if isinstance(val, dict) else None,
                                                            index=listbox.curselection() if isinstance(val, list) else None))
-    remove_button.pack()
-    Hovertip(remove_button, 'remove items')
+    removeButton.pack()
+    Hovertip(removeButton, 'remove items')
 
     disp.bind("<<ValueEdited>>", lambda e: configure())
-    disp.bind("<<ItemAdded>>", lambda e: refresh_listbox())
-    disp.bind("<<ItemRemoved>>", lambda e: refresh_listbox())
+    disp.bind("<<ItemAdded>>", lambda e: refreshListbox())
+    disp.bind("<<ItemRemoved>>", lambda e: refreshListbox())
 
 # next three functions are for finding objects
 def findWindow(listbox: tk.Listbox) -> None:
@@ -906,8 +906,8 @@ def context(event: tk.Event) -> None:
     contextMenu.add_command(label='Save as', command=lambda: save(saveas=True))
     contextMenu.add_command(label='Open', command=load)
     contextMenu.add_separator()
-    contextMenu.add_command(label='Add new item', command=add_button.invoke)
-    contextMenu.add_command(label='Remove selected item', command=remove_button.invoke)
+    contextMenu.add_command(label='Add new item', command=addButton.invoke)
+    contextMenu.add_command(label='Remove selected item', command=removeButton.invoke)
     contextMenu.add_separator()
     contextMenu.add_command(label='Show plain text', command=plainText)
     contextMenu.tk_popup(event.x_root, event.y_root)
@@ -1003,7 +1003,7 @@ else:
     color = '#1e1e2e'
     fore = 'white'
 
-root = main_window()
+root = mainWindow()
 img = tk.PhotoImage(data = image)
 root.iconphoto(True, img)
 # styling ttk widgets
