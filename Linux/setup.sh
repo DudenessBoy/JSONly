@@ -91,7 +91,7 @@ done
 # copy the other application elements into the folder
 cp ../JSONly.desktop deb/usr/share/applications/
 cp ../../LICENSE deb/usr/share/doc/JSONly/
-cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/
+cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/JSONly.png
 cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
 cp JSONly deb/usr/bin/
 ensureFolder /usr/lib/python3/dist-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
