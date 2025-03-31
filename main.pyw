@@ -590,7 +590,7 @@ def main_window() -> None:
     Hovertip(view, 'look at complex values (arrays and objects)')
 
     edit = StyledButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
-                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection()[0])))
+                      command=lambda: edit_value(root, file, key=listbox.get(listbox.curselection())))
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
@@ -600,7 +600,7 @@ def main_window() -> None:
     Hovertip(add_button, 'add a new item')
 
     remove_button = StyledButton(root, text='Remove item', cursor='hand2', state='disabled',
-                               command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection()[0])))
+                               command=lambda: remove_item(root, file, key=listbox.get(listbox.curselection())))
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
@@ -659,7 +659,7 @@ def refresh_listbox(listbox, val) -> None:
 def setIndex(listbox: tk.Listbox):
     global index
     if listbox.curselection():
-        index = listbox.curselection()[0]
+        index = listbox.curselection()
     else:
         index = 0
 
@@ -773,8 +773,8 @@ def display(val) -> None:
 
     remove_button = StyledButton(disp, text='Remove item', cursor='hand2', state='disabled',
                                command=lambda: remove_item(disp, val, 
-                                                           key=listbox.get(listbox.curselection()[0]) if isinstance(val, dict) else None,
-                                                           index=listbox.curselection()[0] if isinstance(val, list) else None))
+                                                           key=listbox.get(listbox.curselection()) if isinstance(val, dict) else None,
+                                                           index=listbox.curselection() if isinstance(val, list) else None))
     remove_button.pack()
     Hovertip(remove_button, 'remove items')
 
