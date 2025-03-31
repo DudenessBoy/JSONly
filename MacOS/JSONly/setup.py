@@ -6,9 +6,9 @@ DATA_FILES = [
     ('resources/doc', ['MIT.txt', 'BSD-3-Clause.txt', '../../LICENSE', '../../PSFL.txt'])
 ]
 OPTIONS = {
-    'packages': ['JSONly', 'customtkinter', 'CTkListbox', 'plyer', 'pyperclip']
-    'iconfile': 'resources/icon.icns'
-    'plist': {
+    'packages': ['JSONly', 'customtkinter', 'CTkListbox', 'plyer', 'pyperclip'],
+    'iconfile': 'resources/icon.icns',
+    'plist': {,
         'CFBundleName': 'JSONly',
         'CFBundleVersion': '1.0.0',
         'CFBundleShortVersionString': '1.0',
