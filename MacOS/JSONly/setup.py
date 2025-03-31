@@ -8,7 +8,7 @@ DATA_FILES = [
 OPTIONS = {
     'packages': ['JSONly', 'customtkinter', 'CTkListbox', 'plyer', 'pyperclip'],
     'iconfile': 'resources/icon.icns',
-    'plist': {,
+    'plist': {
         'CFBundleName': 'JSONly',
         'CFBundleVersion': '1.0.0',
         'CFBundleShortVersionString': '1.0',
