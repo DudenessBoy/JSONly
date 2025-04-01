@@ -48,6 +48,7 @@ import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
 from tkinter import ttk
+import darkdetect
 if platform.system() != 'Linux':
     import pyperclip
 
@@ -996,7 +997,15 @@ if 'global' not in data['theme'].keys():
     data['theme']['global'] = 0
     saveData(data)
 
-if data['theme']['global']:
+themeData = data['theme']['global']
+if themeData == 0:
+    if darkdetect.isLight():
+        color = 'white'
+        fore = 'black'
+    else:
+        color = '#1e1e2e'
+        fore = 'white'
+elif themeData == 1:
     color = 'white'
     fore = 'black'
 else:

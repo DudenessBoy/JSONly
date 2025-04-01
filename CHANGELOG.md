@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - data storage directories are now set for FreeBSD
+### Added
+- automatic detection for system theme
 
 ## v1.0.1
 ### Fixed
