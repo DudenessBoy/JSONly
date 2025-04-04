@@ -3,11 +3,10 @@
 
 import os
 import sys
-from JSONly.constants import *
 if OS != 'Linux':
     import pyperclip
 else:
-    sys.path.append(os.path.join(RESOURCEDIR, 'lib'))
+    sys.path.append('/usr/share/JSONly/lib')
     import subprocess
 import json
 import subprocess
@@ -19,6 +18,7 @@ from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import JSONly.License
 from JSONly.image import image
 import JSONly.lang
+from JSONly.constants import *
 from tkinter import ttk
 import darkdetect
 
