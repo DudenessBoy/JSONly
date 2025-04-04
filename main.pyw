@@ -1,5 +1,5 @@
 #   JSONly is a GUI program for interacting with and manipulating JSON files
-#     Copyright (C) 2024  Luke Moyer
+#     Copyright (C) 2024 Luke Moyer
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
 #     the Free Software Foundation, either version 3 of the License, or
@@ -14,29 +14,13 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import platform
 import sys
-# set the data and configuration folders depending on OS, needs to be above the other import statements to work properly
-match platform.system():
-    case'Linux':
-        configDir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.getenv('HOME', ''), '.config')) # get $XDG_CONFIG_HOME, if not set default to $HOME/.config
-        dataDir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', ''), '.local', 'share')) # seperate data directory to comply with XDG Base Directory Specification
-        sys.path.insert(0, "/usr/share/JSONly/lib/")
-        import subprocess
-    case 'Darwin': # MacOS
-        configDir = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
-        dataDir = configDir
-    case 'Windows':
-        configDir = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE\AppData\Local
-        dataDir = configDir
-    case 'FreeBSD':
-        configDir = os.path.join(os.getenv('HOME'), '.config')
-        dataDir = os.path.join(os.getenv('HOME'), '.local/share')
-    case _:
-        configDir = '.' # attempt to store data in same directory as the program if the OS is something other than Windows, MacOS or Linux
-        dataDir = configDir
-configDir = os.path.join(configDir, 'JSONly')
-dataDir = os.path.join(dataDir, 'JSONly')
+from JSONly.constants import *
+if OS != 'Linux':
+    import pyperclip
+else:
+    sys.path.append(os.path.join(RESOURCEDIR, 'lib'))
+    import subprocess
 import json
 import subprocess
 import webbrowser
@@ -47,10 +31,9 @@ from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import JSONly.License
 from JSONly.tooltip import Hovertip
 from JSONly.image import image
+import JSONly.lang
 from tkinter import ttk
 import darkdetect
-if platform.system() != 'Linux':
-    import pyperclip
 
 # initialize some variables
 file = {}# JSON data to be viewed
@@ -66,58 +49,13 @@ def close() -> None:
         print('closing blocked by popup')
         return
     if not saved:
-        ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
-        if ans == 'Cancel':
+        ans = messagebox(lang['popup.unsaved.title'], lang['popup.unsaved.body.close'], lang['popup.unsaved.buttons'])
+        if ans == lang['popup.unsaved.buttons'][2]:
             return
-        elif ans == 'Save':
+        elif ans == lang['popup.unsaved.buttons'][0]:
             if not save():
                 return
     root.destroy()
-
-# display messages in a pop-up
-def messagebox(title, message, buttons=("OK",), callback=None, geometry = '300x150'):
-    # Create a new window
-    window = tk.Toplevel()
-    window.configure(bg = color)
-    window.title(title)
-    window.geometry(geometry)
-    window.resizable(False, False)
-
-    # Add a message label
-    label = ttk.Label(window, text=message, wraplength=250, anchor="center")
-    label.pack(padx=20, pady=(20, 10))
-
-    # Create a frame for the buttons
-    buttonFrame = ttk.Frame(window)
-    buttonFrame.pack(pady=10)
-
-    # Callback function for buttons
-    def onButtonClick(btn_text):
-        nonlocal endVal
-        if callback:
-            callback(btn_text)
-        endVal = btn_text
-        enableWidgets(root)
-        window.destroy()
-    
-    endVal = 'closed'
-
-    # Add buttons
-    for button_text in buttons:
-        button = StyledButton(buttonFrame, text=button_text, command=lambda bt=button_text: onButtonClick(bt), height=30, width = 100)
-        button.pack(side=tk.LEFT, padx=5)
-
-    # Center the window on the screen
-    window.update_idletasks()
-
-    # Prevent interaction with the main window
-    window.transient()
-    # window.grab_set()
-    window.attributes('-topmost', True)
-    disableWidgets(root)
-    window.protocol('WM_DELETE_WINDOW', lambda: onButtonClick(buttons[-1]))
-    window.wait_window()
-    return endVal
 
 def disableWidgets(parent):
     """Disable all interactive widgets in the parent window."""
@@ -142,10 +80,10 @@ def enableWidgets(parent):
 def load(event = None, filePath = None) -> None:
     global filename, file, saved
     if not saved:
-        ans = messagebox('Unsaved Work', 'Would you like to save your changes before loading a new file?', ('Save', 'Don\'t Save', 'Cancel'))
-        if ans == 'Cancel':
+        ans = messagebox(lang['popup.unsaved.title'], lang['popup.unsaved.body.load'], lang['popup.unsaved.buttons'])
+        if ans == lang['popup.unsaved.buttons'][2]:
             return
-        elif ans == 'Save':
+        elif ans == lang['popup.unsaved.buttons'][0]:
             if not save():
                 return
     if filePath is None:
@@ -158,23 +96,23 @@ def load(event = None, filePath = None) -> None:
             with open(filename, 'r', encoding = 'utf-8') as f:
                 file = json.load(f)
         except FileNotFoundError:
-            messagebox('File Not Found', f'The file "{filename}" could not be found')
+            messagebox(lang['error.missingfile.title'], lang['error.missingfile.body'].format(filename))
             filename = None
             return
         except json.JSONDecodeError:
-            messagebox('JSON Decode Error', f'The file "{filename}" contains invalid JSON syntax')
+            messagebox(lang['error.json.title'], lang['error.json.body'].format(filename))
             filename = None
             return
         except EOFError:
-            messagebox('EOF Error', f'The file "{filename}" is corrupted')
+            messagebox(lang['error.eof.title'], lang['error.eof.body'].format(filename))
             filename = None
             return
         except PermissionError:
-            messagebox('Permission Denied', f'Permission to read the file "{filename}" could not be obtained')
+            messagebox(lang['error.permission.title'], lang['error.permission.read.body'].format(filename))
             filename = None
             return
         except Exception as e:
-            messagebox('Error', f'There was an error while attempting to read the file "{filename}": {e}')
+            messagebox(lang['error.generic.title'], lang['error.generic.read.body'].format(filename, str(e)))
             filename = None
             return
         else:
@@ -187,7 +125,7 @@ def load(event = None, filePath = None) -> None:
 def save(event = None, saveas: bool = False) -> bool:
     global filename, saved
     if filename is None or saveas:
-        filename = filechooser.save_file(filters = [('JSON files', '*.json')])
+        filename = filechooser.save_file(filters = [(lang['filepicker.filter.json'], '*.json')])
         if not filename:
             filename = None
             return False
@@ -195,15 +133,11 @@ def save(event = None, saveas: bool = False) -> bool:
         with open(filename, 'w', encoding = 'utf-8') as f:
             json.dump(file, f, indent = 2)
     except PermissionError:
-        messagebox('Permission Denied', f'Permission to write to the file "{filename}" could not be obtained')
-        filename = None
-        return
-    except IOError:
-        messagebox('I/O Error', f'There was an error while attempting to write to the file "{filename}"')
+        messagebox(lang['error.permission.title'], lang['error.permission.write.body'].format(filename))
         filename = None
         return
     except Exception as e:
-        messagebox('Error', f'There was an error while attempting to write to the file "{dataFile}": {e}')
+        messagebox(lang['error.generic.title'], lang['error.generic.write.body'].format(dataFile, e))
         return
     else:
         saved = True
@@ -246,7 +180,7 @@ def editValue(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=None
     disableWidgets(root)
     editWindow.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), editWindow.destroy()])
     editWindow.configure(bg = color)
-    editWindow.title("Edit Value")
+    editWindow.title(lang['popup.edit.title'])
     editWindow.focus()
     # editWindow.grab_set()
     currentRow = 0
@@ -279,7 +213,7 @@ def editValue(parent, val, typeVar: tk.StringVar, valVar: tk.StringVar, key=None
     valueEntry.grid(row=currentRow, column=1, padx=5, pady=5)
     currentRow += 1
 
-    StyledButton(editWindow, text="Save", command=saveValue, cursor = 'hand2', height=30, width = 150)
+    StyledButton(editWindow, text=lang['popup.button.save'], command=saveValue, cursor = 'hand2', height=30, width = 150)
 
 # edit the value directly from the entry widget
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
@@ -366,17 +300,17 @@ def updateValueDisplay(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> No
 def plainText() -> None:
     win = tk.Toplevel(root)
     win.configure(bg = color)
-    win.title('JSONly (plain text)')
+    win.title(lang['popup.plaintext.title'])
     win.focus()
     # win.grab_set()
     text = tk.Text(win, width = 100, height = 20, bg = color, insertbackground = fore, fg = fore)
     text.pack()
     text.insert(0.0, json.dumps(file, indent = 2))
     text.configure(state = 'disabled')
-    if platform.system() == 'Linux':
-        copy = StyledButton(win, text = 'Copy', cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
+    if OS == 'Linux':
+        copy = StyledButton(win, text = lang['popup.plaintext.button.copy'], cursor = 'hand2', command = lambda: subprocess.run(["xsel", "-b"], input=json.dumps(file, indent = 2).encode('utf-8'), check=True))
     else:
-        copy = StyledButton(win, text = 'Copy', cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)))
+        copy = StyledButton(win, text = lang['popup.plaintext.button.copy'], cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)))
     copy.pack()
 
 # add a new item to the listbox
@@ -410,10 +344,10 @@ def addNewItem(parent, val) -> None:
         if isinstance(val, dict):
             new_key = key_entry.get().strip()
             if not new_key:
-                messagebox("Error", "Key cannot be empty")
+                messagebox(lang['error.generic.title'], lang['error.generic.emptykey'])
                 return
             if new_key in val:
-                messagebox("Error", "Key already exists")
+                messagebox(lang['error.generic.title'], lang['error.generic.dupekey'])
                 return
             val[new_key] = newValue
         elif isinstance(val, list):
@@ -428,7 +362,7 @@ def addNewItem(parent, val) -> None:
     addWindow.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), addWindow.destroy()])
     addWindow.geometry('900x150')
     addWindow.configure(bg = color)
-    addWindow.title("Add New Item")
+    addWindow.title(lang['popup.add.title'])
     addWindow.focus()
     # addWindow.grab_set()
 
@@ -455,7 +389,7 @@ def addNewItem(parent, val) -> None:
     valueEntry.grid(row=currentRow, column=1, padx=5, pady=5)
     currentRow += 1
 
-    StyledButton(addWindow, text="Save", command=saveItem, cursor = 'hand2', height=30, width = 150).grid(row=currentRow, column=0, columnspan=2, pady=10)
+    StyledButton(addWindow, text=lang['popup.button.save'], command=saveItem, cursor = 'hand2', height=30, width = 150).grid(row=currentRow, column=0, columnspan=2, pady=10)
 
 # general preferences
 def settings() -> None:
@@ -473,7 +407,7 @@ def settings() -> None:
     win = tk.Toplevel(root)
     disableWidgets(root)
     win.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), win.destroy()])
-    win.title('Preferences - JSONly')
+    win.title(lang['settings.title'])
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
     ttk.Label(win, text = 'Indent when saving', font = 1).pack()
@@ -495,10 +429,10 @@ def writeFile(path: str, data: str) -> bool:
             f.write(data)
         return True
     except PermissionError:
-        messagebox('Permission Denied', f'Permission to write to the file "{path}" could not be obtained.')
+        messagebox(lang['error.permission.title'], lang['error.permission.write.body'].format(path))
         return False
     except Exception as e:
-        messagebox('Error', f'There was an error while attempting to write to the file "{path}": {e}.')
+        messagebox(lang['error.generic.title'], lang['error.generic.write.body'].format(path, e))
         return False
 
 def loadData(path: str, default: str) -> str:
@@ -510,14 +444,14 @@ def loadData(path: str, default: str) -> str:
         writeFile(path, default)
         return default
     except PermissionError:
-        messagebox('Permission Denied', f'Permission to read the file "{path}" could not be obtained. Data cannot be read.')
+        messagebox(lang['error.permission.title'], lang['error.permission.read.body'].format(path))
         return default
     except json.JSONDecodeError:
-        messagebox('JSON Decode Error', f'The file "{path}" contains invalid JSON syntax. JSONly will overwrite the data.')
+        messagebox(lang['error.json.title'], lang['error.json.body'].format(path) + ' ' + lang['error.json.submessage.overwrite'])
         writeFile(path, default)
         return default
     except Exception as e:
-        messagebox('Error', f'There was an error while attempting to read the file "{path}": {e}. JSONly will attempt to overwrite the data.')
+        messagebox(lang['error.generic.title'], lang['error.generic.read.body'] + ' ' + lang['error.json.submessage.attempt'])
         writeFile(path, default)
         return default
 
@@ -545,7 +479,7 @@ def theme() -> None:
     win = tk.Toplevel()
     disableWidgets(root)
     win.protocol('WM_DELETE_WINDOW', lambda: [enableWidgets(root), win.destroy()])
-    win.title('Theme - JSONly')
+    win.title(lang['theme.title'])
     # win.grab_set()
     win.config(bg = color)
     ttk.Label(win, text = 'Global theme', font = 1).pack()
@@ -563,11 +497,11 @@ def mainWindow() -> None:
 
     root = tk.Tk()
     root.configure(bg = color)
-    root.title('JSONly')
+    root.title(lang['window.title'])
     root.geometry('1000x800')
-    if platform.system() == 'Windows':
+    if OS == 'Windows':
         root.state('zoomed')
-    elif platform.system() == 'Linux':
+    elif OS == 'Linux':
         root.attributes('-zoomed', True)
     root.focus()
 
@@ -589,48 +523,48 @@ def mainWindow() -> None:
     valueEntry.bind('<Return>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
     valueEntry.bind('<FocusOut>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
 
-    view = StyledButton(root, text='View complex value', cursor='hand2', state='disabled')
+    view = StyledButton(root, text=lang['window.button.complex'], cursor='hand2', state='disabled')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
 
-    edit = StyledButton(root, text='Edit simple value', cursor='hand2', state='disabled', 
+    edit = StyledButton(root, text=lang['window.button.edit'], cursor='hand2', state='disabled', 
                       command=lambda: editValue(root, file, key=listbox.get(listbox.curselection())))
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
-    addButton = StyledButton(root, text='Add new item', cursor='hand2', 
+    addButton = StyledButton(root, text=lang['window.button.add'], cursor='hand2', 
                             command=lambda: addNewItem(root, file))
     addButton.pack()
     Hovertip(addButton, 'add a new item')
 
-    removeButton = StyledButton(root, text='Remove item', cursor='hand2', state='disabled',
+    removeButton = StyledButton(root, text=lang['window.button.remove'], cursor='hand2', state='disabled',
                                command=lambda: removeItem(root, file, key=listbox.get(listbox.curselection())))
     removeButton.pack()
-    Hovertip(removeButton, 'remove items')
+    Hovertip(removeButton, 'remove the selected item')
 
     # menu bar
     menubar = tk.Menu(root)
     filemenu = tk.Menu(menubar, tearoff = 0)
-    filemenu.add_command(label = 'Open', command = load)
-    filemenu.add_command(label = 'Save', command = save)
-    filemenu.add_command(label = 'Save as…', command = lambda: save(saveas = True))
+    filemenu.add_command(label = lang['menubar.file.open'], command = load)
+    filemenu.add_command(label = lang['menubar.file.save'], command = save)
+    filemenu.add_command(label = lang['menubar.file.saveas'], command = lambda: save(saveas = True))
     filemenu.add_separator()
-    filemenu.add_command(label = 'Exit', command = close)
-    menubar.add_cascade(label = 'File', menu = filemenu)
+    filemenu.add_command(label = lang['menubar.file.exit'], command = close)
+    menubar.add_cascade(label = lang['menubar.file'], menu = filemenu)
     editmenu = tk.Menu(menubar, tearoff = 0)
-    editmenu.add_command(label = 'Add new item', command = addButton.invoke)
-    editmenu.add_command(label = 'Show plain text', command = plainText)
-    menubar.add_cascade(label = 'Edit', menu=editmenu)
+    editmenu.add_command(label = lang['menubar.edit.add'], command = addButton.invoke)
+    editmenu.add_command(label = lang['menubar.edit.plaintext'], command = plainText)
+    menubar.add_cascade(label = lang['menubar.edit'], menu=editmenu)
     about = tk.Menu(menubar, tearoff = 0)
-    about.add_command(label = 'Website', command = lambda: webbrowser.open('https://dudenessboy.github.io/JSONly'))
-    about.add_command(label = 'Github repository', command = lambda: webbrowser.open('https://github.com/DudenessBoy/JSONly'))
-    about.add_command(label = 'License', command = JSONly.License.showLicense)
-    menubar.add_cascade(label = 'About', menu = about)
+    about.add_command(label = lang['menubar.about.website'], command = lambda: webbrowser.open('https://dudenessboy.github.io/JSONly'))
+    about.add_command(label = lang['menubar.about.repo'], command = lambda: webbrowser.open('https://github.com/DudenessBoy/JSONly'))
+    about.add_command(label = lang['menubar.about.license'], command = JSONly.License.showLicense)
+    menubar.add_cascade(label = lang['menubar.about'], menu = about)
     settingmenu = tk.Menu(menubar, tearoff = 0)
-    settingmenu.add_command(label = 'Theme', command = theme)
-    settingmenu.add_command(label = 'Preferences', command = settings)
-    menubar.add_cascade(label = 'Settings', menu = settingmenu)
-    if platform.system() != 'Windows':
+    settingmenu.add_command(label = lang['menubar.settings.theme'], command = theme)
+    settingmenu.add_command(label = lang['menubar.settings.preferences'], command = settings)
+    menubar.add_cascade(label = lang['menubar.settings'], menu = settingmenu)
+    if OS != 'Windows':
         for menu in (menubar, filemenu, editmenu, about, settingmenu):
             menu.configure(bg = color, fg = fore, activebackground='#646cff', activeforeground='#cccccc')
     root.configure(menu = menubar)
@@ -764,23 +698,23 @@ def display(val) -> None:
     else:
         valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
         valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
-    view = StyledButton(disp, text='View complex value', cursor='hand2', state='disabled')
+    view = StyledButton(disp, text=lang['window.button.complex'], cursor='hand2', state='disabled')
     view.pack()
     Hovertip(view, 'look at complex values (arrays and objects)')
-    edit = StyledButton(disp, text='Edit simple value', cursor='hand2', state='disabled',)
+    edit = StyledButton(disp, text=lang['window.button.edit'], cursor='hand2', state='disabled',)
     edit.pack()
     Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
-    addButton = StyledButton(disp, text='Add new item', cursor='hand2', 
+    addButton = StyledButton(disp, text=lang['window.button.add'], cursor='hand2', 
                             command=lambda: addNewItem(disp, val))
     addButton.pack()
     Hovertip(addButton, 'add a new item')
 
-    removeButton = StyledButton(disp, text='Remove item', cursor='hand2', state='disabled',
+    removeButton = StyledButton(disp, text=lang['window.button.remove'], cursor='hand2', state='disabled',
                                command=lambda: removeItem(disp, val, 
                                                            key=listbox.get(listbox.curselection()) if isinstance(val, dict) else None,
                                                            index=listbox.curselection() if isinstance(val, list) else None))
     removeButton.pack()
-    Hovertip(removeButton, 'remove items')
+    Hovertip(removeButton, 'remove selected item')
 
     disp.bind("<<ValueEdited>>", lambda e: configure())
     disp.bind("<<ItemAdded>>", lambda e: refreshListbox())
@@ -886,33 +820,27 @@ def findPrev(searchKey: str, listbox: tk.Listbox):
 
 # save the program's persistant data
 def saveData(data: dict) -> None:
-    if os.path.exists(dataFile):
-        operation = 'write to'
-    else:
-        operation = 'create'
     try:
         with open(dataFile, 'w') as f:
             json.dump(data, f, indent = 2)
     except PermissionError:
-        messagebox('Permission Denied', f'Permission to {operation} the file "{dataFile}" could not be obtained')
-    except IOError:
-        messagebox('I/O Error', f'There was an error while attempting to {operation} the file "{dataFile}"')
+        messagebox(lang['error.permission.title'], lang['error.permission.write.body'].format(dataFile))
     except Exception as e:
-        messagebox('Error', f'There was an error while attempting to {operation} the file "{dataFile}": {e}')
+        messagebox(lang['error.generic.title'], lang['error.generic.write.body'].format(dataFile, e))
 
 # context menu
 def context(event: tk.Event) -> None:
     contextMenu = tk.Menu(root, tearoff=0)
-    contextMenu.add_command(label='Save', command=save)
-    contextMenu.add_command(label='Save as', command=lambda: save(saveas=True))
-    contextMenu.add_command(label='Open', command=load)
+    contextMenu.add_command(label=lang['contextmenu.save'], command=save)
+    contextMenu.add_command(label=lang['contextmenu.saveas'], command=lambda: save(saveas=True))
+    contextMenu.add_command(label=lang['contextmenu.open'], command=load)
     contextMenu.add_separator()
-    contextMenu.add_command(label='Add new item', command=addButton.invoke)
-    contextMenu.add_command(label='Remove selected item', command=removeButton.invoke)
+    contextMenu.add_command(label=lang['contextmenu.add'], command=addButton.invoke)
+    contextMenu.add_command(label=lang['contextmenu.remove'], command=removeButton.invoke)
     contextMenu.add_separator()
-    contextMenu.add_command(label='Show plain text', command=plainText)
+    contextMenu.add_command(label=lang['contextmenu.plaintext'], command=plainText)
     contextMenu.tk_popup(event.x_root, event.y_root)
-    if platform.system() != 'Windows':
+    if OS != 'Windows':
         contextMenu.configure(bg = color, fg = fore, activebackground='#646cff', activeforeground='#cccccc')
 
 # a custom button class, useless outside of this program, pre-sets a lot of things that were causing repitition
@@ -970,13 +898,13 @@ class ResizableListbox(CTkListbox):
             super().configure(height = available)
 
 # load save data
-dataFile = os.path.join(configDir, 'settings.json')
-os.makedirs(configDir, exist_ok=True)
-os.makedirs(dataDir, exist_ok=True)
+dataFile = os.path.join(CONFIGDIR, 'settings.json')
+os.makedirs(CONFIGDIR, exist_ok=True)
+os.makedirs(DATADIR, exist_ok=True)
 try:
     data = json.loads(loadData(dataFile, r'{}'))
 except json.JSONDecodeError:
-    messagebox('JSON Decode Error', f'The file "{dataFile}" contains invalid JSON syntax. Persistant data will be overwritten.')
+    messagebox(lang['error.json.title'], lang['error.json.body'].format(dataFile) + ' ' + lang['error.json.submessage.overwrite'])
     data = {}
     saveData(data)
 
@@ -996,6 +924,9 @@ if 'theme' not in data.keys():
 if 'global' not in data['theme'].keys():
     data['theme']['global'] = 0
     saveData(data)
+if 'lang' not in data['preferences'].keys():
+    data['preferences']['lang'] = 'en_US.json'
+    saveData(data)
 
 themeData = data['theme']['global']
 if themeData == 0:
@@ -1011,6 +942,79 @@ elif themeData == 1:
 else:
     color = '#1e1e2e'
     fore = 'white'
+
+if os.path.dirname(data['preferences']['lang']) == '':
+    data['preferences']['lang'] = os.path.join(RESOURCEDIR, 'lang', data['preferences']['lang'])
+lang = JSONly.lang.loadData(data['preferences']['lang'])
+if 'error' in lang.keys():
+    print(lang)
+    match lang['error']:
+        case "invalid_json":
+            message = 'contains JSON syntax errors'
+        case 'file_not_found':
+            message = 'could not be found'
+        case 'permission_denied':
+            message = 'could not be read due to insufficient permissions'
+        case 'missing_key':
+            message = f'is missing a mandatory key: {lang['key']}'
+        case 'bad_key_type':
+            message = f'contains a key with the wrong value type: {lang['key']}'
+        case 'unknown_error':
+            message = f'caused an error while processing: {lang['message']}'            
+        case _:
+            message = 'caused an unknown error while processing'
+    print('The default lang file ' + message)
+    quit()
+elif 'success' in lang.keys():
+    lang = lang['data']
+else:
+    print('There was an unknown error while processing data')
+    quit()
+
+# display messages in a pop-up, below others because it needs the 'lang' variable to be set
+def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None, geometry = '300x150'):
+    # Create a new window
+    window = tk.Toplevel()
+    window.configure(bg = color)
+    window.title(title)
+    window.geometry(geometry)
+    window.resizable(False, False)
+
+    # Add a message label
+    label = ttk.Label(window, text=message, wraplength=250, anchor="center")
+    label.pack(padx=20, pady=(20, 10))
+
+    # Create a frame for the buttons
+    buttonFrame = ttk.Frame(window)
+    buttonFrame.pack(pady=10)
+
+    # Callback function for buttons
+    def onButtonClick(btn_text):
+        nonlocal endVal
+        if callback:
+            callback(btn_text)
+        endVal = btn_text
+        enableWidgets(root)
+        window.destroy()
+    
+    endVal = 'closed'
+
+    # Add buttons
+    for button_text in buttons:
+        button = StyledButton(buttonFrame, text=button_text, command=lambda bt=button_text: onButtonClick(bt), height=30, width = 100)
+        button.pack(side=tk.LEFT, padx=5)
+
+    # Center the window on the screen
+    window.update_idletasks()
+
+    # Prevent interaction with the main window
+    window.transient()
+    # window.grab_set()
+    window.attributes('-topmost', True)
+    disableWidgets(root)
+    window.protocol('WM_DELETE_WINDOW', lambda: onButtonClick(buttons[-1]))
+    window.wait_window()
+    return endVal
 
 root = mainWindow()
 img = tk.PhotoImage(data = image)
