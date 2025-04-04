@@ -956,11 +956,11 @@ if 'error' in lang.keys():
         case 'permission_denied':
             message = 'could not be read due to insufficient permissions'
         case 'missing_key':
-            message = f'is missing a mandatory key: {lang['key']}'
+            message = f'is missing a mandatory key: {lang["key"]}'
         case 'bad_key_type':
-            message = f'contains a key with the wrong value type: {lang['key']}'
+            message = f'contains a key with the wrong value type: {lang["key"]}'
         case 'unknown_error':
-            message = f'caused an error while processing: {lang['message']}'            
+            message = f'caused an error while processing: {lang["message"]}'            
         case _:
             message = 'caused an unknown error while processing'
     print('The default lang file ' + message)
