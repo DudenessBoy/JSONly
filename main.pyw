@@ -17,7 +17,6 @@ import tkinter as tk
 import customtkinter as ctk
 from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import JSONly.License
-from JSONly.tooltip import Hovertip
 from JSONly.image import image
 import JSONly.lang
 from tkinter import ttk
@@ -513,22 +512,18 @@ def mainWindow() -> None:
 
     view = StyledButton(root, text=lang['window.button.complex'], cursor='hand2', state='disabled')
     view.pack()
-    Hovertip(view, 'look at complex values (arrays and objects)')
 
     edit = StyledButton(root, text=lang['window.button.edit'], cursor='hand2', state='disabled', 
                       command=lambda: editValue(root, file, key=listbox.get(listbox.curselection())))
     edit.pack()
-    Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
 
     addButton = StyledButton(root, text=lang['window.button.add'], cursor='hand2', 
                             command=lambda: addNewItem(root, file))
     addButton.pack()
-    Hovertip(addButton, 'add a new item')
 
     removeButton = StyledButton(root, text=lang['window.button.remove'], cursor='hand2', state='disabled',
                                command=lambda: removeItem(root, file, key=listbox.get(listbox.curselection())))
     removeButton.pack()
-    Hovertip(removeButton, 'remove the selected item')
 
     # menu bar
     menubar = tk.Menu(root)
@@ -688,21 +683,17 @@ def display(val) -> None:
         valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
     view = StyledButton(disp, text=lang['window.button.complex'], cursor='hand2', state='disabled')
     view.pack()
-    Hovertip(view, 'look at complex values (arrays and objects)')
     edit = StyledButton(disp, text=lang['window.button.edit'], cursor='hand2', state='disabled',)
     edit.pack()
-    Hovertip(edit, 'edit the properties of simple values (strings, integers, etc.)')
     addButton = StyledButton(disp, text=lang['window.button.add'], cursor='hand2', 
                             command=lambda: addNewItem(disp, val))
     addButton.pack()
-    Hovertip(addButton, 'add a new item')
 
     removeButton = StyledButton(disp, text=lang['window.button.remove'], cursor='hand2', state='disabled',
                                command=lambda: removeItem(disp, val, 
                                                            key=listbox.get(listbox.curselection()) if isinstance(val, dict) else None,
                                                            index=listbox.curselection() if isinstance(val, list) else None))
     removeButton.pack()
-    Hovertip(removeButton, 'remove selected item')
 
     disp.bind("<<ValueEdited>>", lambda e: configure())
     disp.bind("<<ItemAdded>>", lambda e: refreshListbox())
@@ -743,13 +734,10 @@ def findWindow(listbox: tk.Listbox) -> None:
     findEntry.select_range(0, tk.END)
     nextBtn = StyledButton(findWin, text = '↓', command = lambda: findNext(findEntry.get(), listbox), width = 5)
     nextBtn.pack(side = 'left')
-    Hovertip(nextBtn, 'find next (enter, up)')
     prevBtn = StyledButton(findWin, text = '↑', command = lambda: findPrev(findEntry.get(), listbox), width = 5)
     prevBtn.pack(side = 'left')
-    Hovertip(prevBtn, 'find previous (up)')
     closeBtn = StyledButton(findWin, text = '×', command = close, width = 5)
     closeBtn.pack(side = 'left')
-    Hovertip(closeBtn, 'close')
     findWin.bind('<Return>', lambda event: findNext(findEntry.get(), listbox))
     findWin.bind('<Down>', lambda event: findNext(findEntry.get(), listbox))
     findWin.bind('<Up>', lambda event: findPrev(findEntry.get(), listbox))

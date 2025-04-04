@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - automatic detection for system theme
 - language support
+### Removed
+- tooltips
 
 ## v1.0.1
 ### Fixed
