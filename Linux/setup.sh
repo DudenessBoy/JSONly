@@ -43,9 +43,9 @@ ensureFile ../../version.txt "The file '../../version.txt' does not exist. Pleas
 version=$(<../../version.txt)
 
 # get additional licenses that will be used
-wget -O MIT.txt https://raw.githubusercontent.com/spdx/license-list-data/main/text/MIT.txt
 wget -O BSD-3-Clause.txt https://raw.githubusercontent.com/spdx/license-list-data/main/text/BSD-3-Clause.txt
 wget -O xsel-license.txt https://raw.githubusercontent.com/kfish/xsel/refs/heads/master/COPYING
+wget -O PSFL.txt https://raw.githubusercontent.com/test-unit/test-unit/refs/heads/master/PSFL
 
 # set up the .deb setup directory
 
@@ -56,7 +56,6 @@ createDir deb/usr/share/JSONly/lib
 createDir deb/usr/share/applications
 createDir deb/usr/share/doc/customtkinter
 createDir deb/usr/share/doc/darkdetect
-createDir deb/usr/share/doc/JSONly
 createDir deb/usr/share/doc/CTkListbox
 createDir deb/usr/local/share/icons/hicolor/64x64/apps/
 
@@ -78,9 +77,12 @@ done
 
 # copy the other application elements into the folder
 cp ../JSONly.desktop deb/usr/share/applications/
-cp ../../LICENSE deb/usr/share/doc/JSONly/
+cp -r ../../lang/ deb/usr/share/JSONly/
+cp ../../LICENSE deb/usr/share/JSONly/
 cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/JSONly.png
 cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
+# change the packaging variable in constants.py
+sed -i "18s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
 cp JSONly deb/usr/bin/
 ensureFolder /usr/lib/python3/dist-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
 cp -r /usr/lib/python3/dist-packages/customtkinter/ deb/usr/share/JSONly/lib/
@@ -95,11 +97,10 @@ declare -a mit=(
 )
 for i in "${mit[@]}"; do
     if [[ $i != "plyer" ]]; then
-        cp MIT.txt "deb/usr/share/doc/$i/LICENSE"
+        cp ../../LICENSE "deb/usr/share/doc/$i/LICENSE"
     fi
 done
-cp ../../LICENSE deb/usr/share/doc/JSONly/
-cp ../../PSFL.txt deb/usr/share/doc/JSONly/
+cp ../../LICENSE deb/usr/share/JSONly/
 
 # set up the AppImage setup directory
 
@@ -109,7 +110,6 @@ createDir appimage/usr/lib/python3.11
 createDir appimage/usr/lib/python3/dist-packages/
 createDir appimage/usr/share/doc/customtkinter/
 createDir appimage/usr/share/doc/darkdetect/
-createDir appimage/usr/share/doc/JSONly/
 createDir appimage/usr/share/doc/CTkListbox
 createDir appimage/usr/share/doc/Python
 createDir appimage/usr/share/doc/plyer
@@ -117,7 +117,9 @@ createDir appimage/usr/share/doc/xsel
 
 # copy application elements
 cp JSONly appimage/usr/bin/JSONly
+cp -r ../../lang/ appimage/usr/share/JSONly/
 cp -r ../../JSONly/ appimage/usr/lib/python3/dist-packages/
+sed -i "18s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py
 cp ../JSONly.desktop appimage/app.desktop
 cp ../../icon.png appimage/app.png
 cp ../AppRun appimage/
@@ -151,13 +153,12 @@ ensureFolder $pypath/json $message
 cp -r $pypath/json appimage/usr/lib/python3.11
 
 for i in "${mit[@]}"; do
-    cp MIT.txt "appimage/usr/share/doc/$i/LICENSE"
+    cp ../../LICENSE "appimage/usr/share/doc/$i/LICENSE"
 done
 cp BSD-3-Clause.txt "appimage/usr/share/doc/darkdetect/LICENSE"
 cp xsel-license.txt "appimage/usr/share/doc/xsel/LICENSE"
-cp ../../LICENSE "appimage/usr/share/doc/JSONly/"
-cp ../../PSFL.txt "appimage/usr/share/doc/JSONly/"
-cp ../../PSFL.txt "appimage/usr/share/doc/Python/LICENSE"
+cp ../../LICENSE "appimage/usr/share/JSONly/"
+cp PSFL.txt "appimage/usr/share/doc/Python/LICENSE"
 
 # change the icon line in app.desktop to use "app" instead of "JSONly"
 sed -i "5s/.*/Icon=app/" appimage/app.desktop
