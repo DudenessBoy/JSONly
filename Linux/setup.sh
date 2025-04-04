@@ -32,11 +32,11 @@ ensureFolder() {
 mkdir dist/
 cd dist
 
-cp ../../main.pyw ./JSONly # make a copy of the program that will be executable
+cp ../../main.pyw ./jsonly # make a copy of the program that will be executable
 
 # add a shebang and mark it executable
-sed -i '1i #!/usr/bin/python3' JSONly
-chmod +x JSONly
+sed -i '1i #!/usr/bin/python3' jsonly
+chmod +x jsonly
 
 # get the version and store it in a variable
 ensureFile ../../version.txt "The file '../../version.txt' does not exist. Please create this file so that the script can write the version to certain files."
@@ -83,7 +83,7 @@ cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/JSONly.png
 cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
 # change the packaging variable in constants.py
 sed -i "18s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
-cp JSONly deb/usr/bin/
+cp jsonly deb/usr/bin/
 ensureFolder /usr/lib/python3/dist-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
 cp -r /usr/lib/python3/dist-packages/customtkinter/ deb/usr/share/JSONly/lib/
 ensureFolder /usr/local/lib/python3.11/dist-packages/darkdetect "DarkDetect is not installed on your computer. Please install it with 'sudo pip3 install darkdetect'"
@@ -116,7 +116,7 @@ createDir appimage/usr/share/doc/plyer
 createDir appimage/usr/share/doc/xsel
 
 # copy application elements
-cp JSONly appimage/usr/bin/JSONly
+cp jsonly appimage/usr/bin/
 cp -r ../../lang/ appimage/usr/share/JSONly/
 cp -r ../../JSONly/ appimage/usr/lib/python3/dist-packages/
 sed -i "18s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py

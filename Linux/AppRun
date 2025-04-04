@@ -13,4 +13,4 @@ export PATH="$APPDIR/usr/bin:$PATH"
 export PYTHONPATH="$APPDIR/usr/lib/python3/dist-packages:$APPDIR/usr/lib/python3.11:$PYTHONPATH"
 
 # Execute the application
-exec "$APPDIR/usr/bin/python3.11" "$APPDIR/usr/bin/JSONly" "$@"
+exec "$APPDIR/usr/bin/python3.11" "$APPDIR/usr/bin/jsonly" "$@"
