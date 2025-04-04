@@ -23,7 +23,7 @@ match OS:
         elif packaging == 'system': # installed with the system's package manager (APT, DNF, etc.)
             RESOURCEDIR = '/usr/share/JSONly/'
         elif packaging == 'appimage': # running in an appimage
-            RESOURCEDIR = os.path.join(os.path.dirname(sys.executable), 'usr/share/JSONly')
+            RESOURCEDIR = os.path.join(os.path.dirname(os.path.dirname(sys.executable)), 'share', 'JSONly')
         else:
             RESOURCEDIR = FILEDIR
     case 'Darwin': # MacOS
