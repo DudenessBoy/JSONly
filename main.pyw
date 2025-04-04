@@ -3,7 +3,8 @@
 
 import os
 import sys
-if OS != 'Linux':
+import platform
+if platform.system() != 'Linux': # can't use OS because of confilicts with DEB package
     import pyperclip
 else:
     sys.path.append('/usr/share/JSONly/lib')
