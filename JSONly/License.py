@@ -1,19 +1,7 @@
-#   JSONly is a GUI program for interacting with and manipulating JSON files
-#     Copyright (C) 2024  Luke Moyer
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
+# Copyright (c) 2025 Luke Moyer
+# Licensed under the MIT License. See LICENSE file for details.
 
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-
-#     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-# file that displays JSONly's license (GNU GPL)
+# file that displays JSONly's license (MIT)
 import tkinter as tk
 from tkinter import ttk
 from JSONly.tooltip import Hovertip
@@ -126,7 +114,7 @@ def showLicense() -> None:
 
     # Hyperlinks
     Hyperlink(
-        linkFrame, text='GNU GPL License V3',
-        url='https://www.gnu.org/licenses/gpl-3.0.en.html', cursor='hand2',
+        linkFrame, text='MIT License',
+        url='https://opensource.org/license/mit', cursor='hand2',
         bg='#1e1e2e'
     ).pack()

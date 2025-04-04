@@ -1,5 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+# Copyright (c) 2025 Luke Moyer
+# Licensed under the MIT License. See LICENSE file for details.
+
 # This is the PyInstaller spec file for compiling JSONly to a .exe file
 
 a = Analysis(

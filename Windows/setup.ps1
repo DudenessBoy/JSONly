@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Luke Moyer
+# Licensed under the MIT License. See LICENSE file for details.
 # this PowerShell script prepares certain other files for use with PyInstaller and Inno Setup
 
 # create a doc directory and all required subdirs

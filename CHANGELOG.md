@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - data storage directories are now set for FreeBSD
+- relicensed under MIT
+- license module now reads the 'LICENSE' file rather than using hard-coded text
 ### Added
 - automatic detection for system theme
+- language support
 
 ## v1.0.1
 ### Fixed

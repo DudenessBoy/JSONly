@@ -62,7 +62,10 @@ If running from source, use the following command:
 python main.pyw
 ```
 ## License
-JSONly is released under the GPL License. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
+This project is licensed under the MIT License starting from version 1.1.0-beta. See the [LICENSE](https://github.com/DudenessBoy/JSONly/blob/main/LICENSE) file for more details.
+
+Versions 1.0.1 and earlier were released under the GNU General Public License v3.0 (GPL-3.0).
+You can find the GPL-licensed source code by checking out the appropriate tags/releases in this repository.
 
 ## Additional links
 Project website: https://DudenessBoy.github.io/JSONly  

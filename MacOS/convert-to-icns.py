@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Luke Moyer
+# Licensed under the MIT License. See LICENSE file for details.
+
 import icnsutil
 
 # Load the PNG file

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Copyright (c) 2025 Luke Moyer
+# Licensed under the MIT License. See LICENSE file for details.
+
 # create directories
 mkdir -p JSONly/resources/doc/
 mkdir -p JSONly/JSONly
