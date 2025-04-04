@@ -4,7 +4,6 @@
 # file that displays JSONly's license (MIT)
 import tkinter as tk
 from tkinter import ttk
-from JSONly.tooltip import Hovertip
 import webbrowser
 from JSONly.constants import *
 
@@ -15,10 +14,9 @@ class Hyperlink(tk.Label):
     '''A simple hyperlink that opens a website when clicked.\n
     New parameters:\n
     • url - the website that is connected to the hyperlink\n
-    • showHovertip - whether or not to show a tooltip for the website\n
     • changeColor - whether or not to change color when hovered over\n
     • same - if true and no text or textvariable is given, text is the same as url'''
-    def __init__(self, master: tk.Misc | None = None, *, url: str, font: str | list | tuple = 'Helvetica 10 underline', highlightcolor: str = 'blue', showHovertip: bool = True, same: bool = True, changeColor: bool = True, **kwargs) -> None:
+    def __init__(self, master: tk.Misc | None = None, *, url: str, font: str | list | tuple = 'Helvetica 10 underline', highlightcolor: str = 'blue', same: bool = True, changeColor: bool = True, **kwargs) -> None:
         if not (url.startswith('https://') or url.startswith('http://')):
             url = 'http://' + url
         if kwargs['text'] is None:
@@ -27,12 +25,9 @@ class Hyperlink(tk.Label):
             else:
                 kwargs['text'] = ''
         self.changeColor = changeColor
-        self.showHovertip = showHovertip
         self.same = same
         self.url = url
         super().__init__(master, activeforeground='#4FC3F7', disabledforeground='#4FC3F7', fg='#4FC3F7', font=font, foreground='#4FC3F7', highlightcolor=highlightcolor, **kwargs)
-        if showHovertip:
-            Hovertip(self, url)
     
     # handle url clicked
     def _onClick(self, event = None) -> None:
