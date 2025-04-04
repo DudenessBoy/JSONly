@@ -114,10 +114,11 @@ createDir appimage/usr/share/doc/CTkListbox
 createDir appimage/usr/share/doc/Python
 createDir appimage/usr/share/doc/plyer
 createDir appimage/usr/share/doc/xsel
+createDir appimage/usr/share/JSONly/lang
 
 # copy application elements
 cp jsonly appimage/usr/bin/
-cp -r ../../lang/ appimage/usr/share/JSONly/
+cp ../../lang/* appimage/usr/share/JSONly/lang
 cp -r ../../JSONly/ appimage/usr/lib/python3/dist-packages/
 sed -i "18s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py
 cp ../JSONly.desktop appimage/app.desktop
@@ -162,3 +163,5 @@ cp PSFL.txt "appimage/usr/share/doc/Python/LICENSE"
 
 # change the icon line in app.desktop to use "app" instead of "JSONly"
 sed -i "5s/.*/Icon=app/" appimage/app.desktop
+# change exec to AppRun
+sed -i "4s/.*/Exec=AppRun %F/" appimage/app.desktop

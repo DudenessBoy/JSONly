@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=JSONly
-Exec=JSONly %F
+Exec=jsonly %F
 Icon=JSONly
 Categories=Development;
 StartupWMClass=JSONly
