@@ -38,7 +38,8 @@ match OS:
         CONFIGDIR = os.getenv("LOCALAPPDATA", os.path.join(os.getenv("USERPROFILE", ""), "AppData", "Local")) # data stored in %LOCALAPPDATA%, if it isn't set, default to %USERPROFILE%\AppData\Local
         DATADIR = CONFIGDIR
         if getattr(sys, 'frozen', False):
-            RESOURCEDIR = os.path.join(FILEDIR, 'resources')
+            basePath = sys._MEIPASS
+            RESOURCEDIR = os.path.join(basePath, 'resources')
         else:
             RESOURCEDIR = FILEDIR
     case 'FreeBSD':
