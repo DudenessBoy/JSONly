@@ -12,16 +12,16 @@ else:
 import json
 import subprocess
 import webbrowser
-from plyer import filechooser
 import tkinter as tk
+from tkinter import ttk
+from plyer import filechooser
 import customtkinter as ctk
 from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
+import darkdetect
 import JSONly.License
 from JSONly.image import image
 import JSONly.lang
 from JSONly.constants import *
-from tkinter import ttk
-import darkdetect
 
 # initialize some variables
 file = {}# JSON data to be viewed
