@@ -52,3 +52,8 @@ match OS:
 CONFIGDIR = os.path.join(CONFIGDIR, 'JSONly')
 DATADIR = os.path.join(DATADIR, 'JSONly')
 VERSION = '1.1.0-beta' # current application version
+LINKS = {
+    'repo': 'https://github.com/DudenessBoy/JSONly',
+    'website': 'https://dudenessboy.github.io/JSONly',
+    'license': 'https://opensource.org/license/mit'
+}

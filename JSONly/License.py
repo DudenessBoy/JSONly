@@ -110,6 +110,6 @@ def showLicense() -> None:
     # Hyperlinks
     Hyperlink(
         linkFrame, text='MIT License',
-        url='https://opensource.org/license/mit', cursor='hand2',
+        url=LINKS['license'], cursor='hand2',
         bg='#1e1e2e'
     ).pack()
