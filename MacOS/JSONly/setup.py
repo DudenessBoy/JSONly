@@ -5,8 +5,9 @@ from setuptools import setup
 
 APP = ['main.pyw']
 DATA_FILES = [
-    ('resources', ['resources/icon.icns']),
-    ('resources/doc', ['resources/doc/MIT.txt', 'resources/doc/BSD-3-Clause.txt', '../../LICENSE', '../../PSFL.txt'])
+    ('', ['resources/icon.icns', 'resources/doc/BSD-3-Clause.txt', '../../LICENSE']),
+    ('lang', ['../../lang/en_US.json'])
+
 ]
 OPTIONS = {
     'argv_emulation': False,
