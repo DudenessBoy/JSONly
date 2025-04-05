@@ -7,7 +7,7 @@ from tkinter import ttk
 import webbrowser
 from JSONly.constants import *
 
-with open(os.path.join(RESOURCEDIR, 'LICENSE'), 'r') as f:
+with open(os.path.join(RESOURCEDIR, 'LICENSE'), 'r', encoding='utf-8') as f:
     LICENSE = f.read()
 
 class Hyperlink(tk.Label):

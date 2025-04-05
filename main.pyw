@@ -413,7 +413,7 @@ def settings() -> None:
 
 def writeFile(path: str, data: str) -> bool:
     try:
-        with open(path, 'w') as f:
+        with open(path, 'w', encoding='utf-8') as f:
             f.write(data)
         return True
     except PermissionError:
@@ -425,7 +425,7 @@ def writeFile(path: str, data: str) -> bool:
 
 def loadData(path: str, default: str) -> str:
     try:
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             ret = f.read()
             return ret
     except FileNotFoundError:
@@ -798,7 +798,7 @@ def findPrev(searchKey: str, listbox: tk.Listbox):
 # save the program's persistant data
 def saveData(data: dict) -> None:
     try:
-        with open(dataFile, 'w') as f:
+        with open(dataFile, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent = 2)
     except PermissionError:
         messagebox(lang['error.permission.title'], lang['error.permission.write.body'].format(dataFile))

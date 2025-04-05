@@ -77,7 +77,7 @@ listKeys = [ # keys that need to be in list format, others should be strings
 def loadMeta(file: str) -> dict | None:
     # open the file
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except:
         return None
@@ -93,7 +93,7 @@ def loadMeta(file: str) -> dict | None:
 # load the JSON data and return the value of the lang key
 def loadData(file: str) -> dict:
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except json.JSONDecodeError:
         return {'error': 'invalid_json'}
