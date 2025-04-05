@@ -941,12 +941,12 @@ if 'error' in lang.keys():
         case _:
             message = 'caused an unknown error while processing'
     print('The default lang file ' + message)
-    quit()
+    sys.exit()
 elif 'success' in lang.keys():
     lang = lang['data']
 else:
     print('There was an unknown error while processing data')
-    quit()
+    sys.exit()
 
 # display messages in a pop-up, below others because it needs the 'lang' variable to be set
 def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None, geometry = '300x150'):
