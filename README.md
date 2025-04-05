@@ -11,19 +11,21 @@ JSONly is perfect for developers, data analysts, or anyone needing a reliable to
 ## Installing Dependencies (for running from source):
 If you plan to run JSONly from the source code, you will need to install the following dependencies:
 
-1. **plyer**:
+1. **Python requirements** (requirements.txt)
    ```bash
-   pip install plyer
-2. **CustomTkinter**
-   ```bash
-   pip install customtkinter
-3. **pyperclip** (Windows and MacOS only)
-   ```bash
-   pip install pyperclip
-4. **PyWin32** (Windows only)
-   ```bash
-   pip install pywin32
-5. **Python** 3.10 or above
+   pip install -r requirements.txt
+2. **Xsel** (Linux only)
+   - For **Debian-based distributions** (e.g., Ubuntu):
+       ```bash
+       sudo apt install xsel
+      - For **Red Hat-based distributions** (e.g., Fedora, CentOS):
+         ```bash
+         sudo dnf install xsel
+     - For **Arch-based distributions** (e.g. Manjaro, EndeavorOS):
+         ```bash
+         sudo pacman -S xsel
+     - For other Linux distributions, you can search for xsel in your package manager.
+3. **Python** 3.10 or above
    - For Linux (note: most Linux distributions come with Python preinstalled):
      - For **Debian-based distributions** (e.g., Ubuntu):
        ```bash

@@ -1,0 +1,5 @@
+plyer
+customtkinter
+CTkListbox
+pyperclip
+darkdetect
