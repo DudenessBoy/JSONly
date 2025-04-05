@@ -37,9 +37,9 @@ LicenseLabel3=Important Notice: This is not an End User License Agreement (EULA)
 
 [Files]
 Source: "dist\JSONly.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\LICENSE"; DestDir: "{app}\doc\"; Flags: ignoreversion
-Source: "..\PSFL.txt"; DestDir: "{app}\doc\"; Flags: ignoreversion
-Source: "doc\*"; DestDir: "{app}\doc\"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\LICENSE"; DestDir: "{app}\resources\"; Flags: ignoreversion
+Source: "doc\*"; DestDir: "{app}\resources\doc\"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\lang\*"; DestDir: "{app}\resources\lang\"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\JSONly"; Filename: "{app}\JSONly.exe"; WorkingDir: "{app}"; IconFilename: "{app}\JSONly.exe"
