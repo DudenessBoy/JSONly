@@ -10,13 +10,12 @@ foreach ($folder in $folders) {
 }
 
 # get the license files from GitHub
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/spdx/license-list-data/main/text/MIT.txt" -OutFile "doc\MIT.txt"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/spdx/license-list-data/main/text/BSD-3-Clause.txt" -OutFile "doc\BSD-3-Clause.txt"
 
 # copy the licenses to their appropriate places, moving them on the last one to avoid leftover mess
-Copy-Item -Path "doc\MIT.txt" -Destination "doc\CustomTkinter\LICENSE"
-Copy-Item -Path "doc\MIT.txt" -Destination "doc\CTkListbox\LICENSE"
-Move-Item -Path "doc\MIT.txt" -Destination "doc\Plyer\LICENSE"
+Copy-Item -Path "..\LICENSE" -Destination "doc\CustomTkinter\LICENSE"
+Copy-Item -Path "..\LICENSE" -Destination "doc\CTkListbox\LICENSE"
+Copy-Item -Path "..\LICENSE" -Destination "doc\Plyer\LICENSE"
 Copy-Item -Path "doc\BSD-3-Clause.txt" -Destination "doc\Pyperclip\LICENSE"
 Move-Item -Path "doc\BSD-3-Clause.txt" -Destination "doc\DarkDetect\LICENSE"
 
