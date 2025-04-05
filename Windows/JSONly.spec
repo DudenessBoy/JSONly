@@ -9,7 +9,10 @@ a = Analysis(
     ['..\\main.pyw'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[
+        (os.path.abspath('..\\LICENSE'), 'resources'),
+        (os.path.abspath('..\\lang'), 'resources\\lang'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
