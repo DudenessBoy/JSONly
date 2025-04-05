@@ -30,7 +30,7 @@ match OS:
         CONFIGDIR = os.path.join(os.getenv("HOME", ""), "Library", "Application Support") # data stored in $HOME/Library/Application Support (why is there a space in the folder name?)
         DATADIR = CONFIGDIR
         if getattr(sys, 'frozen', False):
-            basePath = sys._MEIPASS
+            basePath = os.path.dirname(os.path.dirname(sys.executable))
             RESOURCEDIR = os.path.join(basePath, 'Resources')
         else:
             RESOURCEDIR = FILEDIR
