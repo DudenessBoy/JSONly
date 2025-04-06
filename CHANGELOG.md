@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - icon is now read from a file instead of base64 encoded text
+- program no longer terminates when it encounters an error processing the lang file
 ### Added
 - language preferences
 ## v1.1.0 beta
