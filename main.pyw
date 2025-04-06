@@ -1299,8 +1299,10 @@ else:
     fore = 'white'
 
 if os.path.dirname(data['preferences']['lang']) == '':
-    data['preferences']['lang'] = os.path.join(RESOURCEDIR, 'lang', data['preferences']['lang'])
-lang = JSONly.lang.loadData(data['preferences']['lang'])
+    langPath = os.path.join(RESOURCEDIR, 'lang', data['preferences']['lang'])
+else:
+    langPath = data['preferences']['lang']
+lang = JSONly.lang.loadData(langPath)
 if 'error' in lang.keys():
     print(lang)
     match lang['error']:
@@ -1385,7 +1387,6 @@ style = ttk.Style()
 style.theme_use('alt')
 style.configure('TLabel', background=color, foreground=fore)
 style.configure('TFrame', background=color)
-del img, image
 
 if len(sys.argv) > 1:
     print('opened:', sys.argv[1])
