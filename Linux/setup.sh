@@ -83,7 +83,7 @@ cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/JSONly.png
 cp ../../icon.png deb/usr/share/JSONly/
 cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
 # change the packaging variable in constants.py
-sed -i "18s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
+sed -i "19s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
 cp jsonly deb/usr/bin/
 ensureFolder /usr/lib/python3/dist-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
 cp -r /usr/lib/python3/dist-packages/customtkinter/ deb/usr/share/JSONly/lib/
@@ -121,7 +121,7 @@ createDir appimage/usr/share/JSONly/lang
 cp jsonly appimage/usr/bin/
 cp ../../lang/* appimage/usr/share/JSONly/lang
 cp -r ../../JSONly/ appimage/usr/lib/python3/dist-packages/
-sed -i "18s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py
+sed -i "19s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py
 cp ../JSONly.desktop appimage/app.desktop
 cp ../../icon.png appimage/app.png
 cp ../../icon.png appimage/usr/share/JSONly/
