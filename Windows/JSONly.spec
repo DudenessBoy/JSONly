@@ -12,7 +12,7 @@ a = Analysis(
     datas=[
         (os.path.abspath('..\\LICENSE'), 'resources'),
         (os.path.abspath('..\\lang'), 'resources\\lang'),
-        (os.path.abspath('..\\icon.png', 'resources')),
+        (os.path.abspath('..\\icon.png'), 'resources'),
     ],
     hiddenimports=[],
     hookspath=[],
