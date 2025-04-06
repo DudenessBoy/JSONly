@@ -565,7 +565,7 @@ def settings() -> None:
         button_color='#646cff',
         button_hover_color='#4b50d8'
     )
-    indent.set(data['preferences']['indent'])
+    indent.set(2)
     indent.pack()
     ttk.Label(win, text=lang['settings.label.extension'], font = 1).pack()
     ext = ctk.CTkEntry(
