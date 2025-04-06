@@ -1322,34 +1322,14 @@ else:
     fore = 'black'
 
 if os.path.dirname(data['preferences']['lang']) == '':
-    langPath = os.path.join(RESOURCEDIR, 'lang', data['preferences']['lang'])
+    langPath = os.path.join(
+        RESOURCEDIR,
+        'lang',
+        data['preferences']['lang']
+    )
 else:
     langPath = data['preferences']['lang']
 lang = JSONly.lang.loadData(langPath)
-if 'error' in lang.keys():
-    print(lang)
-    match lang['error']:
-        case "invalid_json":
-            message = 'contains JSON syntax errors'
-        case 'file_not_found':
-            message = 'could not be found'
-        case 'permission_denied':
-            message = 'could not be read due to insufficient permissions'
-        case 'missing_key':
-            message = f'is missing a mandatory key: {lang["key"]}'
-        case 'bad_key_type':
-            message = f'contains a key with the wrong value type: {lang["key"]}'
-        case 'unknown_error':
-            message = f'caused an error while processing: {lang["message"]}'            
-        case _:
-            message = 'caused an unknown error while processing'
-    print('The default lang file ' + message)
-    sys.exit()
-elif 'success' in lang.keys():
-    lang = lang['data']
-else:
-    print('There was an unknown error while processing data')
-    sys.exit()
 
 # display messages in a pop-up, below others because it needs the 'lang' variable to be set
 def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None, geometry='300x150'):

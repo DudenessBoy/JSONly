@@ -6,7 +6,10 @@ import glob
 import os
 from JSONly.constants import *
 
-keys = [ # a list of all keys that should be present in the lang file
+default = os.path.join(RESOURCEDIR, 'lang', 'en.json')  # default language file name
+
+# a list of all keys that should be present in the lang file
+keys = [
     'menubar.file',
     'menubar.edit',
     'menubar.about',
@@ -74,10 +77,17 @@ keys = [ # a list of all keys that should be present in the lang file
     'filepicker.filter.json',
 ]
 # keys that need to be in list format, others should be strings
-listKeys = [
-    'popup.unsaved.buttons',
-    'window.types',
-]
+# this also contains the number of values that should be in each
+listKeys = {
+    'popup.unsaved.buttons': 3,
+    'window.types': 5,
+}
+
+# return a version of the language dictionary using the keys as values.
+# this is useful for when the file is corrupted or missing.
+def useKeys(message: str) -> None:
+    print(f'{message} Using the language keys instead.')
+    return dict(zip(keys, keys))
 
 # open and ensure the usability of the lang files
 def loadMeta(file: str) -> dict | None:
@@ -98,56 +108,47 @@ def loadMeta(file: str) -> dict | None:
 
 # load the JSON data and return the value of the lang key
 def loadData(file: str) -> dict:
+    data = dict()
     try:
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except json.JSONDecodeError:
-        return {'error': 'invalid_json'}
+        data['lang'] = useKeys('The default language file contains JSON syntax errors.')
     except FileNotFoundError:
-        return {'error': 'file_not_found'}
+        if file != default:
+            return loadData(default)
+        else:
+            data['lang'] = useKeys('The default language file could not be found.')
     except PermissionError:
-        return {'error': 'permission_denied'}
+        data['lang'] = useKeys('The default language file contains insufficient permissions.')
     except Exception as e:
-        return {'error': 'unknown_error', 'message': str(e)}
-
+        data['lang'] = useKeys(f'There was an error processing the default lang file:\n\
+            {str(e)}\n')
+    
     if 'lang' not in data:
-        return {'error': 'missing_key', 'key': 'lang'}
+        lang = useKeys('Language data was not found in the default lang file.')
     
     for key in keys:
-        # check to see if the key exists
+        # check to see if the key exists, if not, assign the key as the value
         if key not in data['lang']:
-            return {'error': 'missing_key', 'key': key}
+            data['lang'][key] = key
         # check to make sure the key is the correct format
-        elif key in listKeys:
+        if key in listKeys.keys():
             if not isinstance(data['lang'][key], list):
-                return {'error': 'bad_key_type', 'key': key}
+                data['lang'][key] = []
+                for i in range(listKeys[data['lang'][key]]):
+                    data['lang'][key].append(f'{key}.{i}')
         elif not isinstance(data['lang'][key], str):
-            return {'error': 'bad_key_type', 'key': key}
+            data['lang'][key] = str(data['lang'][key])
     
-    return {'success': True, 'data': data['lang']}
+    return data['lang']
 
-# remove any language files with the same common name to avoid confusion
-def removeDuplicates(langFiles):
-    seen = {}
-    for commonName, path in langFiles.items():
-        if commonName not in seen or path.startswith('lang/'):
-            seen[commonName] = path
-    # Return in the format {commonname: path}
-    return seen
-
-# Define possible language file locations (installed and source directory)
-langDirs = [
-    os.path.join(RESOURCEDIR, 'lang'),  # Installed location
-    'lang'  # Source directory (for development)
-]
+langPath = os.path.join(RESOURCEDIR, 'lang')
 langFiles = dict()  # holds metadata and corresponding lang files
 
-# Search for language files in both locations
-for langPath in langDirs:
-    if os.path.isdir(langPath):  # Check if the directory exists
-        for file in glob.glob(os.path.join(langPath, '*.json')):
-            meta = loadMeta(file)
-            if meta != None:
-                langFiles.update(meta)
-
-langFiles = removeDuplicates(langFiles)
+# Search for language files
+if os.path.isdir(langPath):  # Check if the directory exists
+    for file in glob.glob(os.path.join(langPath, '*.json')):
+        meta = loadMeta(file)
+        if meta != None:
+            langFiles.update(meta)
