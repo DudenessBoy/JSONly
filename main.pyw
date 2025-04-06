@@ -19,7 +19,6 @@ import customtkinter as ctk
 from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import darkdetect
 import JSONly.License
-from JSONly.image import image
 import JSONly.lang
 from JSONly.constants import *
 
@@ -185,24 +184,24 @@ def editValue(
     ) -> None:
     def saveValue(event = None):
         newValue = valueEntry.get()
-        if typeVar.get() == 'integer':
+        if typeVar.get() == lang['window.types'][1]:
             try:
                 newValue = int(float(newValue))
             except ValueError:
                 newValue = 1
-        elif typeVar.get() == 'floating point number':
+        elif typeVar.get() == lang['window.types'][2]:
             try:
                 newValue = float(newValue)
             except ValueError:
                 newValue = 1.0
-        elif typeVar.get() == 'boolean':
+        elif typeVar.get() == lang['window.types'][3]:
             if newValue.lower() != 'true' and newValue.lower() != 'false':
                 if newValue == '0' or newValue == '':
                     newValue = 'false'
                 else:
                     newValue = 'true'
             newValue = newValue.lower() == 'true'
-        elif typeVar.get() == 'null':
+        elif typeVar.get() == lang['window.types'][4]:
             newValue = None
 
         if key is not None:
@@ -246,13 +245,7 @@ def editValue(
     typeBox = ctk.CTkOptionMenu(
         editWindow,
         variable=typeVar,
-        values=(
-            'string',
-            'integer',
-            'floating point number',
-            'boolean',
-            'null'
-        ),
+        values=lang['window.types'],
         fg_color='#646cff',
         button_color='#646cff',
         button_hover_color='#4b50d8'
@@ -297,24 +290,24 @@ def editValue(
 # edit the value directly from the entry widget
 def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) -> None:
     newValue = value
-    if typeVar.get() == 'integer':
+    if typeVar.get() == lang['window.types'][1]:
         try:
             newValue = int(float(newValue))
         except ValueError:
             newValue = 1
-    elif typeVar.get() == 'floating point number':
+    elif typeVar.get() == lang['window.types'][2]:
         try:
             newValue = float(newValue)
         except ValueError:
             newValue = 1.0
-    elif typeVar.get() == 'boolean':
+    elif typeVar.get() == lang['window.types'][3]:
         if newValue.lower() != 'true' and newValue.lower() != 'false':
             if newValue == '0' or newValue == '':
                 newValue = 'false'
             else:
                 newValue = 'true'
         newValue = newValue.lower() == 'true'
-    elif typeVar.get() == 'null':
+    elif typeVar.get() == lang['window.types'][4]:
         newValue = None
 
     if key is not None:
@@ -375,14 +368,14 @@ def updateValueDisplay(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> No
     else:
         valVar.set(str(value))
         if isinstance(value, str):
-            typeVar.set('string')
+            typeVar.set(lang['window.types'][0])
         elif isinstance(value, bool):
-            typeVar.set('boolean')
+            typeVar.set(lang['window.types'][3])
             valVar.set(valVar.get().lower())
         elif isinstance(value, int):
-            typeVar.set('integer')
+            typeVar.set(lang['window.types'][1])
         elif isinstance(value, float):
-            typeVar.set('floating point number')
+            typeVar.set(lang['window.types'][2])
 
 # display the file as JSON plain text
 def plainText() -> None:
@@ -421,17 +414,17 @@ def plainText() -> None:
 def addNewItem(parent, val) -> None:
     def saveItem(event = None):
         newValue = valueEntry.get()
-        if type_var.get() == 'integer':
+        if type_var.get() == lang['window.types'][1]:
             try:
                 newValue = int(float(newValue))
             except ValueError:
                 newValue = 1
-        elif type_var.get() == 'floating point number':
+        elif type_var.get() == lang['window.types'][2]:
             try:
                 newValue = float(newValue)
             except ValueError:
                 newValue = 1.0
-        elif type_var.get() == 'boolean':
+        elif type_var.get() == lang['window.types'][3]:
             if newValue.lower() != 'true' and newValue.lower() != 'false':
                 if newValue == '0' or newValue == '':
                     newValue = 'false'
@@ -508,15 +501,7 @@ def addNewItem(parent, val) -> None:
     ctk.CTkOptionMenu(
         addWindow,
         variable=type_var,
-        values=[
-            'string',
-            'integer',
-            'floating point number',
-            'boolean',
-            'null',
-            'array',
-            'object'
-        ],
+        values=lang['window.types'],
         fg_color='#646cff',
         button_color='#646cff',
         button_hover_color='#4b50d8'
@@ -594,7 +579,6 @@ def settings() -> None:
     ext._entry.config(insertbackground=fore)
     ext.pack()
     ext.insert(0, data['preferences']['extension'])
-    ttk.Label
 
 def writeFile(path: str, data: str) -> bool:
     try:
@@ -956,17 +940,17 @@ def display(val) -> None:
         index=None
     ) -> None:
         newValue = value
-        if typeVar.get() == 'integer':
+        if typeVar.get() == lang['window.types'][1]:
             try:
                 newValue = int(float(newValue))
             except ValueError:
                 newValue = 1
-        elif typeVar.get() == 'floating point number':
+        elif typeVar.get() == lang['window.types'][2]:
             try:
                 newValue = float(newValue)
             except ValueError:
                 newValue = 1.0
-        elif typeVar.get() == 'boolean':
+        elif typeVar.get() == lang['window.types'][3]:
             if newValue.lower() != 'true' and newValue.lower() != 'false':
                 if newValue == '0' or newValue == '':
                     newValue = 'false'

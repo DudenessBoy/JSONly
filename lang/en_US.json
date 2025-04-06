@@ -21,6 +21,13 @@
     "window.button.edit": "Edit simple value",
     "window.button.add": "Add new item",
     "window.button.remove": "Remove item",
+    "window.types": [
+      "string",
+      "integer",
+      "floating point number",
+      "boolean",
+      "null"
+    ],
     "popup.plaintext.title": "JSONly (plain text)",
     "popup.plaintext.button.copy": "Copy",
     "popup.unsaved.title": "Unsaved Work",

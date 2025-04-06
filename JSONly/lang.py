@@ -27,6 +27,7 @@ keys = [ # a list of all keys that should be present in the lang file
     'window.button.edit',
     'window.button.add',
     'window.button.remove',
+    'window.types',
     'popup.plaintext.title',
     'popup.plaintext.button.copy',
     'popup.edit.title',
@@ -67,11 +68,12 @@ keys = [ # a list of all keys that should be present in the lang file
     'theme.title',
     'theme.label.global',
     'theme.warn.restart',
-    'filepicker.filter.json'
+    'filepicker.filter.json',
 ]
 # keys that need to be in list format, others should be strings
 listKeys = [
-    'popup.unsaved.buttons'
+    'popup.unsaved.buttons',
+    'window.types',
 ]
 
 # open and ensure the usability of the lang files
