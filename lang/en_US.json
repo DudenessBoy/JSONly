@@ -72,6 +72,9 @@
     "theme.title": "Theme - JSONly",
     "theme.label.global": "Global theme",
     "theme.warn.restart": "Note: requires app restart",
+    "theme.option.dark": "Dark",
+    "theme.option.light": "Light",
+    "theme.option.auto": "Same as system",
     "filepicker.filter.json": "JSON files"
   }
 }

@@ -663,18 +663,25 @@ def theme() -> None:
     win.config(bg=color)
     ttk.Label(win, text=lang['theme.label.global'], font=1).pack()
     globalTheme=tk.IntVar(value=data['theme']['global'])
-    dark = ctk.CTkRadioButton(
+    auto = ctk.CTkRadioButton(
         win,
         variable=globalTheme,
         value=0,
-        text='Dark'
+        text=lang['theme.option.auto']
+    )
+    auto.pack()
+    dark = ctk.CTkRadioButton(
+        win,
+        variable=globalTheme,
+        value=1,
+        text=lang['theme.option.dark']
     )
     dark.pack()
     light = ctk.CTkRadioButton(
         win,
         variable=globalTheme,
-        value=1,
-        text='Light'
+        value=2,
+        text=lang['theme.option.light']
     )
     light.pack()
     ttk.Label(win, text=lang['theme.warn.restart']).pack()
@@ -1292,11 +1299,11 @@ if themeData == 0:
         color = '#1e1e2e'
         fore = 'white'
 elif themeData == 1:
-    color = 'white'
-    fore = 'black'
-else:
     color = '#1e1e2e'
     fore = 'white'
+else:
+    color = 'white'
+    fore = 'black'
 
 if os.path.dirname(data['preferences']['lang']) == '':
     langPath = os.path.join(RESOURCEDIR, 'lang', data['preferences']['lang'])

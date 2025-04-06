@@ -68,6 +68,9 @@ keys = [ # a list of all keys that should be present in the lang file
     'theme.title',
     'theme.label.global',
     'theme.warn.restart',
+    'theme.option.dark',
+    'theme.option.light',
+    'theme.option.auto',
     'filepicker.filter.json',
 ]
 # keys that need to be in list format, others should be strings
