@@ -541,6 +541,12 @@ def settings() -> None:
         if not extension.startswith('.'):
             extension = '.' + extension
         data['preferences']['extension'] = extension
+        if langSel.get().startswith('lang/'):
+            data['preferences']['lang'] = os.path.basename(
+                JSONly.lang.langFiles[langSel.get()]
+            )
+        else:
+            data['preferences']['lang'] = JSONly.lang.langFiles[langSel.get()]
         saveData(data)
         enableWidgets(root)
         win.destroy()
@@ -579,6 +585,16 @@ def settings() -> None:
     ext._entry.config(insertbackground=fore)
     ext.pack()
     ext.insert(0, data['preferences']['extension'])
+
+    ttk.Label(win, text=lang['settings.label.lang'], font = 1).pack()
+    langSel = ctk.CTkOptionMenu(
+        win,
+        values=list(JSONly.lang.langFiles.keys()),
+        fg_color='#646cff',
+        button_color='#646cff',
+        button_hover_color='#4b50d8'
+    )
+    langSel.pack()
 
 def writeFile(path: str, data: str) -> bool:
     try:

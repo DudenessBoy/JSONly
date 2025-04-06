@@ -94,7 +94,7 @@ def loadMeta(file: str) -> dict | None:
     except KeyError:
         return None
 
-    return {file: commonName}
+    return {commonName: file}
 
 # load the JSON data and return the value of the lang key
 def loadData(file: str) -> dict:
@@ -129,11 +129,11 @@ def loadData(file: str) -> dict:
 # remove any language files with the same common name to avoid confusion
 def removeDuplicates(langFiles):
     seen = {}
-    for path, commonName in langFiles.items():
+    for commonName, path in langFiles.items():
         if commonName not in seen or path.startswith('lang/'):
             seen[commonName] = path
-    # Return in the format {filename: commonname}
-    return {path: commonName for commonName, path in seen.items()}
+    # Return in the format {commonname: path}
+    return seen
 
 # Define possible language file locations (installed and source directory)
 langDirs = [
@@ -149,3 +149,5 @@ for langPath in langDirs:
             meta = loadMeta(file)
             if meta != None:
                 langFiles.update(meta)
+
+langFiles = removeDuplicates(langFiles)
