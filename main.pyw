@@ -553,7 +553,7 @@ def settings() -> None:
     win.title(lang['settings.title'])
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
-    ttk.Label(win, text = 'Indent when saving', font = 1).pack()
+    ttk.Label(win, text = lang['settings.label.indent'], font = 1).pack()
     number = ttk.Label(win, text = data['preferences']['indent'])
     number.pack()
     indent = ctk.CTkSlider(
@@ -567,7 +567,7 @@ def settings() -> None:
     )
     indent.set(data['preferences']['indent'])
     indent.pack()
-    ttk.Label(win, text='Default file extension to save', font = 1).pack()
+    ttk.Label(win, text=lang['settings.label.extension'], font = 1).pack()
     ext = ctk.CTkEntry(
         win,
         width=200,
@@ -661,7 +661,7 @@ def theme() -> None:
     win.title(lang['theme.title'])
     # win.grab_set()
     win.config(bg=color)
-    ttk.Label(win, text='Global theme', font=1).pack()
+    ttk.Label(win, text=lang['theme.label.global'], font=1).pack()
     globalTheme=tk.IntVar(value=data['theme']['global'])
     dark = ctk.CTkRadioButton(
         win,
@@ -677,7 +677,7 @@ def theme() -> None:
         text='Light'
     )
     light.pack()
-    ttk.Label(win, text='Note: requires app restart').pack()
+    ttk.Label(win, text=lang['theme.warn.restart']).pack()
     win.protocol('WM_DELETE_WINDOW', close)
 
 # construct the main window with all of it's widgets
