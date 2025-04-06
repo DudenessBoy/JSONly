@@ -69,7 +69,8 @@ keys = [ # a list of all keys that should be present in the lang file
     'theme.warn.restart',
     'filepicker.filter.json'
 ]
-listKeys = [ # keys that need to be in list format, others should be strings
+# keys that need to be in list format, others should be strings
+listKeys = [
     'popup.unsaved.buttons'
 ]
 
@@ -131,10 +132,10 @@ def removeDuplicates(langFiles):
 
 # Define possible language file locations (installed and source directory)
 langDirs = [
-    os.path.join(RESOURCEDIR, 'lang'), # Installed location
+    os.path.join(RESOURCEDIR, 'lang'),  # Installed location
     'lang'  # Source directory (for development)
 ]
-langFiles = dict() # holds metadata and corresponding lang files
+langFiles = dict()  # holds metadata and corresponding lang files
 
 # Search for language files in both locations
 for langPath in langDirs:
