@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v1.2.0 beta
 ### Changed
 - icon is now read from a file instead of base64 encoded text
 - program no longer terminates when it encounters an error processing the lang file
