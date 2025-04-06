@@ -6,7 +6,7 @@
 [Setup]
 AppName=JSONly
 SetupIconFile=icon.ico
-AppVersion=1.0.0
+AppVersion=1.2.0-beta
 DefaultDirName={autopf}\JSONly
 AppPublisher=Luke Moyer
 AppCopyright=Copyright (C) 2024 Luke Moyer
