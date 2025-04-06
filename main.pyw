@@ -1394,7 +1394,7 @@ def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None
     return endVal
 
 root = mainWindow()
-img = tk.PhotoImage(data=image)
+img = tk.PhotoImage(file=os.path.join(RESOURCEDIR, 'icon.png'))
 root.iconphoto(True, img)
 # styling ttk widgets
 style = ttk.Style()

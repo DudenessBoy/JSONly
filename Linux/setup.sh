@@ -80,6 +80,7 @@ cp ../JSONly.desktop deb/usr/share/applications/
 cp -r ../../lang/ deb/usr/share/JSONly/
 cp ../../LICENSE deb/usr/share/JSONly/
 cp ../../icon.png deb/usr/local/share/icons/hicolor/64x64/apps/JSONly.png
+cp ../../icon.png deb/usr/share/JSONly/
 cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
 # change the packaging variable in constants.py
 sed -i "18s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
@@ -123,6 +124,7 @@ cp -r ../../JSONly/ appimage/usr/lib/python3/dist-packages/
 sed -i "18s/.*/        packaging = 'appimage'/" appimage/usr/lib/python3/dist-packages/JSONly/constants.py
 cp ../JSONly.desktop appimage/app.desktop
 cp ../../icon.png appimage/app.png
+cp ../../icon.png appimage/usr/share/JSONly/
 cp ../AppRun appimage/
 ensureFile /usr/bin/python3.11 "Python 3.11 is not installed on your computer. Please install it with 'sudo apt install python3.11' or your distro's equivalent."
 cp /usr/bin/python3.11 appimage/usr/bin/
