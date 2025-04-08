@@ -499,7 +499,7 @@ def addNewItem(parent, val) -> None:
         currentRow += 1
 
     ttk.Label(addWindow, text="Type:").grid(row=currentRow, column=0, padx=5, pady=5)
-    type_var = tk.StringVar(value='string')
+    type_var = tk.StringVar(value=lang['window.types'][0])
     ctk.CTkOptionMenu(
         addWindow,
         variable=type_var,
