@@ -80,7 +80,7 @@ keys = [
 # this also contains the number of values that should be in each
 listKeys = {
     'popup.unsaved.buttons': 3,
-    'window.types': 5,
+    'window.types': 7,
 }
 
 # return a version of the language dictionary using the keys as values.
@@ -134,10 +134,18 @@ def loadData(file: str) -> dict:
             data['lang'][key] = key
         # check to make sure the key is the correct format
         if key in listKeys.keys():
+            length = len(data['lang'][key])
             if not isinstance(data['lang'][key], list):
                 data['lang'][key] = []
-                for i in range(listKeys[data['lang'][key]]):
+                for i in range(listKeys[key]):
                     data['lang'][key].append(f'{key}.{i}')
+            elif length != listKeys[key]:
+                if length > listKeys[key]:
+                    data['lang'][key] = data['lang'][key][:listKeys[key]]
+                else:
+                    missing = listKeys[key] - len(data['lang'][key])
+                    for i in range(listKeys[key] - missing, listKeys[key]):
+                        data['lang'][key].append(f'{key}.{i}')
         elif not isinstance(data['lang'][key], str):
             data['lang'][key] = str(data['lang'][key])
     
