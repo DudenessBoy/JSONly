@@ -1334,7 +1334,7 @@ else:
 lang = JSONly.lang.loadData(langPath)
 
 # display messages in a pop-up, below others because it needs the 'lang' variable to be set
-def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None, geometry='300x150'):
+def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None, geometry='400x150'):
     # Create a new window
     window = tk.Toplevel()
     window.configure(bg=color)
