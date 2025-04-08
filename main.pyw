@@ -4,7 +4,7 @@
 import os
 import sys
 import platform
-if platform.system() != 'Linux': # can't use OS because of confilicts with DEB package
+if platform.system() != 'Linux':  # can't use OS because of confilicts with DEB package
     import pyperclip
 else:
     sys.path.append('/usr/share/JSONly/lib')
@@ -153,6 +153,8 @@ def save(event = None, saveas: bool = False) -> bool:
         if not filename:
             filename = None
             return False
+        elif isinstance(filename, list):
+            filename = filename[0]
     try:
         with open(filename, 'w', encoding = 'utf-8') as f:
             json.dump(file, f, indent = 2)
@@ -166,7 +168,7 @@ def save(event = None, saveas: bool = False) -> bool:
     except Exception as e:
         messagebox(
             lang['error.generic.title'],
-            lang['error.generic.write.body'].format(dataFile, e)
+            lang['error.generic.write.body'].format(filename, e)
         )
         return
     else:
