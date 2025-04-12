@@ -294,7 +294,6 @@ def removeItem(parent, val, key=None, index=None) -> None:
     parent.event_generate("<<ItemRemoved>>")
 
 def configure(event=None) -> None:
-    setIndex(listbox)
     if listbox.curselection() is not None:
         key = listbox.get(listbox.curselection())
         value = file[key]
@@ -733,13 +732,13 @@ def mainWindow() -> None:
             file,
             typeVar,
             valueEntry.get(),
-            key=listbox.get(index)
+            key=listbox.get(listbox.curselection())
         )
     )
     valueEntry.bind(
         '<FocusOut>',
         lambda e: directEdit(root, file, typeVar, valueEntry.get(),
-        key=listbox.get(index))
+        key=listbox.get(listbox.curselection()))
     )
 
     view = StyledButton(
@@ -845,13 +844,6 @@ def refreshListbox(listbox, val) -> None:
         for i, item in enumerate(val):
             listbox.insert(tk.END, f"[{i}]")
 
-def setIndex(listbox: tk.Listbox):
-    global index
-    if listbox.curselection():
-        index = listbox.curselection()
-    else:
-        index = 0
-
 # display complex value
 def display(val) -> None:
     index = 0
@@ -888,7 +880,6 @@ def display(val) -> None:
     refreshListbox()
 
     def configure(event=None):
-        setIndex(listbox)
         if listbox.curselection() is not None:
             index = listbox.curselection()
             if isinstance(val, dict):
@@ -983,11 +974,47 @@ def display(val) -> None:
     valueEntry._entry.config(insertbackground=fore)
     valueEntry.pack()
     if isinstance(val, dict):
-        valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), key=listbox.get(index)))
-        valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), key=listbox.get(index)))
+        valueEntry.bind(
+            '<Return>',
+            lambda e: directEdit(
+                disp,
+                file,
+                typeVar,
+                valueEntry.get(),
+                key=listbox.get(listbox.curselection())
+            )
+        )
+        valueEntry.bind(
+            '<FocusOut>',
+            lambda e: directEdit(
+                disp,
+                file,
+                typeVar,
+                valueEntry.get(),
+                key=listbox.get(listbox.curselection())
+            )
+        )
     else:
-        valueEntry.bind('<Return>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
-        valueEntry.bind('<FocusOut>', lambda e: directEdit(disp, file, typeVar, valueEntry.get(), index=index))
+        valueEntry.bind(
+            '<Return>',
+            lambda e: directEdit(
+                disp,
+                file,
+                typeVar,
+                valueEntry.get(),
+                index=listbox.curselection()
+            )
+        )
+        valueEntry.bind(
+            '<FocusOut>',
+            lambda e: directEdit(
+                disp,
+                file,
+                typeVar,
+                valueEntry.get(),
+                index=listbox.curselection()
+            )
+        )
     view = StyledButton(
         disp,
         text=lang['window.button.complex'],
