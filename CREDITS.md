@@ -5,6 +5,7 @@
   - Luke Moyer (lead developer)
 - ### Translations
   - Luke Moyer (English)
+  - Andrew Hane (Spanish)
 
 ## 3rd party libraries
 - **CustomTkinter** (https://customtkinter.tomschimansky.com/)
