@@ -63,8 +63,8 @@ def load(event = None, filePath = None) -> None:
                 return
     if filePath is None:
         filename = filechooser.open_file(
-            title = 'something',
-            filters=[("JSON files", "*.json"), ('All files', '*.*')])
+            filters=[(lang['filepicker.filter.json'], "*.json"), ('All files', '*.*')]
+        )
     else:
         filename = [filePath]
     if filename:

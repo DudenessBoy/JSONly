@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - there is no longer an error popup when using 'save as'
 - object and array now shows up in the type chooser again
 - long messages in popups no longer hide the button(s)
+- objects and arrays are no longer turned into strings
 ### Changed
 - Popups now better handle the modal state
+- filepicker now respects language
 
 ## v1.2.0 beta - 4/6/2025
 ### Changed
