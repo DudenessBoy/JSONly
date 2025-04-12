@@ -1,0 +1,74 @@
+jsonly (1.2.0~beta-1) unstable; urgency=medium
+
+  * Changed: icon is now read from a file instead of base64 encoded text
+  * Changed: program no longer terminates when it encounters an error processing the lang file
+  * Added: language preferences
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Sun, 06 Apr 2025 20:39:51 -0400
+
+jsonly (1.1.0~beta-1) unstable; urgency=medium
+
+  * Changed: relicensed under MIT
+  * Changed: license module now reads the 'LICENSE' file rather than using hard-coded text
+  * Added: automatic detection for system theme
+  * Added: language support
+  * Removed: tooltips
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Sat, 05 Apr 2025 14:00:00 -0400
+
+jsonly (1.0.1-1) unstable; urgency=medium
+
+  * Fixed: Remove and edit buttons now work properly.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Mon, 31 Mar 2025 14:00:00 +0000
+
+jsonly (1.0.0-1) unstable; urgency=medium
+
+  * Added: Right-click context menu.
+  * Added: Automatic resize functionality for main listbox.
+  * Added: MacOS compatibility.
+  * Added: Ability to open files with the app.
+  * Fixed: Interaction with the main window no longer allowed while popup shows.
+  * Changed: Main window now has a default size when in windowed mode.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Sun, 30 Mar 2025 14:00:00 +0000
+
+jsonly (0.4.0~rc2-1) unstable; urgency=medium
+
+  * Added: Licensing for the tooltip module.
+  * Added: Functionality to the theme setting.
+  * Fixed: Fixed a bug causing 'add new item' window to not fully render on some screens.
+  * Changed: Moved embedded image data to a separate file.
+  * Changed: Reorganized file structure.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Fri, 25 Jan 2025 14:00:00 +0000
+
+jsonly (0.4.0~rc1-1) unstable; urgency=medium
+
+  * Added: Preferences.
+  * Added: Theme settings.
+  * Added: Persistent data.
+  * Changed: Replaced the built-in ctk.Button class with a custom subclass.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Tue, 22 Jan 2025 14:00:00 +0000
+
+jsonly (0.3.0~beta-1) unstable; urgency=medium
+
+  * Added: Settings placeholder.
+  * Removed: Several buttons that were cluttering space.
+  * Changed: UI theme now looks more modern.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Thu, 17 Jan 2025 14:00:00 +0000
+
+jsonly (0.2.0~beta-1) unstable; urgency=medium
+
+  * Added: A menubar with file, edit, and about categories.
+  * Added: More advanced editing mode for simple values.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Tue, 01 Jan 2025 14:00:00 +0000
+
+jsonly (0.1.0~alpha-1) unstable; urgency=low
+
+  * Added: Initial release.
+
+ -- Luke Moyer <DudenessBoy_software@disroot.org>  Thu, 20 Dec 2024 14:00:00 +0000

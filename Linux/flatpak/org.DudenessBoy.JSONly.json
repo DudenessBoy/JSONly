@@ -1,0 +1,23 @@
+{
+  "id": "org.DudenessBoy.JSONly",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "22.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "jsonly",
+  "modules": [
+    {
+      "name": "python",
+      "buildsystem": "simple",
+      "build-commands": [
+        "pip install --prefix=/app ."
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/DudenessBoy/JSONly.git",
+          "branch": "main"
+        }
+      ]
+    }
+  ]
+}
