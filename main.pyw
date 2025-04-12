@@ -48,35 +48,6 @@ def close() -> None:
                 return
     root.destroy()
 
-def disableWidgets(parent):
-    """Disable all interactive widgets in the parent window."""
-    global isEnabled
-    print('disabled main window')
-    isEnabled = False
-    for widget in parent.winfo_children():
-        if isinstance(widget, (
-            StyledButton,
-            ResizableListbox,
-            ctk.CTkEntry,
-            ctk.CTkOptionMenu
-            )):
-            widget.configure(state=tk.DISABLED)
-
-def enableWidgets(parent):
-    """Re-enable all widgets in the parent window."""
-    global isEnabled
-    print('enabled main window')
-    isEnabled = True
-    for widget in parent.winfo_children():
-        if isinstance(widget, (
-            StyledButton,
-            ResizableListbox,
-            ctk.CTkEntry,
-            ctk.CTkOptionMenu
-        )):
-            widget.configure(state=tk.NORMAL)
-    configure()
-
 # load a file from the disk
 def load(event = None, filePath = None) -> None:
     global filename, file, saved
@@ -211,21 +182,18 @@ def editValue(
         elif index is not None:
             val[index] = newValue
         
-        enableWidgets(root)
         editWindow.destroy()
         parent.event_generate("<<ValueEdited>>")
 
     editWindow = tk.Toplevel(parent)
-    disableWidgets(root)
-    editWindow.protocol(
-        'WM_DELETE_WINDOW',
-        lambda: [enableWidgets(root),
-        editWindow.destroy()]
-    )
+    editWindow.wait_visibility()
+    editWindow.transient(root)
+    editWindow.grab_set()
+    editWindow.group(root)
+    editWindow.attributes("-type", "dialog")
     editWindow.configure(bg = color)
     editWindow.title(lang['popup.edit.title'])
     editWindow.focus()
-    # editWindow.grab_set()
     currentRow = 0
 
     ttk.Label(
@@ -362,10 +330,10 @@ def updateValueDisplay(value, typeVar: tk.StringVar, valVar: tk.StringVar) -> No
         valVar.set('null')
         typeVar.set('null')
     elif isinstance(value, list):
-        typeVar.set('array')
+        typeVar.set(lang['window.types'][5])
         valVar.set('(complex value)')
     elif isinstance(value, dict):
-        typeVar.set('object')
+        typeVar.set(lang['window.types'][6])
         valVar.set('(complex value)')
     else:
         valVar.set(str(value))
@@ -385,7 +353,11 @@ def plainText() -> None:
     win.configure(bg = color)
     win.title(lang['popup.plaintext.title'])
     win.focus()
-    # win.grab_set()
+    win.wait_visibility()
+    win.transient(root)
+    win.grab_set()
+    win.group(root)
+    win.attributes("-type", "dialog")
     text = tk.Text(
         win,
         width=100,
@@ -409,7 +381,12 @@ def plainText() -> None:
             )
         )
     else:
-        copy = StyledButton(win, text = lang['popup.plaintext.button.copy'], cursor = 'hand2', command = lambda: pyperclip.copy(json.dumps(file, indent = 2)))
+        copy = StyledButton(
+            win,
+            text=lang['popup.plaintext.button.copy'],
+            cursor='hand2',
+            command=lambda: pyperclip.copy(json.dumps(file, indent=2))
+        )
     copy.pack()
 
 # add a new item to the listbox
@@ -435,9 +412,9 @@ def addNewItem(parent, val) -> None:
             newValue = newValue.lower() == 'true'
         elif type_var.get() == 'null':
             newValue = None
-        elif type_var.get() == 'array':
+        elif type_var.get() == lang['window.types'][5]:
             newValue = []
-        elif type_var.get() == 'object':
+        elif type_var.get() == lang['window.types'][6]:
             newValue = {}
 
         if isinstance(val, dict):
@@ -458,24 +435,19 @@ def addNewItem(parent, val) -> None:
         elif isinstance(val, list):
             val.append(newValue)
         
-        enableWidgets(root)
         addWindow.destroy()
         parent.event_generate("<<ItemAdded>>")
 
     addWindow = tk.Toplevel(parent)
-    disableWidgets(root)
-    addWindow.protocol(
-        'WM_DELETE_WINDOW',
-        lambda: [
-            enableWidgets(root),
-            addWindow.destroy()
-        ]
-    )
+    addWindow.wait_visibility()
+    addWindow.transient(root)
+    addWindow.grab_set()
+    addWindow.group(root)
+    addWindow.attributes("-type", "dialog")
     addWindow.geometry('900x150')
     addWindow.configure(bg = color)
     addWindow.title(lang['popup.add.title'])
     addWindow.focus()
-    # addWindow.grab_set()
 
     currentRow = 0
 
@@ -550,14 +522,13 @@ def settings() -> None:
         else:
             data['preferences']['lang'] = JSONly.lang.langFiles[langSel.get()]
         saveData(data)
-        enableWidgets(root)
         win.destroy()
     win = tk.Toplevel(root)
-    disableWidgets(root)
-    win.protocol(
-        'WM_DELETE_WINDOW',
-        lambda: [enableWidgets(root), win.destroy()]
-    )
+    win.wait_visibility()
+    win.transient(root)
+    win.grab_set()
+    win.group(root)
+    win.attributes("-type", "dialog")
     win.title(lang['settings.title'])
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
@@ -649,35 +620,19 @@ def loadData(path: str, default: str) -> str:
         writeFile(path, default)
         return default
 
-# WIP change color while running
-# def changeTheme() -> None:
-#     global color, fore
-#     if data['theme']['global']:
-#         color = fore
-#         fore = 'black'
-#     else:
-#         color = color
-#         fore = fore
-#     root.config(bg = color)
-#     listbox.config(bg = color)
-#     style.configure('TLabel', background = color, foreground = fore)
-
 # theme settings
 def theme() -> None:
     def close() -> None:
         data['theme']['global'] = globalTheme.get()
-        # changeTheme()
         saveData(data)
-        enableWidgets(root)
         win.destroy()
     win = tk.Toplevel()
-    disableWidgets(root)
-    win.protocol(
-        'WM_DELETE_WINDOW',
-        lambda: [enableWidgets(root), win.destroy()]
-    )
+    win.wait_visibility()
+    win.transient(root)
+    win.grab_set()
+    win.group(root)
+    win.attributes("-type", "dialog")
     win.title(lang['theme.title'])
-    # win.grab_set()
     win.config(bg=color)
     ttk.Label(win, text=lang['theme.label.global'], font=1).pack()
     globalTheme=tk.IntVar(value=data['theme']['global'])
@@ -724,9 +679,9 @@ def mainWindow() -> None:
     root.geometry('1000x800')
     if OS == 'Windows':
         root.state('zoomed')
-    elif OS == 'Linux':
+    elif OS != 'Darwin':
         root.attributes('-zoomed', True)
-    # We don't want to do either of these on MacOS since it doesn't have a proper fullscreen
+    
     root.focus()
 
     listbox = ResizableListbox(
@@ -781,7 +736,11 @@ def mainWindow() -> None:
             key=listbox.get(index)
         )
     )
-    valueEntry.bind('<FocusOut>', lambda e: directEdit(root, file, typeVar, valueEntry.get(), key=listbox.get(index)))
+    valueEntry.bind(
+        '<FocusOut>',
+        lambda e: directEdit(root, file, typeVar, valueEntry.get(),
+        key=listbox.get(index))
+    )
 
     view = StyledButton(
         root,
@@ -893,14 +852,17 @@ def setIndex(listbox: tk.Listbox):
     else:
         index = 0
 
-# display complex value, hopefully replaced with a tree view soon
+# display complex value
 def display(val) -> None:
     index = 0
     disp = tk.Toplevel(root)
     disp.configure(bg = color)
     disp.geometry('1000x800')
     disp.title('JSONly (complex value)')
-    # disp.grab_set()
+    disp.wait_visibility()
+    disp.transient(root)
+    win.group(root)
+    win.attributes("-type", "dialog")
     disp.focus()
     
     listbox = ResizableListbox(
@@ -1068,13 +1030,15 @@ def findWindow(listbox: tk.Listbox) -> None:
     def close() -> None:
         global findmode, findWord
         findWord = findEntry.get()
-        enableWidgets(root)
         findWin.destroy()
     findWin = tk.Toplevel(root)
-    disableWidgets(root)
+    findWin.wait_visibility()
+    findWin.transient(root)
+    findWin.grab_set()
+    findWin.group(root)
+    findWin.attributes("-type", "dialog")
     findWin.configure(bg=color)
     findWin.focus()
-    # findWin.grab_set()
     findWin.overrideredirect(True)
     # Calculate the center coordinates of the main window
     root.update_idletasks()
@@ -1356,7 +1320,6 @@ def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None
         if callback:
             callback(btnText)
         endVal = btnText
-        enableWidgets(root)
         window.destroy()
     
     endVal = 'closed'
@@ -1375,11 +1338,12 @@ def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None
     # Center the window on the screen
     window.update_idletasks()
 
-    # Prevent interaction with the main window
-    window.transient()
-    # window.grab_set()
     window.attributes('-topmost', True)
-    disableWidgets(root)
+    window.wait_visibility()
+    window.transient(root)
+    window.grab_set()
+    window.group(root)
+    window.attributes("-type", "dialog")
     window.protocol('WM_DELETE_WINDOW', lambda: onButtonClick(buttons[-1]))
     window.wait_window()
     return endVal
