@@ -1,0 +1,23 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Source: https://github.com/DudenessBoy/JSONly
+
+Upstream-Name: JSONly
+Upstream-Contact: Luke Moyer <DudenessBoy_software@disroot.org>
+
+Files: *
+Copyright: 2025 Luke Moyer <DudenessBoy_software@disroot.org>
+License: MIT
+
+License: MIT
+ This package is licensed under the MIT License.
+
+ You may obtain a copy of the License at:
+
+ https://opensource.org/licenses/MIT
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
