@@ -861,8 +861,8 @@ def display(val) -> None:
     disp.title('JSONly (complex value)')
     disp.wait_visibility()
     disp.transient(root)
-    win.group(root)
-    win.attributes("-type", "dialog")
+    disp.group(root)
+    disp.attributes("-type", "dialog")
     disp.focus()
     
     listbox = ResizableListbox(
