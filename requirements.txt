@@ -3,3 +3,5 @@ customtkinter
 CTkListbox
 pyperclip
 darkdetect
+pywin32; sys_platform == "win32"
+pyobjus; sys_platform == "darwin"
