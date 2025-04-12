@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - object and array now shows up in the type chooser again
 - long messages in popups no longer hide the button(s)
 - objects and arrays are no longer turned into strings
+- Windows exe file picker now works
 ### Changed
 - Popups now better handle the modal state
 - filepicker now respects language
