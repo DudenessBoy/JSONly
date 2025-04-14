@@ -3,8 +3,7 @@
 
 import os
 import sys
-import platform
-if platform.system() != 'Linux':  # can't use OS because of confilicts with DEB package
+if sys.platform != 'linux':  # can't use OS because of confilicts with DEB package
     import pyperclip
 else:
     sys.path.append('/usr/share/JSONly/lib')
@@ -368,7 +367,7 @@ def plainText() -> None:
     text.pack()
     text.insert(0.0, json.dumps(file, indent = 2))
     text.configure(state='disabled')
-    if OS == 'Linux':
+    if OS == 'linux':
         copy = StyledButton(
             win,
             text=lang['popup.plaintext.button.copy'],
@@ -676,9 +675,9 @@ def mainWindow() -> None:
     root.configure(bg = color)
     root.title(lang['window.title'])
     root.geometry('1000x800')
-    if OS == 'Windows':
+    if OS == 'win32':
         root.state('zoomed')
-    elif OS != 'Darwin':
+    elif OS != 'darwin':
         root.attributes('-zoomed', True)
     
     root.focus()
@@ -809,7 +808,7 @@ def mainWindow() -> None:
     settingmenu.add_command(label=lang['menubar.settings.theme'], command=theme)
     settingmenu.add_command(label=lang['menubar.settings.preferences'], command=settings)
     menubar.add_cascade(label=lang['menubar.settings'], menu=settingmenu)
-    if OS != 'Windows':
+    if OS != 'win32':
         for menu in (menubar, filemenu, editmenu, about, settingmenu):
             menu.configure(
                 bg=color,
@@ -1184,7 +1183,7 @@ def context(event: tk.Event) -> None:
     contextMenu.add_separator()
     contextMenu.add_command(label=lang['contextmenu.plaintext'], command=plainText)
     contextMenu.tk_popup(event.x_root, event.y_root)
-    if OS != 'Windows':
+    if OS != 'win32':
         contextMenu.configure(
             bg=color,
             fg=fore,

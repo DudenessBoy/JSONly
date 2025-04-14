@@ -2,12 +2,11 @@
 # Licensed under the MIT License. See LICENSE file for details.
 
 # This file defines certain constants that will need to be used by other parts of the program
-import platform
 import os
 import sys
 import inspect
 
-OS = platform.system()
+OS = sys.platform
 
 frame = inspect.stack()[-1]  # Get the most recent frame (main file's frame)
 mainFile = frame[0].f_globals["__file__"]
@@ -15,7 +14,7 @@ FILEDIR = os.path.abspath(os.path.dirname(mainFile))
 
 # set OS-dependant constants
 match OS:
-    case'Linux':
+    case'linux':
         packaging = 'source'  # be sure to set this variable based on how the app is packaged.The setup.sh script should automatically set this.
         CONFIGDIR = os.getenv(
             'XDG_CONFIG_HOME',
@@ -38,7 +37,7 @@ match OS:
             )
         else:
             RESOURCEDIR = FILEDIR
-    case 'Darwin': # MacOS
+    case 'darwin': # MacOS
         CONFIGDIR = os.path.join(
             os.getenv("HOME", ""),
             "Library",
@@ -50,7 +49,7 @@ match OS:
             RESOURCEDIR = os.path.join(basePath, 'Resources')
         else:
             RESOURCEDIR = FILEDIR
-    case 'Windows': # before we get started, why does Windows just have to be different and use %VAR% instead of $VAR like other systems?
+    case 'win32': # before we get started, why does Windows just have to be different and use %VAR% instead of $VAR like other systems?
         CONFIGDIR = os.getenv(
             "LOCALAPPDATA",
             os.path.join(
