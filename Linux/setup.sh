@@ -65,7 +65,7 @@ declare -a control=(
     "Section: editors"
     "Architecture: amd64"
     "Maintainer: Luke Moyer <DudenessBoy-software@proton.me>"
-    "Depends: xsel, python3 (>= 3.10), python3-plyer, python3-tk, python3-packaging"
+    "Depends: xsel, python3 (>= 3.10), python3-plyer, python3-tk, python3-packaging", "python3-setuptools"
     "Description: A GUI JSON editor"
     " JSONly is a GUI program for interacting with and manipulating JSON files"
 )
