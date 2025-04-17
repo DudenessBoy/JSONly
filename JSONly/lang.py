@@ -30,7 +30,6 @@ keys = [
     'window.button.edit',
     'window.button.add',
     'window.button.remove',
-    'window.types',
     'popup.plaintext.title',
     'popup.plaintext.button.copy',
     'popup.edit.title',
@@ -39,8 +38,14 @@ keys = [
     'popup.unsaved.body.load',
     'popup.unsaved.body.close',
     'popup.unsaved.buttons',
+    'popup.update.title',
+    'popup.update.body',
+    'popup.update.buttons',
     'popup.button.ok',
     'popup.button.save',
+    'popup.beta_warning.title',
+    'popup.beta_warning.body',
+    'popup.beta_warning.buttons',
     'error.missingfile.title',
     'error.missingfile.body',
     'error.json.title',
@@ -68,6 +73,9 @@ keys = [
     'settings.label.indent',
     'settings.label.extension',
     'settings.label.lang',
+    'settings.label.update',
+    'settings.checkbox.enable_update',
+    'settings.checkbox.beta_channel',
     'theme.title',
     'theme.label.global',
     'theme.warn.restart',
@@ -77,10 +85,12 @@ keys = [
     'filepicker.filter.json',
 ]
 # keys that need to be in list format, others should be strings
-# this also contains the number of values that should be in each
+# this also contains the number of values that should be in each list
 listKeys = {
     'popup.unsaved.buttons': 3,
     'window.types': 7,
+    'popup.beta_warning.buttons': 2,
+    'popup.update.buttons': 2,
 }
 
 # return a version of the language dictionary using the keys as values.

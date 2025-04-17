@@ -11,6 +11,8 @@ else:
 import json
 import subprocess
 import webbrowser
+import requests
+from packaging import version
 import tkinter as tk
 from tkinter import ttk
 from plyer import filechooser
@@ -507,6 +509,17 @@ def addNewItem(parent, val) -> None:
 def settings() -> None:
     def configNumLabel(val) -> None:
         number.config(text = int(val))
+    def warnBeta() -> None:
+        if betaVar.get():
+            messagebox(
+                lang['popup.beta_warning.title'],
+                lang['popup.beta_warning.body'],
+                lang['popup.beta_warning.buttons'],
+                lambda btn: betaVar.set(0) \
+                    if btn == lang['popup.beta_warning.buttons'][1] \
+                    else None,
+                '400x250'
+            )
     def close() -> None:
         data['preferences']['indent'] = int(indent.get())
         extension = ext.get().strip()
@@ -519,6 +532,8 @@ def settings() -> None:
             )
         else:
             data['preferences']['lang'] = JSONly.lang.langFiles[langSel.get()]
+        data['preferences']['check_update'] = bool(enableVar.get())
+        data['preferences']['beta'] = bool(betaVar.get())
         saveData(data)
         win.destroy()
     win = tk.Toplevel(root)
@@ -530,7 +545,7 @@ def settings() -> None:
     win.title(lang['settings.title'])
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
-    ttk.Label(win, text = lang['settings.label.indent'], font = 1).pack()
+    ttk.Label(win, text = lang['settings.label.indent'], font=1).pack()
     number = ttk.Label(win, text = data['preferences']['indent'])
     number.pack()
     indent = ctk.CTkSlider(
@@ -544,7 +559,7 @@ def settings() -> None:
     )
     indent.set(2)
     indent.pack()
-    ttk.Label(win, text=lang['settings.label.extension'], font = 1).pack()
+    ttk.Label(win, text=lang['settings.label.extension'], font=1).pack()
     ext = ctk.CTkEntry(
         win,
         width=200,
@@ -557,7 +572,7 @@ def settings() -> None:
     ext.pack()
     ext.insert(0, data['preferences']['extension'])
 
-    ttk.Label(win, text=lang['settings.label.lang'], font = 1).pack()
+    ttk.Label(win, text=lang['settings.label.lang'], font=1).pack()
     langSel = ctk.CTkOptionMenu(
         win,
         values=list(JSONly.lang.langFiles.keys()),
@@ -566,6 +581,27 @@ def settings() -> None:
         button_hover_color='#4b50d8'
     )
     langSel.pack()
+
+    ttk.Label(win, text=lang['settings.label.update'], font=1).pack()
+    enableVar = tk.IntVar(value=data['preferences']['check_update'])
+    enable = ctk.CTkCheckBox(
+        win,
+        text=lang['settings.checkbox.enable_update'],
+        variable=enableVar,
+        fg_color='#646cff',
+        hover_color='#4b50d8'
+    )
+    enable.pack()
+    betaVar = tk.IntVar(value=data['preferences']['beta'])
+    beta = ctk.CTkCheckBox(
+        win,
+        text=lang['settings.checkbox.beta_channel'],
+        variable=betaVar,
+        fg_color='#646cff',
+        hover_color='#4b50d8',
+        command=warnBeta
+    )
+    beta.pack()
 
 def writeFile(path: str, data: str) -> bool:
     try:
@@ -1191,6 +1227,35 @@ def context(event: tk.Event) -> None:
             activeforeground='#cccccc'
         )
 
+# checks the version.txt in the GitHub repo against the VERSION constant
+def searchUpdate() -> bool:
+    if not data['preferences']['check_update']:
+        return False
+    if data['preferences']['beta']:
+        suffix = '_beta'
+    else:
+        suffix = ''
+    try:
+        response = requests.get(LINKS['version'+suffix])
+        response.raise_for_status()
+        content = response.text.strip()
+    except requests.exceptions.RequestException as e:
+        print(f'Failed to fetch the version file: {e}')
+    else:
+        local = version.parse(VERSION)
+        remote = version.parse(content)
+        if remote > local:
+            messagebox(
+                lang['popup.update.title'],
+                lang['popup.update.body'].format(content),
+                lang['popup.update.buttons'],
+                lambda btn: webbrowser.open(LINKS['download'+suffix]) \
+                    if btn == lang['popup.update.buttons'][0] else None
+            )
+
+def ensureValue(parent: dict, type, default) -> None:
+    pass
+
 # a custom button class, useless outside of this program, pre-sets a lot of things that were causing repitition
 class StyledButton(ctk.CTkButton):
     def __init__(
@@ -1295,7 +1360,13 @@ if 'global' not in data['theme'].keys():
     data['theme']['global'] = 0
     saveData(data)
 if 'lang' not in data['preferences'].keys():
-    data['preferences']['lang'] = 'en_US.json'
+    data['preferences']['lang'] = 'en.json'
+    saveData(data)
+if 'check_update' not in data['preferences'].keys():
+    data['preferences']['check_update'] = True
+    saveData(data)
+if 'beta' not in data['preferences'].keys():
+    data['preferences']['beta'] = False
     saveData(data)
 
 themeData = data['theme']['global']
@@ -1387,4 +1458,5 @@ if len(sys.argv) > 1:
     print('opened:', sys.argv[1])
     load(filePath=sys.argv[1])
 
+root.after(1000, searchUpdate)  # wait a second before doing a version check
 root.mainloop()

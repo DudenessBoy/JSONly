@@ -44,6 +44,18 @@
     ],
     "popup.button.ok": "OK",
     "popup.button.save": "Save",
+    "popup.update.title": "Updates Available",
+    "popup.update.body": "Version {0} is available to download. Would you like to visit the download site?",
+    "popup.update.buttons": [
+      "Yes",
+      "No"
+    ],
+    "popup.beta_warning.title": "Enable Beta Channel",
+    "popup.beta_warning.body": "Disclaimer: Enabling the beta channel allows you to receive early access to upcoming features and updates. However, beta versions may contain bugs, unfinished features, or stability issues. Use at your own risk. It's recommended to back up your data before updating.",
+    "popup.beta_warning.buttons": [
+      "Enable",
+      "Cancel"
+    ],
     "error.missingfile.title": "File Not Found",
     "error.missingfile.body": "The file \"{0}\" could not be found.",
     "error.json.title": "JSON Decode Error",
@@ -71,6 +83,9 @@
     "settings.label.indent":  "Indent when saving",
     "settings.label.extension": "Default file extension to save",
     "settings.label.lang": "Language",
+    "settings.label.update": "Automatic updates",
+    "settings.checkbox.enable_update": "Enable automatic update check",
+    "settings.checkbox.beta_channel": "Use beta channel",
     "theme.title": "Theme - JSONly",
     "theme.label.global": "Global theme",
     "theme.warn.restart": "Note: requires app restart",
