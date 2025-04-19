@@ -44,10 +44,16 @@
     ],
     "popup.button.ok": "OK",
     "popup.button.save": "Guardar",
-
+    "popup.update.title": "Actualizaciones disponibles",
+    "popup.update.body": "Versión {0} es disponible para descargar. ¿Quisiera visitar el sitio de descarga?",
     "popup.update.buttons": [
       "Sí",
       "No"
+    ],
+    "popup.beta_warning.body": "Descargo de responsabilidad: Activar el canal beta le permite recibir acceso anticipado a las próximas funciones y actualizaciones. Sin embargo, las versiones beta pueden contener errores, funciones inacabadas o problemas de estabilidad. Utilícelas bajo su propia responsabilidad. Se recomienda hacer una copia de seguridad de los datos antes de actualizar.",
+    "popup.beta_warning.buttons": [
+      "Activar",
+      "Cancelar"
     ],
     "error.missingfile.title": "Archivo no encontrado",
     "error.missingfile.body": "El archivo \"{0}\" no fue encontrado.",
@@ -76,6 +82,9 @@
     "settings.label.indent":  "Sangría al guardar",
     "settings.label.extension": "Extensión de archivo predeterminada para guardar",
     "settings.label.lang": "Idioma",
+    "settings.label.update": "Actualizaciones automáticas",
+    "settings.checkbox.enable_update": "Activar la comprobación automática de actualizaciones",
+    "settings.checkbox.beta_channel": "Utilizar el canal beta",
     "theme.title": "Theme - JSONly",
     "theme.label.global": "Tema global",
     "theme.warn.restart": "Nota: require reiniciar la aplicación",
