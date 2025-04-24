@@ -1228,7 +1228,7 @@ def context(event: tk.Event) -> None:
             activeforeground='#cccccc'
         )
 
-# checks the version.txt in the GitHub repo against the VERSION constant
+# checks the version.txt on the website against the VERSION constant
 def searchUpdate() -> bool:
     if not data['preferences']['check_update']:
         return False
@@ -1254,10 +1254,30 @@ def searchUpdate() -> bool:
                     if btn == lang['popup.update.buttons'][0] else None
             )
 
-def ensureValue(parent: dict, type, default) -> None:
-    pass
-
-# a custom button class, useless outside of this program, pre-sets a lot of things that were causing repitition
+# makes sure a dictionary key exists and contains the correct data type
+def ensureValue(
+        key: str,
+        type_,
+        default,
+        parentKey: str=None,
+        valid: tuple=None
+    ) -> bool:
+    if parentKey is None:
+        if (key not in data.keys()) or \
+                (not isinstance(data[key], type_)):
+            data[key] = default
+            return False
+    else:
+        if (key not in data[parentKey].keys()) or \
+                (not isinstance(data[parentKey][key], type_)):
+            data[parentKey][key] = default
+            return False
+        elif valid is not None and data[parentKey][key] not in valid:
+            data[parentKey][key] = default
+            return False
+    return True
+ 
+# a custom button class, pre-sets a lot of things that were causing repitition
 class StyledButton(ctk.CTkButton):
     def __init__(
             self,
@@ -1345,30 +1365,18 @@ except json.JSONDecodeError:
     saveData(data)
 
 # make sure all required keys exist and contain valid data
-if 'preferences' not in data.keys():
-    data['preferences'] = {}
-    saveData(data)
-if 'indent' not in data['preferences'].keys():
-    data['preferences']['indent'] = 2
-    saveData(data)
-if 'extension' not in data['preferences'].keys():
-    data['preferences']['extension'] = '.json'
-    saveData(data)
-if 'theme' not in data.keys():
-    data['theme'] = {}
-    saveData(data)
-if 'global' not in data['theme'].keys():
-    data['theme']['global'] = 0
-    saveData(data)
-if 'lang' not in data['preferences'].keys():
-    data['preferences']['lang'] = 'en.json'
-    saveData(data)
-if 'check_update' not in data['preferences'].keys():
-    data['preferences']['check_update'] = True
-    saveData(data)
-if 'beta' not in data['preferences'].keys():
-    data['preferences']['beta'] = False
-    saveData(data)
+for i in [
+    ('preferences', dict, {}),
+    ('theme', dict, {}),
+    ('indent', int, 2, 'preferences'),
+    ('extension', str, '.json', 'preferences'),
+    ('lang', str, 'en.json', 'preferences'),
+    ('check_update', bool, True, 'preferences'),
+    ('beta', bool, False, 'preferences'),
+    ('global', int, 0, 'theme', (0, 1, 2)),
+]:
+    if not ensureValue(*i):
+        saveData(data)
 
 themeData = data['theme']['global']
 if themeData == 0:
