@@ -114,7 +114,7 @@ def loadMeta(file: str) -> dict | None:
     except KeyError:
         return None
 
-    return {commonName: file}
+    return ({commonName: file}, {file: commonName})
 
 # load the JSON data and return the value of the lang key
 def loadData(file: str) -> dict:
@@ -162,11 +162,13 @@ def loadData(file: str) -> dict:
     return data['lang']
 
 langPath = os.path.join(RESOURCEDIR, 'lang')
-langFiles = dict()  # holds metadata and corresponding lang files
+langNames = dict()  # holds metadata and corresponding lang files
+langFiles = dict()
 
 # Search for language files
 if os.path.isdir(langPath):  # Check if the directory exists
     for file in glob.glob(os.path.join(langPath, '*.json')):
         meta = loadMeta(file)
         if meta != None:
-            langFiles.update(meta)
+            langNames.update(meta[0])
+            langFiles.update(meta[1])

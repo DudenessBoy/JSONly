@@ -528,10 +528,10 @@ def settings() -> None:
         data['preferences']['extension'] = extension
         if langSel.get().startswith('lang/'):
             data['preferences']['lang'] = os.path.basename(
-                JSONly.lang.langFiles[langSel.get()]
+                JSONly.lang.langNames[langSel.get()]
             )
         else:
-            data['preferences']['lang'] = JSONly.lang.langFiles[langSel.get()]
+            data['preferences']['lang'] = JSONly.lang.langNames[langSel.get()]
         data['preferences']['check_update'] = bool(enableVar.get())
         data['preferences']['beta'] = bool(betaVar.get())
         saveData(data)
@@ -575,12 +575,13 @@ def settings() -> None:
     ttk.Label(win, text=lang['settings.label.lang'], font=1).pack()
     langSel = ctk.CTkOptionMenu(
         win,
-        values=list(JSONly.lang.langFiles.keys()),
+        values=list(JSONly.lang.langNames.keys()),
         fg_color='#646cff',
         button_color='#646cff',
         button_hover_color='#4b50d8'
     )
     langSel.pack()
+    langSel.set(JSONly.lang.langFiles[data['preferences']['lang']])
 
     ttk.Label(win, text=lang['settings.label.update'], font=1).pack()
     enableVar = tk.IntVar(value=data['preferences']['check_update'])

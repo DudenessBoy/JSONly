@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Automatic detection for updates
+### Fixed
+- Language selection option now displays the current language
 
 ## v1.3.0 - 4/12/2025
 ### Fixed
