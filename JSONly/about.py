@@ -1,7 +1,7 @@
 # Copyright (c) 2025 Luke Moyer
 # Licensed under the MIT License. See LICENSE file for details.
 
-# file that displays JSONly's license (MIT)
+import os
 import tkinter as tk
 from tkinter import ttk
 import webbrowser

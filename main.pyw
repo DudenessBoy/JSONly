@@ -3,7 +3,7 @@
 
 import os
 import sys
-if sys.platform != 'linux':  # can't use OS because of confilicts with DEB package
+if sys.platform != 'linux':  # can't use OS because of conflicts with DEB package
     import pyperclip
 else:
     sys.path.append('/usr/share/JSONly/lib')
@@ -19,7 +19,7 @@ from plyer import filechooser
 import customtkinter as ctk
 from CTkListbox import CTkListbox # customtkinter doesn't have a native listbox
 import darkdetect
-import JSONly.License
+import JSONly.about
 import JSONly.lang
 from JSONly.constants import *
 
@@ -29,13 +29,9 @@ filename = None  # filename to save to
 saved = True  # whether or not the data has been saved
 findWord = ''  # string in the find feature
 buttons = []
-isEnabled = True
 
 # check for unsaved work before closing the main window
 def close() -> None:
-    if not isEnabled:
-        print('closing blocked by popup')
-        return
     if not saved:
         ans = messagebox(
             lang['popup.unsaved.title'],
@@ -838,7 +834,11 @@ def mainWindow() -> None:
     )
     about.add_command(
         label=lang['menubar.about.license'],
-        command=JSONly.License.showLicense
+        command=JSONly.about.showLicense
+    )
+    about.add_command(
+        label=lang['menubar.about.update'],
+        command=lambda: searchUpdate(True)
     )
     menubar.add_cascade(label=lang['menubar.about'], menu=about)
     settingmenu = tk.Menu(menubar, tearoff=0)
@@ -1229,9 +1229,9 @@ def context(event: tk.Event) -> None:
         )
 
 # checks the version.txt on the website against the VERSION constant
-def searchUpdate() -> bool:
-    if not data['preferences']['check_update']:
-        return False
+def searchUpdate(force: bool=False) -> None:
+    if (not data['preferences']['check_update']) and (not force):
+        return
     if data['preferences']['beta']:
         suffix = '_beta'
     else:
@@ -1253,6 +1253,9 @@ def searchUpdate() -> bool:
                 lambda btn: webbrowser.open(LINKS['download'+suffix]) \
                     if btn == lang['popup.update.buttons'][0] else None
             )
+        else:
+            if force:
+                messagebox(lang['popup.no_update.title'], lang['popup.no_update.body'])
 
 # makes sure a dictionary key exists and contains the correct data type
 def ensureValue(
