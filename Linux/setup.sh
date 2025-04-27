@@ -85,12 +85,12 @@ cp -r ../../JSONly/ deb/usr/share/JSONly/lib/
 # change the packaging variable in constants.py
 sed -i "19s/.*/        packaging = 'system'/" deb/usr/share/JSONly/lib/JSONly/constants.py
 cp jsonly deb/usr/bin/
-ensureFolder /usr/lib/python3/dist-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
-cp -r /usr/lib/python3/dist-packages/customtkinter/ deb/usr/share/JSONly/lib/
-ensureFolder /usr/local/lib/python3.11/dist-packages/darkdetect "DarkDetect is not installed on your computer. Please install it with 'sudo pip3 install darkdetect'"
-cp -r /usr/local/lib/python3.11/dist-packages/darkdetect deb/usr/share/JSONly/lib/
-ensureFolder /usr/local/lib/python3.11/dist-packages/CTkListbox "CTkListbox is not installed on your computer. Please install it with 'sudo pip3 install CTkListbox'"
-cp -r /usr/local/lib/python3.11/dist-packages/CTkListbox deb/usr/share/JSONly/lib/
+ensureFolder ../../.venv/lib/python3.11/site-packages/customtkinter/ "CustomTkinter is not installed on your computer. Please install it with 'sudo pip3 install customtkinter'"
+cp -r ../../.venv/lib/python3.11/site-packages/customtkinter/ deb/usr/share/JSONly/lib/
+ensureFolder ../../.venv/lib/python3.11/site-packages/darkdetect "DarkDetect is not installed on your computer. Please install it with 'sudo pip3 install darkdetect'"
+cp -r ../../.venv/lib/python3.11/site-packages/darkdetect deb/usr/share/JSONly/lib/
+ensureFolder ../../.venv/lib/python3.11/site-packages/CTkListbox "CTkListbox is not installed on your computer. Please install it with 'sudo pip3 install CTkListbox'"
+cp -r ../../.venv/lib/python3.11/site-packages/CTkListbox deb/usr/share/JSONly/lib/
 declare -a mit=(
     customtkinter
     CTkListbox
@@ -126,23 +126,23 @@ cp ../JSONly.desktop appimage/app.desktop
 cp ../../icon.png appimage/app.png
 cp ../../icon.png appimage/usr/share/JSONly/
 cp ../AppRun appimage/
-ensureFile /usr/bin/python3.11 "Python 3.11 is not installed on your computer. Please install it with 'sudo apt install python3.11' or your distro's equivalent."
+ensureFile ../../.venv/bin/python3.11 "Python 3.11 is not installed on your computer. Please install it with 'sudo apt install python3.11' or your distro's equivalent."
 cp /usr/bin/python3.11 appimage/usr/bin/
 ensureFile /usr/bin/xsel "xsel is not installed on your computer. Please install it with 'sudo apt install xsel' or your distro's equivalent."
 cp /usr/bin/xsel appimage/usr/bin
 # don't need to make sure they exist, this was done earlier
-cp -r /usr/lib/python3/dist-packages/customtkinter/ appimage/usr/lib/python3/dist-packages/
-cp -r /usr/local/lib/python3.11/dist-packages/darkdetect appimage/usr/lib/python3/dist-packages/
-cp -r /usr/local/lib/python3.11/dist-packages/CTkListbox appimage/usr/lib/python3/dist-packages/
+cp -r ../../.venv/lib/python3.11/site-packages/customtkinter/ appimage/usr/lib/python3/dist-packages/
+cp -r ../../.venv/lib/python3.11/site-packages/darkdetect appimage/usr/lib/python3/dist-packages/
+cp -r ../../.venv/lib/python3.11/site-packages/CTkListbox appimage/usr/lib/python3/dist-packages/
 # these ones we still do since they can just be dependencies of the .deb package but need to be bundled with the AppImage
-ensureFolder /usr/local/lib/python3.11/dist-packages/plyer "Plyer is not installed on your computer. Please install it with 'sudo pip3 install plyer'"
-cp -r /usr/lib/python3/dist-packages/plyer/ appimage/usr/lib/python3/dist-packages/
-ensureFolder /usr/local/lib/python3.11/dist-packages/plyer "Python Packaging is not installed on your computer. Please install it with 'sudo pip3 install packaging'"
-cp -r /usr/lib/python3/dist-packages/packaging/ appimage/usr/lib/python3/dist-packages/
-pypath=/usr/lib/python3.11
+ensureFolder ../../.venv/lib/python3.11/site-packages/plyer "Plyer is not installed on your computer. Please install it with 'sudo pip3 install plyer'"
+cp -r ../../.venv/lib/python3.11/site-packages/plyer/ appimage/usr/lib/python3/dist-packages/
+ensureFolder ../../.venv/lib/python3.11/site-packages/packaging "Python Packaging is not installed on your computer. Please install it with 'sudo pip3 install packaging'"
+cp -r ../../.venv/lib/python3.11/site-packages/packaging/ appimage/usr/lib/python3/dist-packages/
+pypath=../../.venv/lib/python3.11/site-packages
 message="Your Python install is broken. Please reinstall."
-ensureFolder $pypath/tkinter "Tkinter is not installed on your computer. Please install it with 'sudo apt install python3-tk' or your distro's equivalent."
-cp -r $pypath/tkinter appimage/usr/lib/python3.11
+ensureFolder /lib/python3.11/tkinter "Tkinter is not installed on your computer. Please install it with 'sudo apt install python3-tk' or your distro's equivalent."
+cp -r /lib/python3.11/tkinter appimage/usr/lib/python3.11
 declare -a pyapps=(
     platform.py
     subprocess.py
