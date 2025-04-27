@@ -6,7 +6,11 @@ from setuptools import setup
 APP = ['main.pyw']
 DATA_FILES = [
     ('', ['resources/icon.icns', 'resources/doc/BSD-3-Clause.txt', '../../LICENSE', '../../icon.png']),
-    ('lang', ['../../lang/en_US.json'])
+    ('lang', [
+        '../../lang/en.json',
+        '../../lang/es.json',
+        ]
+     )
 
 ]
 OPTIONS = {
