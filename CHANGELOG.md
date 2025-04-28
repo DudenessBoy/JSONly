@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Language is no longer saved as full file path
 - Preference window no longer bugs out when lang file path is invalid
+- Popups no longer crash on Windows
 
 ## v1.4.0 - 4/27/2025
 ### Added

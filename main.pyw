@@ -187,7 +187,6 @@ def editValue(
     editWindow.transient(root)
     editWindow.grab_set()
     editWindow.group(root)
-    editWindow.attributes("-type", "dialog")
     editWindow.configure(bg = color)
     editWindow.title(lang['popup.edit.title'])
     editWindow.focus()
@@ -353,7 +352,6 @@ def plainText() -> None:
     win.transient(root)
     win.grab_set()
     win.group(root)
-    win.attributes("-type", "dialog")
     text = tk.Text(
         win,
         width=100,
@@ -439,7 +437,6 @@ def addNewItem(parent, val) -> None:
     addWindow.transient(root)
     addWindow.grab_set()
     addWindow.group(root)
-    addWindow.attributes("-type", "dialog")
     addWindow.geometry('900x150')
     addWindow.configure(bg = color)
     addWindow.title(lang['popup.add.title'])
@@ -664,7 +661,6 @@ def theme() -> None:
     win.transient(root)
     win.grab_set()
     win.group(root)
-    win.attributes("-type", "dialog")
     win.title(lang['theme.title'])
     win.config(bg=color)
     ttk.Label(win, text=lang['theme.label.global'], font=1).pack()
@@ -892,7 +888,6 @@ def display(val) -> None:
     disp.wait_visibility()
     disp.transient(root)
     disp.group(root)
-    disp.attributes("-type", "dialog")
     disp.focus()
     
     listbox = ResizableListbox(
@@ -1101,7 +1096,6 @@ def findWindow(listbox: tk.Listbox) -> None:
     findWin.transient(root)
     findWin.grab_set()
     findWin.group(root)
-    findWin.attributes("-type", "dialog")
     findWin.configure(bg=color)
     findWin.focus()
     findWin.overrideredirect(True)
@@ -1454,7 +1448,6 @@ def messagebox(title, message, buttons=(lang['popup.button.ok'],), callback=None
     window.transient(root)
     window.grab_set()
     window.group(root)
-    window.attributes("-type", "dialog")
     window.protocol('WM_DELETE_WINDOW', lambda: onButtonClick(buttons[-1]))
     window.wait_window()
     return endVal
