@@ -575,7 +575,7 @@ def settings() -> None:
     try:
         langSel.set(JSONly.lang.langFiles[langPath])
     except KeyError:
-        langSel.set(JSONly.lang.langFiles.values()[0])
+        langSel.set(list(JSONly.lang.langFiles.values())[0])
 
     ttk.Label(win, text=lang['settings.label.update'], font=1).pack()
     enableVar = tk.IntVar(value=data['preferences']['check_update'])
