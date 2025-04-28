@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.4.1 hotfix - 4/28/2025
 ### Fixed
 - Language is no longer saved as full file path
+- Preference window no longer bugs out when lang file path is invalid
 
 ## v1.4.0 - 4/27/2025
 ### Added
