@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.4.1 hotfix - 4/28/2025
 ### Fixed
-- Preferences window no longer encounters an error when loading language preferences
+- Language is no longer saved as full file path
 
 ## v1.4.0 - 4/27/2025
 ### Added
