@@ -20,7 +20,7 @@ OPTIONS = {
     'excludes': 'setuptools',
     'plist': {
         'CFBundleName': 'JSONly',
-        'CFBundleVersion': '1.4.0',
+        'CFBundleVersion': '1.4.1`',
         'CFBundleShortVersionString': '1.4',
         'NSHighResolutionCapable': True
     }

@@ -577,7 +577,7 @@ def settings() -> None:
         button_hover_color='#4b50d8'
     )
     langSel.pack()
-    langSel.set(JSONly.lang.langFiles[data['preferences']['lang']])
+    langSel.set(JSONly.lang.langFiles[langPath])
 
     ttk.Label(win, text=lang['settings.label.update'], font=1).pack()
     enableVar = tk.IntVar(value=data['preferences']['check_update'])
