@@ -8,9 +8,13 @@
 # Determine the directory of the AppRun script
 APPDIR="$(dirname "$(readlink -f "${0}")")"
 
-# Set PATH and PYTHONPATH before launching the app
+# Set various paths
 export PATH="$APPDIR/usr/bin:$PATH"
 export PYTHONPATH="$APPDIR/usr/lib/python3/dist-packages:$APPDIR/usr/lib/python3.11:$PYTHONPATH"
+export LD_LIBRARY_PATH="$APPDIR/usr/lib:$LD_LIBRARY_PATH"
+export TK_LIBRARY="$APPDIR/usr/share/tcltk/tK8.6"
+export TCL_LIBRARY="$APPDIR/usr/share/tcltk/tcl8.6"
+export TCLLIBPATH="$APPDIR/usr/share/tcltk"
 
 # Execute the application
 exec "$APPDIR/usr/bin/python3.11" "$APPDIR/usr/bin/jsonly" "$@"
