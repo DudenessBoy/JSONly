@@ -533,7 +533,6 @@ def settings() -> None:
     win.transient(root)
     win.grab_set()
     win.group(root)
-    win.attributes("-type", "dialog")
     win.title(lang['settings.title'])
     win.config(bg = color)
     win.protocol('WM_DELETE_WINDOW', close)
