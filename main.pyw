@@ -522,12 +522,11 @@ def settings() -> None:
         if not extension.startswith('.'):
             extension = '.' + extension
         data['preferences']['extension'] = extension
-        if langSel.get().startswith('lang/'):
-            data['preferences']['lang'] = os.path.basename(
-                JSONly.lang.langNames[langSel.get()]
-            )
-        else:
-            data['preferences']['lang'] = JSONly.lang.langNames[langSel.get()]
+        data['preferences']['lang'] = JSONly.lang.langNames[langSel.get()]
+        if os.path.dirname(data['preferences']['lang']) == \
+                os.path.join(RESOURCEDIR, 'lang'):
+            data['preferences']['lang'] = \
+                os.path.basename(data['preferences']['lang'])
         data['preferences']['check_update'] = bool(enableVar.get())
         data['preferences']['beta'] = bool(betaVar.get())
         saveData(data)
