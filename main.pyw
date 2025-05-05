@@ -29,6 +29,8 @@ filename = None  # filename to save to
 saved = True  # whether or not the data has been saved
 findWord = ''  # string in the find feature
 buttons = []
+undoStack = []
+redoStack = []
 
 # check for unsaved work before closing the main window
 def close() -> None:
@@ -284,9 +286,23 @@ def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) 
 # remove an item
 def removeItem(parent, val, key=None, index=None) -> None:
     if key is not None:
+        undoStack.append({
+            'action': 'delete',
+            'path': val,
+            'key': key,
+            'value': val[key],
+            'type': getType(val[key])
+        })
         del val[key]
     elif index is not None:
         del val[index]
+        undoStack.append(undoStack.append({
+            'action': 'delete',
+            'path': val,
+            'key': index,
+            'value': val[key],
+            'type': getType(val[key])
+        }))
     parent.event_generate("<<ItemRemoved>>")
 
 def configure(event=None) -> None:
@@ -383,55 +399,51 @@ def plainText() -> None:
         )
     copy.pack()
 
+def add(newValue: str, type_: str, val: dict, key: str):
+    if type_ == lang['window.types'][1]:
+        try:
+            newValue = int(float(newValue))
+        except ValueError:
+            newValue = 1
+    elif type_ == lang['window.types'][2]:
+        try:
+            newValue = float(newValue)
+        except ValueError:
+            newValue = 1.0
+    elif type_ == lang['window.types'][3]:
+        if newValue.lower() != 'true' and newValue.lower() != 'false':
+            if newValue == '0' or newValue == '':
+                newValue = 'false'
+            else:
+                newValue = 'true'
+        newValue = newValue.lower() == 'true'
+    elif type_ == 'null':
+        newValue = None
+    elif type_ == lang['window.types'][5]:
+        newValue = []
+    elif type_ == lang['window.types'][6]:
+        newValue = {}
+
+    if isinstance(val, dict):
+        newKey = key.strip()
+        if not newKey:
+            messagebox(
+                lang['error.generic.title'],
+                lang['error.generic.emptykey']
+            )
+            return
+        if newKey in val:
+            messagebox(
+                lang['error.generic.title'],
+                lang['error.generic.dupekey']
+            )
+            return
+        val[newKey] = newValue
+    elif isinstance(val, list):
+        val.append(newValue)
+
 # add a new item to the listbox
 def addNewItem(parent, val) -> None:
-    def saveItem(event = None):
-        newValue = valueEntry.get()
-        if type_var.get() == lang['window.types'][1]:
-            try:
-                newValue = int(float(newValue))
-            except ValueError:
-                newValue = 1
-        elif type_var.get() == lang['window.types'][2]:
-            try:
-                newValue = float(newValue)
-            except ValueError:
-                newValue = 1.0
-        elif type_var.get() == lang['window.types'][3]:
-            if newValue.lower() != 'true' and newValue.lower() != 'false':
-                if newValue == '0' or newValue == '':
-                    newValue = 'false'
-                else:
-                    newValue = 'true'
-            newValue = newValue.lower() == 'true'
-        elif type_var.get() == 'null':
-            newValue = None
-        elif type_var.get() == lang['window.types'][5]:
-            newValue = []
-        elif type_var.get() == lang['window.types'][6]:
-            newValue = {}
-
-        if isinstance(val, dict):
-            new_key = key_entry.get().strip()
-            if not new_key:
-                messagebox(
-                    lang['error.generic.title'],
-                    lang['error.generic.emptykey']
-                )
-                return
-            if new_key in val:
-                messagebox(
-                    lang['error.generic.title'],
-                    lang['error.generic.dupekey']
-                )
-                return
-            val[new_key] = newValue
-        elif isinstance(val, list):
-            val.append(newValue)
-        
-        addWindow.destroy()
-        parent.event_generate("<<ItemAdded>>")
-
     addWindow = tk.Toplevel(parent)
     addWindow.wait_visibility()
     addWindow.transient(root)
@@ -485,14 +497,35 @@ def addNewItem(parent, val) -> None:
         text_color=fore
     )
     valueEntry._entry.config(insertbackground=fore)
-    valueEntry.bind('<Return>', saveItem)
+    valueEntry.bind(
+        '<Return>',
+        lambda e: [
+            add(
+                valueEntry.get(),
+                type_var.get(),
+                val,
+                key_entry.get()
+            ),
+            addWindow.destroy(),
+            parent.event_generate("<<ItemAdded>>")
+        ]
+    )
     valueEntry.grid(row=currentRow, column=1, padx=5, pady=5)
     currentRow += 1
 
     StyledButton(
         addWindow,
         text=lang['popup.button.save'],
-        command=saveItem,
+        command=lambda: [
+            add(
+                valueEntry.get(),
+                type_var.get(),
+                val,
+                key_entry.get()
+            ),
+            addWindow.destroy(),
+            parent.event_generate("<<ItemAdded>>")
+        ],
         cursor='hand2',
         height=30,
         width=150
@@ -819,6 +852,9 @@ def mainWindow() -> None:
     editmenu = tk.Menu(menubar, tearoff=0)
     editmenu.add_command(label=lang['menubar.edit.add'], command=addButton.invoke)
     editmenu.add_command(label=lang['menubar.edit.plaintext'], command=plainText)
+    editmenu.add_separator()
+    editmenu.add_command(label='Undo', command=undo)
+    editmenu.add_command(label='Redo', command=redo)
     menubar.add_cascade(label=lang['menubar.edit'], menu=editmenu)
     about = tk.Menu(menubar, tearoff = 0)
     about.add_command(
@@ -1274,7 +1310,41 @@ def ensureValue(
             data[parentKey][key] = default
             return False
     return True
- 
+
+def undo() -> None:
+    if undoStack:
+        action = undoStack.pop()
+    else:
+        print('Undo: Nothing to undo')
+        return
+    if action['action'] == 'delete':
+        add(
+            action['value'],
+            action['type'],
+            action['path'],
+            action['key'],
+        )
+        listbox.event_generate('<<ItemAdded>>')
+
+def redo() -> None:
+    pass
+
+def getType(value) -> None:
+    if isinstance(value, list):
+        return 'array'
+    elif isinstance(value, dict):
+        return 'object'
+    elif isinstance(value, int):
+        return 'integer'
+    elif isinstance(value, float):
+        return 'floating point number'
+    elif isinstance(value, bool):
+        return 'boolean'
+    elif isinstance(value, str):
+        return 'string'
+    else:
+        return 'null'
+
 # a custom button class, pre-sets a lot of things that were causing repitition
 class StyledButton(ctk.CTkButton):
     def __init__(
