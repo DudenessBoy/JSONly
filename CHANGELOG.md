@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Partial undo functionality
 
+### Changed
+- Command rather than control is now the primary modifier on MacOS
+
 ## v1.4.1 hotfix - 4/28/2025
 ### Fixed
 - Language is no longer saved as full file path

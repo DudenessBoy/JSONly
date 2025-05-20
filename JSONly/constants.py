@@ -11,6 +11,7 @@ OS = sys.platform
 frame = inspect.stack()[-1]  # Get the most recent frame (main file's frame)
 mainFile = frame[0].f_globals["__file__"]
 FILEDIR = os.path.abspath(os.path.dirname(mainFile))
+MODIFIER = 'Control'
 
 # set OS-dependant constants
 match OS:
@@ -49,6 +50,7 @@ match OS:
             RESOURCEDIR = os.path.join(basePath, 'Resources')
         else:
             RESOURCEDIR = FILEDIR
+        MODIFIER = 'Command'
     case 'win32': # before we get started, why does Windows just have to be different and use %VAR% instead of $VAR like other systems?
         CONFIGDIR = os.getenv(
             "LOCALAPPDATA",
