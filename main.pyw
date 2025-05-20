@@ -902,11 +902,13 @@ def mainWindow() -> None:
             )
     root.configure(menu = menubar)
 
+    # keybindings
     root.bind("<<ValueEdited>>", lambda e: configure())
     root.bind("<<ItemAdded>>", lambda e: refreshListbox(listbox, file))
     root.bind("<<ItemRemoved>>", lambda e: refreshListbox(listbox, file))
     root.bind('<Control-o>', load)
     root.bind('<Control-s>', save)
+    root.bind('Control-z', undo)
     root.bind('<Control-Shift-KeyPress-s>', lambda: save(saveas = True))
     root.protocol('WM_DELETE_WINDOW', close)
     root.bind('<Control-f>', lambda e: findWindow(listbox))
@@ -1325,7 +1327,7 @@ def ensureValue(
             return False
     return True
 
-def undo() -> None:
+def undo(e=None) -> None:
     if undoStack:
         action = undoStack.pop()
     else:
@@ -1352,7 +1354,7 @@ def undo() -> None:
             undo=False
         )
 
-def redo() -> None:
+def redo(e=None) -> None:
     pass
 
 def getType(value) -> None:
