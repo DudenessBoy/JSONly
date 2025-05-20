@@ -284,25 +284,27 @@ def directEdit(parent, val, typeVar: tk.StringVar, value, key=None, index=None) 
         val[index] = newValue
 
 # remove an item
-def removeItem(parent, val, key=None, index=None) -> None:
+def removeItem(parent, val, key=None, index=None, undo: bool=True) -> None:
     if key is not None:
-        undoStack.append({
-            'action': 'delete',
-            'path': val,
-            'key': key,
-            'value': val[key],
-            'type': getType(val[key])
-        })
+        if undo:
+            undoStack.append({
+                'action': 'delete',
+                'path': val,
+                'key': key,
+                'value': val[key],
+                'type': getType(val[key])
+            })
         del val[key]
     elif index is not None:
         del val[index]
-        undoStack.append(undoStack.append({
-            'action': 'delete',
-            'path': val,
-            'key': index,
-            'value': val[key],
-            'type': getType(val[key])
-        }))
+        if undo:
+            undoStack.append(undoStack.append({
+                'action': 'delete',
+                'path': val,
+                'key': index,
+                'value': val[key],
+                'type': getType(val[key])
+            }))
     parent.event_generate("<<ItemRemoved>>")
 
 def configure(event=None) -> None:
@@ -399,7 +401,7 @@ def plainText() -> None:
         )
     copy.pack()
 
-def add(newValue: str, type_: str, val: dict, key: str):
+def add(newValue: str, type_: str, val: dict, key: str, undo: bool=True):
     if type_ == lang['window.types'][1]:
         try:
             newValue = int(float(newValue))
@@ -439,8 +441,20 @@ def add(newValue: str, type_: str, val: dict, key: str):
             )
             return
         val[newKey] = newValue
+        if undo:
+            undoStack.append({
+                'action': 'add',
+                'val': val,
+                'key': newKey
+            })
     elif isinstance(val, list):
         val.append(newValue)
+        if undo:
+            undoStack.append({
+                'action': 'add',
+                'val': val,
+                'index': val[len(val) - 1]
+            })
 
 # add a new item to the listbox
 def addNewItem(parent, val) -> None:
@@ -1323,8 +1337,20 @@ def undo() -> None:
             action['type'],
             action['path'],
             action['key'],
+            undo=False
         )
         listbox.event_generate('<<ItemAdded>>')
+    elif action['action'] == 'add':
+        if 'key' in action.keys():
+            type_ = 'key'
+        else:
+            type_ = 'index'
+        removeItem(
+            listbox,
+            action['val'],
+            action[type_],
+            undo=False
+        )
 
 def redo() -> None:
     pass
